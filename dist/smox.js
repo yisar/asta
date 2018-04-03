@@ -231,7 +231,7 @@ var connect = function connect(mapStateToProps, mapDispatchToProps) {
   };
 };
 
-var thunk$1 = function thunk(_ref) {
+var thunk = function thunk(_ref) {
   var dispatch = _ref.dispatch,
       getState = _ref.getState;
   return function (next) {
@@ -244,12 +244,27 @@ var thunk$1 = function thunk(_ref) {
   };
 };
 
+var arrayThunk = function arrayThunk(_ref) {
+  var dispatch = _ref.dispatch,
+      getState = _ref.getState;
+  return function (next) {
+    return function (action) {
+      if (Array.isArray(action)) {
+        return action.forEach(function (v) {
+          return dispatch(v);
+        });
+      }
+      return next(action);
+    };
+  };
+};
+
 module.exports = {
   createStore: createStore,
   applyMiddleware: applyMiddleware,
   connect: connect,
   Provider: Provider,
   Consumer: Consumer,
-  thunk: thunk$1,
+  thunk: thunk,
   arrayThunk: arrayThunk
 };

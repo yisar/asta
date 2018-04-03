@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from './src/smox'
 import { connect, Provider, Consumer } from './src/smox-react'
 import  thunk  from './src/smox-thunk'
-import arraryThunk from './src/smox-array'
+import arrayThunk from './src/smox-array'
 
 
 module.exports ={
