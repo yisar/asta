@@ -192,7 +192,17 @@ var connect = function connect(mapStateToProps, mapDispatchToProps) {
       }
 
       createClass(WrapComp, [{
-        key: "componentDidMount",
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+          this._isMounted = true;
+        }
+      }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+          this._isMounted = false;
+        }
+      }, {
+        key: 'componentDidMount',
         value: function componentDidMount() {
           var _this2 = this;
 
@@ -202,17 +212,19 @@ var connect = function connect(mapStateToProps, mapDispatchToProps) {
           this.update();
         }
       }, {
-        key: "update",
+        key: 'update',
         value: function update() {
           var store = this.store;
           var stateProps = mapStateToProps(store.getState());
           var dispatchProps = bindActionCreators(mapDispatchToProps, store.dispatch);
-          this.setState({
-            props: _extends({}, this.state.props, stateProps, dispatchProps)
-          });
+          if (this._isMounted) {
+            this.setState({
+              props: _extends({}, this.state.props, stateProps, dispatchProps)
+            });
+          }
         }
       }, {
-        key: "render",
+        key: 'render',
         value: function render() {
           var _this3 = this;
 

@@ -13,6 +13,8 @@ npm i smox
 
 ## demo
 * [Counter](https://github.com/132yse/smox-counter)
+* [爱弹幕后台](https://github.com/132yse/idanmu-admin)
+
 
 # about
 * blog: [伊撒尔の窝](http://www.yisaer.com)
