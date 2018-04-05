@@ -1,6 +1,6 @@
 {
   "name": "smox",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A state manager based on New context api which has the same api as Redux.",
   "main": "./dist/smox.js",
   "scripts": {

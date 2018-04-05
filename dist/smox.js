@@ -233,7 +233,7 @@ var connect = function connect(mapStateToProps, mapDispatchToProps) {
             null,
             function (store) {
               _this3.store = store;
-              return React.createElement(Component, _extends({ store: store }, _this3.state.props));
+              return React.createElement(Component, _this3.state.props);
             }
           );
         }

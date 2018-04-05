@@ -48,7 +48,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => Component => {
         <Consumer>
           {store => {
             this.store = store
-            return <Component store={store} {...this.state.props} />
+            return <Component {...this.state.props} />
           }}
         </Consumer>
       )
