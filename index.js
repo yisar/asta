@@ -1,15 +1,8 @@
-import { createStore, applyMiddleware } from './src/smox'
-import { connect, Provider, Consumer } from './src/smox-react'
-import  thunk  from './src/smox-thunk'
-import arrayThunk from './src/smox-array'
+import { Store, Provider,withStore } from './src/index'
 
 
 module.exports ={
-  createStore,
-  applyMiddleware,
-  connect,
+  Store,
   Provider,
-  Consumer,
-  thunk,
-  arrayThunk
+  withStore
 }
