@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "es2015",                   
+    "moduleResolution": "node"  
+  },
+  "exclude": [
+    "node_modules"
+]
+}
