@@ -5,7 +5,7 @@
 
 # Smox
 
-> Fast 1kB state management based on New context api which is similar to Vuex.
+> Fast 1kB state management Used New context api and Proxy which is similar to Vuex.
 
 ### Feature
 
