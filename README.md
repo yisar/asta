@@ -43,10 +43,10 @@ const actions = {
 
 const mutations = {
   add(state) {
-    count: state.count + 1
+    state.count += 1
   },
   cut(state) {
-    count: state.count - 1
+    state.count -= 1
   }
 }
 
