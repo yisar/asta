@@ -13,7 +13,7 @@
 
 :jack_o_lantern: Tiny size, 1Kb gzipped, no Dependencies
 
-:ghost: High Performance without optimization because ES6 Proxy
+:ghost: High Performance without optimization because ES6 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 
 ## Install
 
