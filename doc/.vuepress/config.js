@@ -9,6 +9,5 @@ module.exports = {
           { text: 'Github', link: 'https://github.com/132yse/smox' }
         ],
         sidebar: 'auto'
-      },
-    dest:'./'  
+      } 
   }
