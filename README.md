@@ -15,8 +15,8 @@
 
 :ghost: High Performance without optimization because ES6 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 
-## 文档
-[smox documents](https://132yse.github.io/smox/)
+## Docs
+[smox documents](https://smox.js.org)
 
 ## Install
 
