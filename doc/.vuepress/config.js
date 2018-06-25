@@ -1,7 +1,6 @@
 module.exports = {
     title: 'smox-document',
     description: 'smox docs',
-    base:'/smox/',
     themeConfig: {
         nav: [
           { text: '首页', link: '/' },
