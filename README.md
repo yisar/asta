@@ -67,7 +67,7 @@ then app.js
 
 ```javascript
 import React from 'react'
-import { connect } from 'smox'
+import { map } from 'smox'
 
 @map({
   state: ['count'],
