@@ -70,9 +70,9 @@ import React from 'react'
 import { connect } from 'smox'
 
 @map({
-  state:['count'],
-  mutations:['add','cut'],
-  actions:['asyncAdd']
+  state: ['count'],
+  mutations: ['add', 'cut'],
+  actions: ['asyncAdd']
 })
 
 class App extends React.Component {
@@ -99,8 +99,8 @@ import { produce } from 'smox'
 class App extends React.Component {
   onClick = () => {
     this.setState(
-        produce(draft => {
-            draft.count += 1
+        produce(state => {
+            state.count += 1
         })
     )
   }

@@ -295,3 +295,4 @@ function mapMethods(method, methods) {
 
     return res;
 }
+
