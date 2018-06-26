@@ -1,7 +1,7 @@
 <p align="center"><img src="http://ww1.sinaimg.cn/large/85564debgy1froiubji5aj207f03nq34.jpg" alt="smox logo"></p>
 
-[![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat)](https://npmjs.com/package/smox)
-[![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat)](https://npmjs.com/package/smox)
+[![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
+[![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 
 # Smox
 
