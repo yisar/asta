@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Provider = exports.connect = exports.Store = undefined;
+exports.Provider = exports.map = exports.Store = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -78,10 +78,13 @@ var Store = exports.Store = function () {
 }();
 
 var Context = _react2.default.createContext(null);
-var connect = exports.connect = function connect() {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    var mutations = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-    var actions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+var map = exports.map = function map(_ref2) {
+    var _ref2$state = _ref2.state,
+        state = _ref2$state === undefined ? [] : _ref2$state,
+        _ref2$mutations = _ref2.mutations,
+        mutations = _ref2$mutations === undefined ? [] : _ref2$mutations,
+        _ref2$actions = _ref2.actions,
+        actions = _ref2$actions === undefined ? [] : _ref2$actions;
     return function (Component) {
         return function (_React$Component) {
             _inherits(_class, _React$Component);
@@ -269,9 +272,9 @@ function mapMethods(method, methods) {
 
     try {
         for (var _iterator = normalizeMap(methods)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _ref3 = _step.value;
-            var k = _ref3.k,
-                v = _ref3.v;
+            var _ref4 = _step.value;
+            var k = _ref4.k,
+                v = _ref4.v;
 
             res[k] = method[v];
         }

@@ -118,7 +118,11 @@ export default App
 * store.dispatch(action)
 * store.subscribe(sub)
 
-* connect([state],[mutations],[actions])
+* map({
+      state:[],
+      mutations:[],
+      actions:[]
+    })
 
 * produce(state,producer)
 
