@@ -1,7 +1,7 @@
 import { resolveSource } from './util'
 import { produce } from './produce'
 
-interface Fnc {
+export interface Fnc {
   [k: string]: Function
 }
 

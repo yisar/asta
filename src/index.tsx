@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { bindCreators, mapMethods } from './util'
+import { Fnc } from './store'
 
 const Context = React.createContext(null)
 
@@ -7,7 +8,7 @@ interface State {
   props: any
 }
 
-export const connect = (state: string[] = [], mutations: string[] = [], actions: string[] = []) => Component => {
+export const map = ({ state = [], mutations = [], actions = [] }: Fnc) => Component => {
   return class extends React.Component<State> {
     _isMounted: boolean
     store: any
@@ -64,14 +65,14 @@ export const connect = (state: string[] = [], mutations: string[] = [], actions:
   }
 }
 
-interface Props{
-  store:any
+interface Props {
+  store: any
 }
 
 export class Provider extends React.Component<Props>{
-  store:any 
-  props:any
-  constructor(props:Props) {
+  store: any
+  props: any
+  constructor(props: Props) {
     super(props)
     this.store = this.props.store
   }

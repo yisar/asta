@@ -69,7 +69,11 @@ then app.js
 import React from 'react'
 import { connect } from 'smox'
 
-@connect( ['count'], ['add','cut'], ['asyncAdd'] )
+@map({
+  state:['count'],
+  mutations:['add','cut'],
+  actions:['asyncAdd']
+})
 
 class App extends React.Component {
   render() {
