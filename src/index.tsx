@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { bindCreators, mapMethods } from './util'
-import { Fnc } from './store'
 
 const Context = React.createContext(null)
 
@@ -8,7 +7,7 @@ interface State {
   props: any
 }
 
-export const map = ({ state = [], mutations = [], actions = [] }: Fnc) => Component => {
+export const map = ({ state = [], mutations = [], actions = [] }) => Component => {
   return class extends React.Component<State> {
     _isMounted: boolean
     store: any
