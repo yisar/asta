@@ -74,6 +74,12 @@ import { map } from 'smox'
   mutations: ['add', 'cut'],
   actions: ['asyncAdd']
 })
+// @map({
+//   state: { count },
+//   mutations: { add ,cut },
+//   actions: { asyncAdd }
+// })
+// ↑ Also OK
 
 class App extends React.Component {
   render() {
