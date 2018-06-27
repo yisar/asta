@@ -27,3 +27,8 @@ export function mapMethods(method, methods:string[]) {
     }
     return res
   }
+
+
+export function isModules(type:string):boolean{
+    return type.includes('/')
+}
