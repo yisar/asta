@@ -75,11 +75,10 @@ import { map } from 'smox'
   actions: ['asyncAdd']
 })
 // @map({
-//   state: { count },
 //   mutations: { add ,cut },
 //   actions: { asyncAdd }
 // })
-// ↑ Also OK
+// ↑ Function as import is also OK
 
 class App extends React.Component {
   render() {
