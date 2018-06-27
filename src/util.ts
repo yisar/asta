@@ -22,7 +22,8 @@ export function normalizeMap(map: string[]) {
 export function mapMethods(method, methods:string[]) {
     let res = {}
     for (let { k, v } of normalizeMap(methods)) {
-      res[k] = method[v]
+        typeof v === 'function' ? res[k] = v
+        : res[k] = method[v]
     }
     return res
   }
