@@ -11,21 +11,21 @@ smox 提供 model 机制，用于大型项目的拆分，相似的机制在同�
 首先，一个 model 长这样：
 ```JavaScript
 const modelA = {
-    state:{
-        count:1
-    },
-    mutations:{
-        add(state){
-            state.count ++
-        }
-    },
-    actions:{
-        asyncAdd({ commit }) {
-            setTimeout(() => {
-                commit('add')
-            }, 1000)
-        }
+  state: {
+    count: 1
+  },
+  mutations: {
+    add(state) {
+      state.count++
     }
+  },
+  actions: {
+    asyncAdd({ commit }) {
+      setTimeout(() => {
+        commit('add')
+      }, 1000)
+    }
+  }
 }
 ```
 可以看到，我们只是在 `单model` 模式上，包了层对象，但是有了这层对象，就可以肆意的 export 啦
