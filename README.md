@@ -26,6 +26,10 @@ npm i smox -S
 
 ## Use
 
+smox 新版本支持 model 机制拆分，以下代码默认是一个 model，大型项目需要拆分 model，请：
+
+[戳我戳我]()
+
 ```javascript
 import React from 'react'
 import ReactDOM from 'react-dom'
