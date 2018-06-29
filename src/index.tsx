@@ -14,6 +14,7 @@ export const map = ({ state = [], mutations = [], actions = [] }) => Component =
     props: any
     state: any
     setState: any
+    name: string
     constructor(props) {
       super(props)
       this.state = {
@@ -36,9 +37,10 @@ export const map = ({ state = [], mutations = [], actions = [] }) => Component =
     }
 
     update() {
-      const stateProps = mapMethods(this.store.state, state)
-      const commitProps = bindCreators(mapMethods(this.store.mutations, mutations), this.store.commit)
-      const dispatchProps = bindCreators(mapMethods(this.store.actions, actions), this.store.dispatch)
+      this.name = mapMethods(this.store.state, state).name
+      const stateProps = mapMethods(this.store.state, state).res
+      const commitProps = bindCreators(mapMethods(this.store.mutations, mutations).res, this.store.commit, this.name)
+      const dispatchProps = bindCreators(mapMethods(this.store.actions, actions).res, this.store.dispatch, this.name)
       if (this._isMounted) {
         this.setState({
           props: {

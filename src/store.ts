@@ -1,4 +1,4 @@
-import { resolveSource } from './util'
+import { resolveSource, combineModels, splitType } from './util'
 import { produce } from './produce'
 
 export interface Fnc {
@@ -10,10 +10,10 @@ export class Store {
   mutations: Fnc
   actions: Fnc
   subscribers: Function[]
-  constructor({ state, mutations, actions }) {
-    this.state = state
-    this.mutations = mutations
-    this.actions = actions
+  constructor(models) {
+    this.state = models.state ? models.state : combineModels(models).state
+    this.mutations = models.state ? models.mutations : combineModels(models).mutations
+    this.actions = models.state ? models.actions : combineModels(models).actions
     this.subscribers = []
     this.dispatch = this.dispatch.bind(this)
     this.commit = this.commit.bind(this)
@@ -28,6 +28,7 @@ export class Store {
   }
 
   dispatch(type: Function | string, payload) {
+    type = splitType(type)
     const action = resolveSource(this.actions, type)
     const ctx = {
       commit: this.commit,
@@ -37,10 +38,15 @@ export class Store {
   }
 
   commit(type: Function | string, payload) {
-    const mutation = resolveSource(this.mutations, type)
-    this.state = produce(this.state, (draft) => {
-      mutation(draft, payload)
-    })
+    const mutation = resolveSource(this.mutations, type);
+    const model = Array.isArray(type) ? type[0] : type
+    typeof type === 'function' ?
+      this.state[name] = produce(this.state[name], (state) => {
+        mutation(state, payload);
+      }) :
+      this.state[model] = produce(this.state[model], (state) => {
+        mutation(state, payload);
+      });
     this.subscribers.forEach(v => v())
   }
 }

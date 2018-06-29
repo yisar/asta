@@ -21,7 +21,8 @@ class State {
         if (!this.modifed) {
             this.modifing()
         }
-        return this.copy[key] = value
+        this.copy[key] = value
+        return true
     }
 
     modifing() {
