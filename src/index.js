@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { bindCreators } from './util'
 import { mapMethods } from './helper'
 const Context = React.createContext(null)
