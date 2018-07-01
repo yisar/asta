@@ -98,26 +98,10 @@ connect 是一个高阶组件，可以通过装饰器的写法，接受三个参
 
 先别急，我们还可以整理整理代码
 
-### 推荐目录结构
 
-我们都知道 redux 中拆分 reducer、action，是不太好搞的，需要 combineReducers 来合并
-但是 smox 可以不用，因为 smox 对应的都是对象，所以我们直接 `export default {}`即可
-
-我推荐是这个结构：
-```shell
-├── index.js                #入口文件
-├── components              #业务组件
-│   ├── App.js 
-│   └── ...
-└── store
-    ├── index.js            # 创建并导出 store 的地方
-    ├── mutations.js        # mutation
-    └── actions.js          # actions
-```
-
-好的，这样一来，一个`拆分合理`、`代码优雅`的应用就搞定了，
+好的，这样一来，一个简单的 counter 应用就搞定了，
 
 [请参见 Counter github源码](https://github.com/132yse/smox-counter)
 
-
-以上只是对最基本的操作进行阐述，更骚的操作请阅读[详细教程→](/guide/)
+值得一提的是，smox 新版本已经实现 model 机制，以上是 `单model` 模式，
+多 model 和更骚的操作请阅读[详细教程→](/guide/)
