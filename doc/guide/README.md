@@ -2,27 +2,27 @@
 ### Model 机制
 
 smox 提供 model 机制，用于大型项目的拆分，相似的机制在同类工具中也存在，如 vuex 的 module、rematch/dva 的 model
-虽然相似，但 smox 却带来更好的 API ，以及更合理的改变
+虽然相似，但 smox 却带来更好的 API ，以及更合理的细节体验
 
-好啦，我们开始吧~
+好啦，我们从一个变性的 demo 开始吧~
 
 #### 建立 model
 
 首先，一个 model 长这样：
 ```JavaScript
-const modelA = {
+const sex = {
   state: {
-    count: 1
+    sex: 'boy'
   },
   mutations: {
-    add(state) {
-      state.count++
+    change(state, payload) {
+      state.sex = payload
     }
   },
   actions: {
-    asyncAdd({ commit }) {
+    asyncChange({ commit }, payload) {
       setTimeout(() => {
-        commit('add')
+        commit('change', payload)
       }, 1000)
     }
   }
@@ -30,6 +30,7 @@ const modelA = {
 ```
 可以看到，我们只是在 `单model` 模式上，包了层对象，但是有了这层对象，就可以肆意的 export 啦
 是的，到这里，我们一个 model 已经搞定了，值得一提的是，不需要写命名空间，smox 内部已经做了处理
+但是与此同时，也存在一个约定，就是 actions 的 payload 将会是必传，因为内含 name
 
 #### 创建 store
 
@@ -62,19 +63,18 @@ const store = new Store({ state, mutations, actions })
 import { map } from 'smox'
 
 @map({
-  state: ['moduleA/count'],
-  mutations: ['moduleA/add'],
-  actions: ['moduleA/asyncAdd']
+  state: ['sex/sex'],
+  mutations: ['sex/change'],
+  actions: ['sex/asyncChange']
 })
 
 class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>现在是{this.props.count}</h1>
-        <button onClick={this.props.add}>加一</button>
-        <button onClick={this.props.cut}>减一</button>
-        <button onClick={this.props.asyncAdd}>异步加一</button>
+        <h1>现在是{this.props.sex}</h1>
+        <button onClick={this.props.change('girl')}>变性</button>
+        <button onClick={this.props.change('girl')}>异步变性</button>
       </div>
     )
   }

@@ -21,19 +21,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PROXY_STATE = 'proxy-state';
-
 var Store = exports.Store = function () {
-    function Store(_ref) {
-        var state = _ref.state,
-            mutations = _ref.mutations,
-            actions = _ref.actions;
-
+    function Store(models) {
         _classCallCheck(this, Store);
 
-        this.state = state;
-        this.mutations = mutations;
-        this.actions = actions;
+        this.state = models.state ? models.state : combineModels(models).state;
+        this.mutations = models.state ? models.mutations : combineModels(models).mutations;
+        this.actions = models.state ? models.actions : combineModels(models).actions;
         this.subscribers = [];
         this.dispatch = this.dispatch.bind(this);
         this.commit = this.commit.bind(this);
@@ -53,7 +47,8 @@ var Store = exports.Store = function () {
         }
     }, {
         key: 'dispatch',
-        value: function dispatch(type, payload) {
+        value: function dispatch(type, name, payload) {
+            type = splitType(type);
             var action = resolveSource(this.actions, type);
             var ctx = {
                 commit: this.commit,
@@ -63,10 +58,14 @@ var Store = exports.Store = function () {
         }
     }, {
         key: 'commit',
-        value: function commit(type, payload) {
+        value: function commit(type, name, payload) {
+            type = splitType(type);
             var mutation = resolveSource(this.mutations, type);
-            this.state = produce(this.state, function (draft) {
-                mutation(draft, payload);
+            var model = Array.isArray(type) ? type[0] : type;
+            typeof type === 'function' ? this.state[name] = produce(this.state[name], function (state) {
+                mutation(state, payload);
+            }) : this.state[model] = produce(this.state[model], function (state) {
+                mutation(state, payload);
             });
             this.subscribers.forEach(function (v) {
                 return v();
@@ -78,13 +77,13 @@ var Store = exports.Store = function () {
 }();
 
 var Context = _react2.default.createContext(null);
-var map = exports.map = function map(_ref2) {
-    var _ref2$state = _ref2.state,
-        state = _ref2$state === undefined ? [] : _ref2$state,
-        _ref2$mutations = _ref2.mutations,
-        mutations = _ref2$mutations === undefined ? [] : _ref2$mutations,
-        _ref2$actions = _ref2.actions,
-        actions = _ref2$actions === undefined ? [] : _ref2$actions;
+var map = exports.map = function map(_ref) {
+    var _ref$state = _ref.state,
+        state = _ref$state === undefined ? [] : _ref$state,
+        _ref$mutations = _ref.mutations,
+        mutations = _ref$mutations === undefined ? [] : _ref$mutations,
+        _ref$actions = _ref.actions,
+        actions = _ref$actions === undefined ? [] : _ref$actions;
     return function (Component) {
         return function (_React$Component) {
             _inherits(_class, _React$Component);
@@ -128,9 +127,10 @@ var map = exports.map = function map(_ref2) {
             }, {
                 key: 'update',
                 value: function update() {
-                    var stateProps = mapMethods(this.store.state, state);
-                    var commitProps = bindCreators(mapMethods(this.store.mutations, mutations), this.store.commit);
-                    var dispatchProps = bindCreators(mapMethods(this.store.actions, actions), this.store.dispatch);
+                    this.name = mapMethods(this.store.state, state).name;
+                    var stateProps = mapMethods(this.store.state, state).res;
+                    var commitProps = bindCreators(mapMethods(this.store.mutations, mutations).res, this.store.commit, this.name);
+                    var dispatchProps = bindCreators(mapMethods(this.store.actions, actions).res, this.store.dispatch, this.name);
                     if (this._isMounted) {
                         this.setState({
                             props: Object.assign({}, this.state.props, stateProps, commitProps, dispatchProps)
@@ -184,6 +184,8 @@ var Provider = exports.Provider = function (_React$Component2) {
     return Provider;
 }(_react2.default.Component);
 
+var PROXY_STATE = 'proxy-state';
+
 var State = function () {
     function State(base) {
         _classCallCheck(this, State);
@@ -207,7 +209,8 @@ var State = function () {
             if (!this.modifed) {
                 this.modifing();
             }
-            return this.copy[key] = value;
+            this.copy[key] = value;
+            return true;
         }
     }, {
         key: 'modifing',
@@ -227,8 +230,7 @@ var handler = {
         return target.get(key);
     },
     set: function set(target, key, value) {
-        target.set(key, value);
-        return true;
+        return target.set(key, value);
     }
 };
 function produce(baseState, producer) {
@@ -243,16 +245,19 @@ function produce(baseState, producer) {
 }
 
 function resolveSource(source, type) {
-    return typeof type === 'function' ? type : source[type];
+    if (typeof type === 'function') {
+        return type;
+    }
+    return Array.isArray(type) ? source[type[0]][type[1]] : source[type];
 }
-function bindCreators(creators, operate) {
+function bindCreators(creators, operate, name) {
     return Object.keys(creators).reduce(function (ret, item) {
         ret[item] = function () {
             for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
                 args[_key] = arguments[_key];
             }
 
-            return operate.apply(undefined, [creators[item]].concat(args));
+            return operate.apply(undefined, [creators[item], name].concat(args));
         };
         return ret;
     }, {});
@@ -264,19 +269,21 @@ function normalizeMap(map) {
         return { k: k, v: map[k] };
     });
 }
-function mapMethods(method, methods) {
+function mapMethods(method, type) {
+    var name = Object.keys(method)[0];
+    var content = splitContent(type);
     var res = {};
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
 
     try {
-        for (var _iterator = normalizeMap(methods)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _ref4 = _step.value;
-            var k = _ref4.k,
-                v = _ref4.v;
+        for (var _iterator = normalizeMap(content)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var _ref3 = _step.value;
+            var k = _ref3.k,
+                v = _ref3.v;
 
-            res[k] = method[v];
+            typeof v === 'function' ? res[k] = v : res[k] = method[name][v];
         }
     } catch (err) {
         _didIteratorError = true;
@@ -293,6 +300,44 @@ function mapMethods(method, methods) {
         }
     }
 
-    return res;
+    return {
+        res: res,
+        name: name
+    };
 }
 
+function splitContent(type) {
+    var res = [];
+    type.map(function (i) {
+        res.push(i.split('/')[1]);
+    });
+    return res;
+}
+function combineModels(models) {
+    var state = {},
+        mutations = {},
+        actions = {};
+    Object.keys(models).forEach(function (i) {
+        if (models[i].state) {
+            state[i] = models[i].state;
+        }
+        if (models[i].mutations) {
+            mutations[i] = models[i].mutations;
+        }
+        if (models[i].actions) {
+            actions[i] = models[i].actions;
+        }
+    });
+    return {
+        state: state,
+        mutations: mutations,
+        actions: actions
+    };
+}
+
+function splitType(type) {
+    if (typeof type === 'function') {
+        return type;
+    }
+    return type.indexOf('/') != -1 ? type.split('/') : type;
+}
