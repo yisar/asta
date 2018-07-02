@@ -19,7 +19,7 @@ export class Store {
   dispatch(type, payload, name) {
     if (name) {
       payload = {
-        name,
+        namespace:name,
         payload
       }
     }
@@ -31,8 +31,8 @@ export class Store {
     return Promise.resolve(action(ctx, payload))
   }
   commit(type, payload, name) {
-    if (payload.name) {
-      name = payload.name
+    if (payload.namespace) {
+      name = payload.namespace
       payload = payload.payload
     }
     type = splitType(type)
