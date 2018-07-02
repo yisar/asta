@@ -245,7 +245,7 @@ var Store = exports.Store = function () {
     value: function dispatch(type, payload, name) {
       if (name) {
         payload = {
-          name: name,
+          namespace: name,
           payload: payload
         };
       }
@@ -259,8 +259,8 @@ var Store = exports.Store = function () {
   }, {
     key: 'commit',
     value: function commit(type, payload, name) {
-      if (payload.name) {
-        name = payload.name;
+      if (payload.namespace) {
+        name = payload.namespace;
         payload = payload.payload;
       }
       type = splitType(type);
