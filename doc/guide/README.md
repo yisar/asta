@@ -101,6 +101,25 @@ model 仅仅是便于开发中拆分，smox 本身仍是单 store，拆分只是
 
 用不用具体场景具体分析哈！
 
+### 中间件机制
+
+smox 提供中间件机制，可以愉快的定制中间件，smox 的中间件和 redux 的神似，一个中间件长这样：
+
+```JavaScript
+export const logger = (store) => (next) => (mutation,payload) =>{
+  console.group('before',store.state)
+  next(mutation,payload)
+  console.log('after', store.state)
+console.groupEnd()
+}
+``` 
+使用的时候作为第二个参数传入，是个数组
+```JavaScript
+const store = new Store({ state, mutations, actions },[logger])
+``` 
+
+需要注意的是，开发 smox 中间件需要知道，mutation 和 action 都不再是一个`{type: xxx}`的对象，而是字符串或函数
+
 ### 推荐目录结构
 
 我们都知道 redux 中拆分 reducer、action，是不太好搞的，需要 combineReducers 来合并
@@ -136,7 +155,7 @@ smox 平时提倡 `单model`，但也确实存在 `多model`，因此目录拆�
                 ├── state.js            # state
           |     ├── mutations.js        # mutation
           |     └── actions.js          # actions
-          └── modelB …
+          └── modelB ...
 ```
 
 ### produce 语法糖

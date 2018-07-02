@@ -12,7 +12,7 @@ export class Store {
     this.commit = this.commit.bind(this)
     if (middlewares && middlewares.length !== 0) {
       const store = this
-      const middwareChain = middlewares.map(middware => middware(store))
+      const middwareChain = middlewares.map(middware => middware({ state: store.state, commit: store.commit }))
       this.commit = compose(...middwareChain)(this.commit)
 
     }
