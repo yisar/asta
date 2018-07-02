@@ -10,12 +10,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 exports.produce = produce;
+exports.bindCreators = bindCreators;
 
 var _react = require('react');
 
-var _react2 = _interopRequireDefault(_react);
+var React = _interopRequireWildcard(_react);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -23,7 +26,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Context = _react2.default.createContext(null);
+var Context = React.createContext(null);
 var map = exports.map = function map(_ref) {
   var _ref$state = _ref.state,
       state = _ref$state === undefined ? [] : _ref$state,
@@ -115,19 +118,19 @@ var map = exports.map = function map(_ref) {
         value: function render() {
           var _this4 = this;
 
-          return _react2.default.createElement(
+          return React.createElement(
             Context.Consumer,
             null,
             function (store) {
               _this4.store = store;
-              return _react2.default.createElement(Component, _this4.state.props);
+              return React.createElement(Component, _this4.state.props);
             }
           );
         }
       }]);
 
       return _class;
-    }(_react2.default.Component);
+    }(React.Component);
   };
 };
 
@@ -146,7 +149,7 @@ var Provider = exports.Provider = function (_React$Component2) {
   _createClass(Provider, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
+      return React.createElement(
         Context.Provider,
         { value: this.store },
         this.props.children
@@ -155,77 +158,26 @@ var Provider = exports.Provider = function (_React$Component2) {
   }]);
 
   return Provider;
-}(_react2.default.Component);
-
-function combineModels(models) {
-  var state = {},
-      mutations = {},
-      actions = {};
-  Object.keys(models).forEach(function (i) {
-    if (models[i].state) {
-      state[i] = models[i].state;
-    }
-    if (models[i].mutations) {
-      mutations[i] = models[i].mutations;
-    }
-    if (models[i].actions) {
-      actions[i] = models[i].actions;
-    }
-  });
-  return {
-    state: state,
-    mutations: mutations,
-    actions: actions
-  };
-}
-
-function mapMethods(method, type) {
-  var name = method.state ? Object.keys(method)[0] : undefined;
-  var content = splitContent(type);
-  var res = {};
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = normalizeMap(content)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var _ref3 = _step.value;
-      var k = _ref3.k,
-          v = _ref3.v;
-
-      typeof v === 'function' ? res[k] = v : name ? res[k] = method[name][v] : res[k] = method[v];
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  return {
-    name: name,
-    res: res
-  };
-}
+}(React.Component);
 
 var Store = exports.Store = function () {
-  function Store(models) {
+  function Store(models, middlewares) {
     _classCallCheck(this, Store);
 
     this.state = models.state ? models.state : combineModels(models).state;
     this.mutations = models.state ? models.mutations : combineModels(models).mutations;
     this.actions = models.state ? models.actions : combineModels(models).actions;
+    this.middlewares = middlewares;
     this.subscribers = [];
     this.dispatch = this.dispatch.bind(this);
     this.commit = this.commit.bind(this);
+    if (middlewares && middlewares.length !== 0) {
+      var store = this;
+      var middwareChain = middlewares.map(function (middware) {
+        return middware(store);
+      });
+      this.commit = compose.apply(undefined, _toConsumableArray(middwareChain))(this.commit);
+    }
   }
 
   _createClass(Store, [{
@@ -259,7 +211,7 @@ var Store = exports.Store = function () {
   }, {
     key: 'commit',
     value: function commit(type, payload, name) {
-      if (payload.namespace) {
+      if (payload.namespace !== 'undefined') {
         name = payload.namespace;
         payload = payload.payload;
       }
@@ -342,6 +294,65 @@ function produce(baseState, producer) {
   return newState.base;
 }
 
+function combineModels(models) {
+  var state = {},
+      mutations = {},
+      actions = {};
+  Object.keys(models).forEach(function (i) {
+    if (models[i].state) {
+      state[i] = models[i].state;
+    }
+    if (models[i].mutations) {
+      mutations[i] = models[i].mutations;
+    }
+    if (models[i].actions) {
+      actions[i] = models[i].actions;
+    }
+  });
+  return {
+    state: state,
+    mutations: mutations,
+    actions: actions
+  };
+}
+
+function mapMethods(method, type) {
+  var name = method.state ? Object.keys(method)[0] : null;
+  var content = splitContent(type);
+  var res = {};
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = normalizeMap(content)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _ref3 = _step.value;
+      var k = _ref3.k,
+          v = _ref3.v;
+
+      typeof v === 'function' ? res[k] = v : name ? res[k] = method[name][v] : res[k] = method[v];
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return {
+    name: name,
+    res: res
+  };
+}
+
 function resolveSource(source, type, name) {
   if (typeof type === 'function') {
     return type;
@@ -381,4 +392,24 @@ function splitType(type) {
     return type;
   }
   return type.indexOf('/') != -1 ? type.split('/') : type;
+}
+
+function compose() {
+  for (var _len2 = arguments.length, funcs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    funcs[_key2] = arguments[_key2];
+  }
+
+  if (funcs.length === 0) {
+    return function (arg) {
+      return arg;
+    };
+  }
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+  return funcs.reduce(function (res, item) {
+    return function () {
+      return res(item.apply(undefined, arguments));
+    };
+  });
 }
