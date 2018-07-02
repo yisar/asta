@@ -1,14 +1,21 @@
-import { resolveSource, splitType } from './util'
+import { resolveSource, splitType, compose } from './util'
 import { combineModels } from './helper'
 import { produce } from './produce'
 export class Store {
-  constructor(models) {
+  constructor(models, middlewares) {
     this.state = models.state ? models.state : combineModels(models).state
     this.mutations = models.state ? models.mutations : combineModels(models).mutations
     this.actions = models.state ? models.actions : combineModels(models).actions
+    this.middlewares = middlewares
     this.subscribers = []
     this.dispatch = this.dispatch.bind(this)
     this.commit = this.commit.bind(this)
+    if (middlewares && middlewares.length !== 0) {
+      const store = this
+      const middwareChain = middlewares.map(middware => middware(store))
+      this.commit = compose(...middwareChain)(this.commit)
+
+    }
   }
   subscribe(sub) {
     return this.subscribers.push(sub)
@@ -19,7 +26,7 @@ export class Store {
   dispatch(type, payload, name) {
     if (name) {
       payload = {
-        namespace:name,
+        namespace: name,
         payload
       }
     }
@@ -31,7 +38,7 @@ export class Store {
     return Promise.resolve(action(ctx, payload))
   }
   commit(type, payload, name) {
-    if (payload.namespace) {
+    if (payload.namespace !== 'undefined') {
       name = payload.namespace
       payload = payload.payload
     }

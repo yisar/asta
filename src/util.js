@@ -34,3 +34,13 @@ export function splitType(type) {
     type.split('/') : type
 
 }
+
+export function compose(...funcs) {
+  if (funcs.length === 0) {
+    return arg => arg
+  }
+  if (funcs.length === 1) {
+    return funcs[0]
+  }
+  return funcs.reduce((res, item) => (...args) => res(item(...args)))
+}
