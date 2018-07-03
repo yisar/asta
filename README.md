@@ -18,6 +18,9 @@
 ## Docs
 [smox documents](https://smox.js.org)
 
+[smox新版本增加 model 机制，点我查看文档！](https://smox.js.org/guide/#model-%E6%9C%BA%E5%88%B6)
+
+[smox新版本增加中间件机制，点我查看文档！](https://smox.js.org/guide/#%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%9C%BA%E5%88%B6)
 ## Install
 
 ```shell
@@ -26,9 +29,7 @@ npm i smox -S
 
 ## Use
 
-smox 新版本支持 model 机制拆分，以下代码默认是一个 model，大型项目需要拆分 model，请：
-
-[参见 model 机制说明，很重要！](https://smox.js.org/guide/#model-%E6%9C%BA%E5%88%B6)
+smox 新版本支持 model 机制拆分，以下代码默认是 `单model`，大型项目需要拆分 model，请[参阅文档](https://github.com/132yse/smox#docs)
 
 ```javascript
 import React from 'react'
