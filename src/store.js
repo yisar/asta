@@ -10,9 +10,12 @@ export class Store {
     this.subscribers = []
     this.dispatch = this.dispatch.bind(this)
     this.commit = this.commit.bind(this)
-    if (middlewares && middlewares.length !== 0) {
-      const store = this
-      const middwareChain = middlewares.map(middware => middware(store))
+    if (this.middlewares && this.middlewares.length !== 0) {
+      this.midApi = {
+        state: this.state,
+        commit: this.commit
+      }
+      const middwareChain = this.middlewares.map(middware => middware(this.midApi))
       this.commit = compose(...middwareChain)(this.commit)
     }
   }
@@ -45,13 +48,13 @@ export class Store {
     const mutation = resolveSource(this.mutations, type, name)
     const model = Array.isArray(type) ? type[0] : name
     typeof type === 'function' && name ?
-      this.state[name] = produce(this.state[name], state => {
+      this.state[name] = this.midApi.state[name] = produce(this.state[name], state => {
         mutation(state, payload)
       }) : model ?
-        this.state[model] = produce(this.state[model], state => {
+        this.state[model] = this.midApi.state[model] = produce(this.state[model], state => {
           mutation(state, payload)
         }) :
-        this.state = produce(this.state, state => {
+        this.state = this.midApi.state = produce(this.state, state => {
           mutation(state, payload)
         })
     this.subscribers.forEach(v => v())
