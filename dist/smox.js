@@ -162,6 +162,8 @@ var Provider = exports.Provider = function (_React$Component2) {
 
 var Store = exports.Store = function () {
   function Store(models, middlewares) {
+    var _this6 = this;
+
     _classCallCheck(this, Store);
 
     this.state = models.state ? models.state : combineModels(models).state;
@@ -171,10 +173,13 @@ var Store = exports.Store = function () {
     this.subscribers = [];
     this.dispatch = this.dispatch.bind(this);
     this.commit = this.commit.bind(this);
-    if (middlewares && middlewares.length !== 0) {
-      var store = this;
-      var middwareChain = middlewares.map(function (middware) {
-        return middware(store);
+    if (this.middlewares && this.middlewares.length !== 0) {
+      this.midApi = {
+        state: this.state,
+        commit: this.commit
+      };
+      var middwareChain = this.middlewares.map(function (middware) {
+        return middware(_this6.midApi);
       });
       this.commit = compose.apply(undefined, _toConsumableArray(middwareChain))(this.commit);
     }
@@ -218,11 +223,11 @@ var Store = exports.Store = function () {
       type = splitType(type);
       var mutation = resolveSource(this.mutations, type, name);
       var model = Array.isArray(type) ? type[0] : name;
-      typeof type === 'function' && name ? this.state[name] = produce(this.state[name], function (state) {
+      typeof type === 'function' && name ? this.state[name] = this.midApi.state[name] = produce(this.state[name], function (state) {
         mutation(state, payload);
-      }) : model ? this.state[model] = produce(this.state[model], function (state) {
+      }) : model ? this.state[model] = this.midApi.state[model] = produce(this.state[model], function (state) {
         mutation(state, payload);
-      }) : this.state = produce(this.state, function (state) {
+      }) : this.state = this.midApi.state = produce(this.state, function (state) {
         mutation(state, payload);
       });
       this.subscribers.forEach(function (v) {

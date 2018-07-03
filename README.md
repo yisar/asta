@@ -15,6 +15,8 @@
 
 :ghost: High Performance without optimization because ES6 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 
+:snowman: Great model and middleware mechanisms supported
+
 ## Docs
 [smox documents](https://smox.js.org)
 
