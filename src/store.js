@@ -40,21 +40,24 @@ export class Store {
     return Promise.resolve(action(ctx, payload))
   }
   commit(type, payload, name) {
-    if (payload.namespace !== 'undefined') {
+    if(payload){
+      if (payload.namespace) {
       name = payload.namespace
       payload = payload.payload
     }
+    }
+    
     type = splitType(type)
     const mutation = resolveSource(this.mutations, type, name)
     const model = Array.isArray(type) ? type[0] : name
-    typeof type === 'function' && name ?
-      this.state[name] = this.midApi.state[name] = produce(this.state[name], state => {
+    typeof type === 'function' && name ?this.middlewares?
+      this.midApi.state[name] = this.state[name] : this.state[name]= produce(this.state[name], state => {
         mutation(state, payload)
-      }) : model ?
-        this.state[model] = this.midApi.state[model] = produce(this.state[model], state => {
+      }) : model ?this.middlewares?
+        this.midApi.state[model] = this.state[model] : this.state[model] = produce(this.state[model], state => {
           mutation(state, payload)
-        }) :
-        this.state = this.midApi.state = produce(this.state, state => {
+        }) :this.middlewares?
+        this.midApi.state = this.state : this.state = produce(this.state, state => {
           mutation(state, payload)
         })
     this.subscribers.forEach(v => v())

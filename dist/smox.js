@@ -5,9 +5,35 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Store = exports.Provider = exports.map = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+  return target;
+};
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
 
 exports.produce = produce;
 exports.bindCreators = bindCreators;
@@ -16,24 +42,68 @@ var _react = require('react');
 
 var React = _interopRequireWildcard(_react);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};
+    if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }
+    newObj.default = obj;
+    return newObj;
+  }
+}
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _toConsumableArray(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+      arr2[i] = arr[i];
+    }
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+}
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
 
 var Context = React.createContext(null);
 var map = exports.map = function map(_ref) {
   var _ref$state = _ref.state,
-      state = _ref$state === undefined ? [] : _ref$state,
-      _ref$mutations = _ref.mutations,
-      mutations = _ref$mutations === undefined ? [] : _ref$mutations,
-      _ref$actions = _ref.actions,
-      actions = _ref$actions === undefined ? [] : _ref$actions;
+    state = _ref$state === undefined ? [] : _ref$state,
+    _ref$mutations = _ref.mutations,
+    mutations = _ref$mutations === undefined ? [] : _ref$mutations,
+    _ref$actions = _ref.actions,
+    actions = _ref$actions === undefined ? [] : _ref$actions;
   return function (Component) {
     return function (_React$Component) {
       _inherits(_class, _React$Component);
@@ -78,7 +148,7 @@ var map = exports.map = function map(_ref) {
         key: 'mapState',
         value: function mapState() {
           var _mapMethods = mapMethods(this.store.state, state),
-              res = _mapMethods.res;
+            res = _mapMethods.res;
 
           return res;
         }
@@ -86,8 +156,8 @@ var map = exports.map = function map(_ref) {
         key: 'mapMutations',
         value: function mapMutations() {
           var _mapMethods2 = mapMethods(this.store.mutations, mutations),
-              res = _mapMethods2.res,
-              name = _mapMethods2.name;
+            res = _mapMethods2.res,
+            name = _mapMethods2.name;
 
           return bindCreators(res, this.store.commit, name);
         }
@@ -95,8 +165,8 @@ var map = exports.map = function map(_ref) {
         key: 'mapActions',
         value: function mapActions() {
           var _mapMethods3 = mapMethods(this.store.actions, actions),
-              res = _mapMethods3.res,
-              name = _mapMethods3.name;
+            res = _mapMethods3.res,
+            name = _mapMethods3.name;
 
           return bindCreators(res, this.store.dispatch, name);
         }
@@ -151,7 +221,7 @@ var Provider = exports.Provider = function (_React$Component2) {
     value: function render() {
       return React.createElement(
         Context.Provider,
-        { value: this.store },
+        {value: this.store},
         this.props.children
       );
     }
@@ -216,18 +286,20 @@ var Store = exports.Store = function () {
   }, {
     key: 'commit',
     value: function commit(type, payload, name) {
-      if (payload.namespace !== 'undefined') {
-        name = payload.namespace;
-        payload = payload.payload;
+      if (payload) {
+        if (payload.namespace) {
+          name = payload.namespace;
+          payload = payload.payload;
+        }
       }
       type = splitType(type);
       var mutation = resolveSource(this.mutations, type, name);
       var model = Array.isArray(type) ? type[0] : name;
-      typeof type === 'function' && name ? this.state[name] = this.midApi.state[name] = produce(this.state[name], function (state) {
+      typeof type === 'function' && name ? this.midApi.state[name] = this.state[name] = produce(this.state[name], function (state) {
         mutation(state, payload);
-      }) : model ? this.state[model] = this.midApi.state[model] = produce(this.state[model], function (state) {
+      }) : model ? this.middlewares ? this.midApi.state[model] = this.state[model] : this.state[model] = produce(this.state[model], function (state) {
         mutation(state, payload);
-      }) : this.state = this.midApi.state = produce(this.state, function (state) {
+      }) : this.middlewares ? this.midApi.state = this.state : this.state = produce(this.state, function (state) {
         mutation(state, payload);
       });
       this.subscribers.forEach(function (v) {
@@ -288,6 +360,7 @@ var handler = {
     return target.set(key, value);
   }
 };
+
 function produce(baseState, producer) {
   var state = new State(baseState);
   var proxy = new Proxy(state, handler);
@@ -301,8 +374,8 @@ function produce(baseState, producer) {
 
 function combineModels(models) {
   var state = {},
-      mutations = {},
-      actions = {};
+    mutations = {},
+    actions = {};
   Object.keys(models).forEach(function (i) {
     if (models[i].state) {
       state[i] = models[i].state;
@@ -333,7 +406,7 @@ function mapMethods(method, type) {
     for (var _iterator = normalizeMap(content)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var _ref3 = _step.value;
       var k = _ref3.k,
-          v = _ref3.v;
+        v = _ref3.v;
 
       typeof v === 'function' ? res[k] = v : name ? res[k] = method[name][v] : res[k] = method[v];
     }
@@ -364,6 +437,7 @@ function resolveSource(source, type, name) {
   }
   return Array.isArray(type) ? source[type[0]][type[1]] : name ? source[name][type] : source[type];
 }
+
 function bindCreators(creators, operate, name) {
   return Object.keys(creators).reduce(function (ret, item) {
     ret[item] = function () {
@@ -376,11 +450,12 @@ function bindCreators(creators, operate, name) {
     return ret;
   }, {});
 }
+
 function normalizeMap(map) {
   return Array.isArray(map) ? map.map(function (k) {
-    return { k: k, v: k };
+    return {k: k, v: k};
   }) : Object.keys(map).map(function (k) {
-    return { k: k, v: map[k] };
+    return {k: k, v: map[k]};
   });
 }
 
