@@ -74,7 +74,7 @@ class App extends React.Component {
       <div>
         <h1>现在是{this.props.sex}</h1>
         <button onClick={this.props.change('girl')}>变性</button>
-        <button onClick={this.props.change('girl')}>异步变性</button>
+        <button onClick={this.props.asyncChange('girl')}>异步变性</button>
       </div>
     )
   }
