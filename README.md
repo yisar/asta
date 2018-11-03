@@ -126,14 +126,18 @@ const actions = {
   }
 }
 
+const state = {
+  sex: 'boy'
+}
+
 export const Sex = () => {
-  const [state, commit, dispatch] = useSmox(mutations, actions, { sex: 'boy' })
+  const [state, commit, dispatch] = useSmox(mutations, actions, state)
   
   return (
     <div>
       {state.sex}
       <button onClick={() => commit('change')}>变性</button>
-      <button onClick={() => dispatch('asyncChange')}>变性</button>
+      <button onClick={() => dispatch('asyncChange')}>异步变性</button>
     </div>
   )
 }
