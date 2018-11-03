@@ -1,6 +1,6 @@
 {
   "name": "smox",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Just 1kB state management based on New context api which is similar to Vuex.",
   "main": "./dist/smox.js",
   "scripts": {

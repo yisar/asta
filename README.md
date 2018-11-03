@@ -15,6 +15,8 @@
 
 :ghost: High Performance without optimization because ES6 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 
+
+
 :scream_cat: Great [Model](https://smox.js.org/guide/#model-%E6%9C%BA%E5%88%B6) and [Middleware](https://smox.js.org/guide/#%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%9C%BA%E5%88%B6) mechanisms supported
 
 
@@ -25,6 +27,8 @@
 [smox新版本增加 model 机制，点我查看文档！](https://smox.js.org/guide/#model-%E6%9C%BA%E5%88%B6)
 
 [smox新版本增加中间件机制，点我查看文档！](https://smox.js.org/guide/#%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%9C%BA%E5%88%B6)
+
+[smox新版本增加 react hooks 支持，点我查看文档！](https://smox.js.org/guide/#%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%9C%BA%E5%88%B6)
 ## Install
 
 ```shell
@@ -83,12 +87,9 @@ import { map } from 'smox'
   mutations: ['add', 'cut'],
   actions: ['asyncAdd']
 })
-// @map({
-//   mutations: { add ,cut },
-//   actions: { asyncAdd }
-// })
-// ↑ Function as import is also OK
+```
 
+```javascript
 class App extends React.Component {
   render() {
     return (
@@ -104,6 +105,41 @@ class App extends React.Component {
 
 export default App
 ```
+#### React Hooks also is OK
+
+there is a `useSmox` API that is similar to `useReducer` API , for example:
+
+```javascript
+import React from 'react'
+import { useSmox } from 'smox'
+const mutations = {
+  change(state) {
+    state.sex = state.sex === 'boy' ? 'girl' : 'boy'
+  }
+}
+
+const actions = {
+  asyncChange({ commit }, payload) {
+    setTimeout(() => {
+      commit('change', payload)
+    }, 1000)
+  }
+}
+
+export const Sex = () => {
+  const [state, commit, dispatch] = useSmox(mutations, actions, { sex: 'boy' })
+  
+  return (
+    <div>
+      {state.sex}
+      <button onClick={() => commit('change')}>变性</button>
+      <button onClick={() => dispatch('asyncChange')}>变性</button>
+    </div>
+  )
+}
+```
+
+
 if you only SetState , there is also a `produce` API to optimize performance
 
 ```javascript
@@ -139,15 +175,13 @@ export default App
     })
 
 * produce(state,producer)
+* useSmox(mutations,actions,state)
 
 ## Demo
 
 * [Counter](https://github.com/132yse/smox-counter)
 * [爱弹幕后台](https://github.com/132yse/idanmu-admin)
 
-<!-- ### Communication
-
-![smox学习交流群](http://wx4.sinaimg.cn/bmiddle/0060lm7Tly1fsizjg7lquj30f00kk10f.jpg) -->
 
 ### Author
 
