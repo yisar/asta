@@ -136,7 +136,7 @@ export const Sex = () => {
   
   return (
     <div>
-      {state.sex}
+      <h1>{state.sex}</h1>
       <button onClick={() => commit('change')}>变性</button>
       <button onClick={() => dispatch('asyncChange')}>异步变性</button>
     </div>
