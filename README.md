@@ -131,7 +131,8 @@ const state = {
 }
 
 export const Sex = () => {
-  const [state, commit, dispatch] = useSmox(mutations, actions, state)
+
+  const [state, commit, dispatch] = useSmox(state, mutations, actions)
   
   return (
     <div>

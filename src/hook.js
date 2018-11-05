@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { produce } from '../smox/produce'
 
-export const useSmox = (mutations, actions, initState) => {
+export const useSmox = (initState, mutations, actions) => {
   const [state, setState] = useState(initState)
   function commit(type, payload) {
     if (type.indexOf('/')) {
