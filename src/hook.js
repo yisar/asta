@@ -4,7 +4,7 @@ import { produce } from '../smox/produce'
 export const useSmox = (initState, mutations, actions) => {
   const [state, setState] = useState(initState)
   function commit(type, payload) {
-    if (type.indexOf('/')) {
+    if (type.indexOf('/') > -1) {
       var model = type.split('/')[0]
       type = type.split('/')[1]
     }
