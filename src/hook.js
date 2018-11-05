@@ -27,8 +27,9 @@ export const useSmox = (initState, mutations, actions) => {
   }
 
   const dispatch = (type, payload) => {
-    console.log(actions)
+
     return Promise.resolve(actions[type]({ commit, dispatch }, payload))
+    
   }
   return [state, commit, dispatch]
 }
