@@ -3,7 +3,8 @@ import { produce } from '../smox/produce'
 
 export const useSmox = (initState, mutations, actions) => {
   const [state, setState] = useState(initState)
-  function commit(type, payload) {
+
+  const commit = (type, payload) => {
     if (type.indexOf('/') > -1) {
       var model = type.split('/')[0]
       type = type.split('/')[1]
@@ -25,7 +26,7 @@ export const useSmox = (initState, mutations, actions) => {
     }
   }
 
-  function dispatch(type, payload) {
+  const dispatch = (type, payload) => {
     console.log(actions)
     return Promise.resolve(actions[type]({ commit, dispatch }, payload))
   }
