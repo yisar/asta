@@ -1,12 +1,7 @@
-<b align="right">v2.0 - beta0</b>
-<p align="center">
-<img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyupdvdcf6j30b40b4t9u.jpg" alt="smox logo">
+<p align="center"><b>v2.0 - beta0</b></p>
+<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyupdvdcf6j30b40b4t9u.jpg" alt="smox logo" width="220"></p>
 
-[![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
-[![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
-</p>
-
-# Smox
+# Smox  [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)  [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 
 > Fast 2kB state management based on path-proxing.
 
