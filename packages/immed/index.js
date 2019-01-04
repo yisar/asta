@@ -42,7 +42,6 @@ function defineProperty(state) {
       set(newVal) {
         if (newVal !== val) {
           val = newVal
-          make = true
         }
       },
       enumerable: true
