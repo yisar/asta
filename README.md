@@ -1,5 +1,5 @@
 <p align="right"><b>v2.0 - beta0</b></p>
-<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuq6dhryoj30b40b4q4e.jpg" alt="smox logo" width="220"></p>
+<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuq97p3fvj30b40b4wg0.jpg" alt="smox logo" width="220"></p>
 
 # Smox  [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)  [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 
@@ -123,6 +123,3 @@ export default App
 ### License
 
 MIT
-Inspirated by [vuex](https://github.com/vuejs/vuex) & [immer](https://github.com/mweststrate/immer)
-
-![smox缩略图](http://wx4.sinaimg.cn/thumb150/0060lm7Tly1fsk4halu0hj309k09k0t8.jpg)
