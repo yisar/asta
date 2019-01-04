@@ -10,14 +10,14 @@ function proxy(state) {
   let copy = {}
   let make
   let handler = {
-    get(target, key) {
-      if (typeof target[key] === 'object' && target[key] !== null) {
-        return new Proxy(target[key], handler)
+    get(obj, key) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        return new Proxy(obj[key], handler)
       }
-      return make ? copy[key] : target[key]
+      return make ? copy[key] : obj[key]
     },
-    set(target, key, value) {
-      copy[key] = value
+    set(obj, key, val) {
+      copy[key] = val
       make = true
       return true
     }
