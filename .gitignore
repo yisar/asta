@@ -1,6 +1,7 @@
 node_modules/
 .vscode/
 .idea/
+ignore/
 npm-debug.log
 yarn-error.log
 package-lock.json
