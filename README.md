@@ -1,5 +1,5 @@
 <p align="right"><b>v2.0 - beta0</b></p>
-<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyupzauqksj30b40b4dh2.jpg" alt="smox logo" width="220"></p>
+<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuq2x3q57j30b40b43zy.jpg" alt="smox logo" width="220"></p>
 
 # Smox  [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)  [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 
