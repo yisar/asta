@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript'
 
 export default {
-  input: './packages/smox/index.ts',
+  input: './packages/index.ts',
   output: {
     file: './dist/smox.js',
     format: 'umd',

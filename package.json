@@ -5,7 +5,7 @@
   "main": "./dist/smox.js",
   "scripts": {
     "test": "jest",
-    "build": "rollup -c"
+    "build": "rollup -c --watch"
   },
   "keywords": [],
   "author": "yisaer",

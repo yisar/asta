@@ -17,6 +17,7 @@ function proxy(state: Object) {
       return make ? copy[key] : obj[key]
     },
     set(_: undefined, key: string, val: any) {
+      console.log('111')
       copy[key] = val
       make = true
       return true
