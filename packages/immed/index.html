@@ -5,20 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>smox</title>
-    <script src='./index.js'></script>
+    <script src="./index.js"></script>
   </head>
   <body>
     <script>
       let state = {
-        info: {
-          name: '123'
-        }
+        name: ['123']
       }
 
       produce(state, draft => {
-        draft.info.name = '132'
-        console.log(draft.info.name)
-        console.log(state.info.name)
+        draft.name = ['132']
+        console.log(draft.name)
+        console.log(state.name)
       })
     </script>
   </body>
