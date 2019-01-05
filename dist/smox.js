@@ -7,7 +7,7 @@
   function produce(state, produce) {
       let newState = Proxy ? proxy(state) : defineProperty(state);
       produce(newState);
-      return newState;
+      return '111';
   }
   function proxy(state) {
       let copy = {};

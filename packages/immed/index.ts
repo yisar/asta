@@ -16,7 +16,7 @@ function proxy(state: Object) {
       }
       return make ? copy[key] : obj[key]
     },
-    set(_, key, val) {
+    set(_, key: string, val) {
       copy[key] = val
       make = true
       return true
@@ -34,7 +34,7 @@ function defineProperty(state: Object): Object {
     newState = walk(copy, key, copy[key])
   })
 
-  function walk(obj:Object, key:string, val) {
+  function walk(obj: Object, key: string, val) {
     return Object.defineProperty(obj, key, {
       get() {
         return val

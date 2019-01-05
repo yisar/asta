@@ -3,7 +3,6 @@
     "module": "ES2015",
     "noImplicitAny": false,
     "removeComments": true,
-    "preserveConstEnums": true,
     "lib": ["es6", "dom"],
     "target": "es6"
   },
