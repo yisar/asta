@@ -9,7 +9,7 @@
 
 :pig_nose: New Context Api、path updating、Es6 proxy ……
 
-:jack_o_lantern: Tiny size, 2Kb gzipped, no Dependencies
+:jack_o_lantern: Tiny size, 1Kb gzipped, no Dependencies
 
 ## Install
 
