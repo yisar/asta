@@ -7,11 +7,9 @@
 
 ### Feature
 
-:pig_nose: New Context Api used
+:pig_nose: New Context Api、path updating、Es6 proxy ……
 
 :jack_o_lantern: Tiny size, 2Kb gzipped, no Dependencies
-
-:ghost: High Performance without optimization
 
 ## Docs
 
@@ -42,7 +40,7 @@ const actions = {
   down(state, data) {
     state.count -= data
   },
-  async up(actions) {
+  async upAsync(actions) {
     await new Promise(t => setTimeout(t, 1000))
     actions.up()
   }
@@ -58,16 +56,13 @@ ReactDOM.render(
 )
 ```
 
-then app.js
-
 ```javascript
 import React from 'react'
 import { map } from 'smox'
 
 @map({
   state: ['count'],
-  actions: ['add'],
-  effects:['up']
+  actions: ['add','upAsync']
 })
 ```
 
@@ -79,7 +74,7 @@ class App extends React.Component {
         <h1>现在是{this.props.count}</h1>
         <button onClick={this.props.up}>加一</button>
         <button onClick={this.props.down}>减一</button>
-        <button onClick={this.props.add}>异步加一</button>
+        <button onClick={this.props.upAsync}>异步加一</button>
       </div>
     )
   }
@@ -88,7 +83,7 @@ class App extends React.Component {
 export default App
 ```
 
-if you only SetState , there is also a `produce` API to optimize performance
+if you only SetState , there is also a `produce` API turn to immutable easy
 
 ```javascript
 import React from 'react'
@@ -98,7 +93,7 @@ class App extends React.Component {
   onClick = () => {
     this.setState(
       produce(this.state, draft => {
-        draft.count += 1
+        draft.count ++
       })
     )
   }
@@ -106,6 +101,21 @@ class App extends React.Component {
 
 export default App
 ```
+
+### p.s.
+smox 终于快要完成 2.0 的 feature 了，唠几句，smox 2.0 的致命之处：
+
+1. 和 rematch、redux 不同，smox 完全移除了 model 、reducers、effects、dispatch、action(type) 等 API，只保留 actions 和 state 两个 API
+
+2. redux 中，只有 dispatch 的 action 才会触发进而修改 state ，smox 也一样，只有 actions 被触发才会修改 state
+
+3. rematch、dva 中，通过 reducers 和 effects 来区分同步异步的 function，smox 通过 async 和 await 来区分，节省了一个 API，更加精巧
+
+4. rematch、dva 中，有个 models 来划分 store，限定命名空间，作用域单层，笨拙且局限。smox 独创 path 机制，不需要手动置顶 model，会根据 key 自动生成作用域，这是 smox 2.0 最成功的一个机制，精巧又灵活
+
+5. rematch 等库，需要保证 reducer 同步的 return 一个新对象，来保证不可变，会丑。smox 自己实现了一个精巧的劫持，不可变的同时，不需要 return（其他库也可以通过 immer）
+
+6. an so on……（尺寸、API 的设计度等等）
 
 ## Demo
 

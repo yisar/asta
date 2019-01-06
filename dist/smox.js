@@ -55,6 +55,48 @@
       return __assign.apply(this, arguments);
   };
 
+  var Store = (function () {
+      function Store(_a) {
+          var _b = _a.state, state = _b === void 0 ? {} : _b, _c = _a.actions, actions = _c === void 0 ? {} : _c;
+          this.state = state;
+          this.actions = this.wireActions([], state, actions);
+          this.subs = [];
+      }
+      Store.prototype.wireActions = function (path, state, actions) {
+          var _this = this;
+          Object.keys(actions).forEach(function (key) {
+              typeof actions[key] === 'function'
+                  ? (function (key, action) {
+                      if (action.constructor.name === 'AsyncFunction') {
+                          actions[key] = function () {
+                              action(actions);
+                          };
+                      }
+                      else {
+                          actions[key] = function (data) {
+                              var res = produce(state, function (draft) {
+                                  action(draft, data);
+                              });
+                              if (res && res !== getState(path, this.state)) {
+                                  this.state = setState(path, res, this.state);
+                                  this.subs.forEach(function (v) { return v(); });
+                              }
+                              return res;
+                          }.bind(_this);
+                      }
+                  })(key, actions[key])
+                  : _this.wireActions(path.concat(key), state[key], actions[key]);
+          });
+          return actions;
+      };
+      Store.prototype.subscribe = function (sub) {
+          return this.subs.push(sub);
+      };
+      Store.prototype.unsubscribe = function (sub) {
+          return this.subs.filter(function (f) { return f !== sub; });
+      };
+      return Store;
+  }());
   function setState(path, value, source) {
       var target = {};
       if (path.length) {
@@ -71,61 +113,8 @@
       }
       return source;
   }
-  //# sourceMappingURL=util.js.map
 
-  var Store = (function () {
-      function Store(_a) {
-          var _b = _a.state, state = _b === void 0 ? {} : _b, _c = _a.actions, actions = _c === void 0 ? {} : _c;
-          this.state = state;
-          this.actions = this._wireActions([], state, actions);
-          this.subs = [];
-      }
-      Store.prototype._wireActions = function (path, state, actions) {
-          var _this = this;
-          Object.keys(actions).forEach(function (key) {
-              typeof actions[key] === 'function'
-                  ? (function (key, action) {
-                      actions[key] = function (data) {
-                          var res = produce(state, function (draft) {
-                              action(draft, data);
-                          });
-                          if (res && res !== getState(path, this.state) && !res.then) {
-                              this.state = setState(path, res, this.state);
-                              this.subs.forEach(function (v) { return v(); });
-                          }
-                          return res;
-                      }.bind(_this);
-                  })(key, actions[key])
-                  : _this._wireActions(path.concat(key), state[key], actions[key]);
-          });
-          return actions;
-      };
-      Store.prototype.subscribe = function (sub) {
-          return this.subs.push(sub);
-      };
-      Store.prototype.unsubscribe = function (sub) {
-          return this.subs.filter(function (f) { return f !== sub; });
-      };
-      return Store;
-  }());
-  //# sourceMappingURL=store.js.map
-
-  var state = {
-      counter: {
-          count: 0
-      }
-  };
-  var actions = {
-      counter: {
-          up: function (state) {
-              state.count++;
-          }
-      }
-  };
-  var store = new Store({ state: state, actions: actions });
-  store.actions.counter.up();
-  store.actions.counter.up();
-  store.subscribe(console.log(store.state));
+  //# sourceMappingURL=index.js.map
 
   exports.produce = produce;
   exports.Store = Store;

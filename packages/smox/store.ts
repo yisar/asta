@@ -6,28 +6,34 @@ export class Store {
   subs: Function[]
   constructor({ state = {}, actions = {} }) {
     this.state = state
-    this.actions = this._wireActions([], state, actions)
+    this.actions = this.wireActions([], state, actions)
     this.subs = []
   }
 
-  private _wireActions(path: string[], state: Object, actions: Object) {
+  private wireActions(path: string[], state: Object, actions: Object) {
     Object.keys(actions).forEach(key => {
       typeof actions[key] === 'function'
         ? ((key, action) => {
-            actions[key] = function(data) {
-              let res: any = produce(state, draft => {
-                action(draft, data)
-              })
-
-              if (res && res !== getState(path, this.state) && !res.then) {
-                this.state = setState(path, res, this.state)
-                this.subs.forEach(v => v())
+            if (action.constructor.name === 'AsyncFunction') {
+              actions[key] = function(){
+                action(actions)
               }
+            } else {
+              actions[key] = function(data) {
+                let res: any = produce(state, draft => {
+                  action(draft, data)
+                })
 
-              return res
-            }.bind(this)
+                if (res && res !== getState(path, this.state)) {
+                  this.state = setState(path, res, this.state)
+                  this.subs.forEach(v => v())
+                }
+
+                return res
+              }.bind(this)
+            }
           })(key, actions[key])
-        : this._wireActions(path.concat(key), state[key], actions[key])
+        : this.wireActions(path.concat(key), state[key], actions[key])
     })
 
     return actions
@@ -40,7 +46,6 @@ export class Store {
     return this.subs.filter(f => f !== sub)
   }
 }
-
 
 function setState(path: string[], value: any, source: any) {
   let target = {}
