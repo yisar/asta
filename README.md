@@ -104,7 +104,7 @@ const actions = {
   }
 }
 
-@map({
+@inject({
   state:['counter/count'],
   actions:['counter/up','counter/down']
 })
