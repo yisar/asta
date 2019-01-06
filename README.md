@@ -3,7 +3,7 @@
 
 # Smox [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox) [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 
-> Fast 2kB state management based on path-proxing.
+> Fast 1kB state management based on path-updating.
 
 ### Feature
 
