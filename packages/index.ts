@@ -1,4 +1,5 @@
 import { produce } from './immed/index'
-import { Store } from './smox/store'
+import { Smox } from './smox/store'
+import { Provider, map } from './smox-react/index'
 
-export { produce, Store }
+export { produce, Smox, Provider, map }

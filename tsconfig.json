@@ -4,7 +4,8 @@
     "noImplicitAny": false,
     "removeComments": true,
     "lib": ["es5", "es6", "dom"],
-    "target": "es5"
+    "target": "es5",
+    "jsx": "preserve"
   },
   "include": ["packages/**/*"],
   "exclude": ["node_modules"]

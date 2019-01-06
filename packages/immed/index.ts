@@ -5,8 +5,11 @@ export function produce(state: Object, produce: Function): Object {
   let newState: object = proxy(state)
 
   produce(newState)
-
-  return make ? copy : state
+  if (Proxy) {
+    return make ? copy : state
+  } else {
+    return defineProperty(state)
+  }
 }
 
 function proxy(state: Object) {

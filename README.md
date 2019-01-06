@@ -39,10 +39,13 @@ const actions = {
   },
   down(state, data) {
     state.count -= data
-  },
-  async upAsync(actions) {
+  }
+}
+
+const effects = {
+  async upAsync(actions, data) {
     await new Promise(t => setTimeout(t, 1000))
-    actions.up()
+    actions.up(data)
   }
 }
 
@@ -52,7 +55,7 @@ ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.body
+  document.getElementById('root')
 )
 ```
 
@@ -93,7 +96,7 @@ class App extends React.Component {
   onClick = () => {
     this.setState(
       produce(this.state, draft => {
-        draft.count ++
+        draft.count++
       })
     )
   }
@@ -103,6 +106,7 @@ export default App
 ```
 
 ### p.s.
+
 smox 终于快要完成 2.0 的 feature 了，唠几句，smox 2.0 的致命之处：
 
 1. 和 rematch、redux 不同，smox 完全移除了 model 、reducers、effects、dispatch、action(type) 等 API，只保留 actions 和 state 两个 API

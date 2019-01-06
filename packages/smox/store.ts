@@ -1,6 +1,6 @@
 import { produce } from '../immed/index'
 
-export class Store {
+export class Smox {
   state: any
   actions: any
   effects: any
@@ -20,8 +20,8 @@ export class Store {
               let res: any = produce(state, draft => {
                 action(draft, data)
               })
-              this.state = setState(path, res, this.state)
-              this.subs.forEach(fun=>fun())
+              this.state = setPlain(path, res, this.state)
+              this.subs.forEach(fun => fun())
             }.bind(this)
           })(key, actions[key])
         : this.wireActions(path.concat(key), state[key], actions[key])
@@ -34,8 +34,8 @@ export class Store {
     Object.keys(effects).forEach(key => {
       typeof effects[key] === 'function'
         ? ((key, effect) => {
-            effects[key] = function() {
-              effect(actions)
+            effects[key] = function(data) {
+              effect(actions, data)
             }
           })(key, effects[key])
         : this.wireEffects(path.concat(key), actions[key], effects[key])
@@ -52,20 +52,12 @@ export class Store {
   }
 }
 
-function setState(path: string[], value: any, source: any) {
+function setPlain(path: string[], value: any, source: any) {
   let target = {}
   if (path.length) {
     target[path[0]] =
-      path.length > 1 ? setState(path.slice(1), value, source[path[0]]) : value
+      path.length > 1 ? setPlain(path.slice(1), value, source[path[0]]) : value
     return { ...source, ...target }
   }
   return value
-}
-
-function getState(path: string[], source: any) {
-  let i = 0
-  while (i < path.length) {
-    source = source[path[i++]]
-  }
-  return source
 }
