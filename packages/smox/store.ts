@@ -3,10 +3,12 @@ import { produce } from '../immed/index'
 export class Store {
   state: any
   actions: any
+  effects: any
   subs: Function[]
-  constructor({ state = {}, actions = {} }) {
+  constructor({ state = {}, actions = {}, effects = {} }) {
     this.state = state
     this.actions = this.wireActions([], state, actions)
+    this.effects = this.wireEffects([], actions, effects)
     this.subs = []
   }
 
@@ -14,24 +16,13 @@ export class Store {
     Object.keys(actions).forEach(key => {
       typeof actions[key] === 'function'
         ? ((key, action) => {
-            if (action.constructor.name === 'AsyncFunction') {
-              actions[key] = function(){
-                action(actions)
-              }
-            } else {
-              actions[key] = function(data) {
-                let res: any = produce(state, draft => {
-                  action(draft, data)
-                })
-
-                if (res && res !== getState(path, this.state)) {
-                  this.state = setState(path, res, this.state)
-                  this.subs.forEach(v => v())
-                }
-
-                return res
-              }.bind(this)
-            }
+            actions[key] = function(data) {
+              let res: any = produce(state, draft => {
+                action(draft, data)
+              })
+              this.state = setState(path, res, this.state)
+              this.subs.forEach(fun=>fun())
+            }.bind(this)
           })(key, actions[key])
         : this.wireActions(path.concat(key), state[key], actions[key])
     })
@@ -39,11 +30,25 @@ export class Store {
     return actions
   }
 
+  private wireEffects(path: string[], actions: Object, effects: Object) {
+    Object.keys(effects).forEach(key => {
+      typeof effects[key] === 'function'
+        ? ((key, effect) => {
+            effects[key] = function() {
+              effect(actions)
+            }
+          })(key, effects[key])
+        : this.wireEffects(path.concat(key), actions[key], effects[key])
+    })
+
+    return effects
+  }
+
   subscribe(sub) {
-    return this.subs.push(sub)
+    this.subs.push(sub)
   }
   unsubscribe(sub) {
-    return this.subs.filter(f => f !== sub)
+    this.subs.filter(f => f !== sub)
   }
 }
 

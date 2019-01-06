@@ -109,13 +109,13 @@ smox 终于快要完成 2.0 的 feature 了，唠几句，smox 2.0 的致命之�
 
 2. redux 中，只有 dispatch 的 action 才会触发进而修改 state ，smox 也一样，只有 actions 被触发才会修改 state
 
-3. rematch、dva 中，通过 reducers 和 effects 来区分同步异步的 function，smox 通过 async 和 await 来区分，节省了一个 API，更加精巧
+3. rematch、dva 中，通过 reducers 和 effects 来区分同步异步的 function，smox 通过 asyncFunction 和 Function 来区分，节省了一个 API，更加精巧
 
-4. rematch、dva 中，有个 models 来划分 store，限定命名空间，作用域单层，笨拙且局限。smox 独创 path 机制，不需要手动置顶 model，会根据 key 自动生成作用域，这是 smox 2.0 最成功的一个机制，精巧又灵活
+4. rematch、dva 中，有个 models 来划分 store，限定命名空间，单层作用域，笨拙且局限。smox 独创 path 机制，不需要手动指定 model，会根据 key 自动生成作用域，这是 smox 2.0 最成功的一个机制，精巧又灵活
 
 5. rematch 等库，需要保证 reducer 同步的 return 一个新对象，来保证不可变，会丑。smox 自己实现了一个精巧的劫持，不可变的同时，不需要 return（其他库也可以通过 immer）
 
-6. an so on……（尺寸、API 的设计度等等）
+6. and so on……（尺寸、API 的设计度等等）
 
 ## Demo
 

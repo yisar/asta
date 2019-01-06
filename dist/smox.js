@@ -57,9 +57,10 @@
 
   var Store = (function () {
       function Store(_a) {
-          var _b = _a.state, state = _b === void 0 ? {} : _b, _c = _a.actions, actions = _c === void 0 ? {} : _c;
+          var _b = _a.state, state = _b === void 0 ? {} : _b, _c = _a.actions, actions = _c === void 0 ? {} : _c, _d = _a.effects, effects = _d === void 0 ? {} : _d;
           this.state = state;
           this.actions = this.wireActions([], state, actions);
+          this.effects = this.wireEffects([], actions, effects);
           this.subs = [];
       }
       Store.prototype.wireActions = function (path, state, actions) {
@@ -67,33 +68,36 @@
           Object.keys(actions).forEach(function (key) {
               typeof actions[key] === 'function'
                   ? (function (key, action) {
-                      if (action.constructor.name === 'AsyncFunction') {
-                          actions[key] = function () {
-                              action(actions);
-                          };
-                      }
-                      else {
-                          actions[key] = function (data) {
-                              var res = produce(state, function (draft) {
-                                  action(draft, data);
-                              });
-                              if (res && res !== getState(path, this.state)) {
-                                  this.state = setState(path, res, this.state);
-                                  this.subs.forEach(function (v) { return v(); });
-                              }
-                              return res;
-                          }.bind(_this);
-                      }
+                      actions[key] = function (data) {
+                          var res = produce(state, function (draft) {
+                              action(draft, data);
+                          });
+                          this.state = setState(path, res, this.state);
+                          this.subs.forEach(function (fun) { return fun(); });
+                      }.bind(_this);
                   })(key, actions[key])
                   : _this.wireActions(path.concat(key), state[key], actions[key]);
           });
           return actions;
       };
+      Store.prototype.wireEffects = function (path, actions, effects) {
+          var _this = this;
+          Object.keys(effects).forEach(function (key) {
+              typeof effects[key] === 'function'
+                  ? (function (key, effect) {
+                      effects[key] = function () {
+                          effect(actions);
+                      };
+                  })(key, effects[key])
+                  : _this.wireEffects(path.concat(key), actions[key], effects[key]);
+          });
+          return effects;
+      };
       Store.prototype.subscribe = function (sub) {
-          return this.subs.push(sub);
+          this.subs.push(sub);
       };
       Store.prototype.unsubscribe = function (sub) {
-          return this.subs.filter(function (f) { return f !== sub; });
+          this.subs.filter(function (f) { return f !== sub; });
       };
       return Store;
   }());
@@ -105,13 +109,6 @@
           return __assign({}, source, target);
       }
       return value;
-  }
-  function getState(path, source) {
-      var i = 0;
-      while (i < path.length) {
-          source = source[path[i++]];
-      }
-      return source;
   }
 
   //# sourceMappingURL=index.js.map
