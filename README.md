@@ -57,16 +57,13 @@ ReactDOM.render(
 
 ```javascript
 import React from 'react'
-import { map } from 'smox'
+import { inject } from 'smox'
 
 @inject({
   state: ['count'],
   actions: ['up','down'],
   effects:['upAsync']
 })
-```
-
-```javascript
 class App extends React.Component {
   render() {
     return (
