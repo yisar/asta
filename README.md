@@ -59,7 +59,7 @@ ReactDOM.render(
 import React from 'react'
 import { map } from 'smox'
 
-@map({
+@inject({
   state: ['count'],
   actions: ['up','down'],
   effects:['upAsync']

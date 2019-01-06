@@ -18,7 +18,7 @@ export class Provider extends React.Component {
   }
 }
 
-export const map = ({
+export const inject = ({
   state = [],
   actions = [],
   effects = []
