@@ -4,14 +4,14 @@
   (global = global || self, factory(global.smox = {}));
 }(this, function (exports) { 'use strict';
 
+  var copy = {};
+  var make = false;
   function produce(state, produce) {
-      var newState = Proxy ? proxy(state) : defineProperty(state);
+      var newState = proxy(state);
       produce(newState);
-      return newState;
+      return make ? copy : state;
   }
   function proxy(state) {
-      var copy = {};
-      var make;
       var handler = {
           get: function (obj, key) {
               if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -20,36 +20,12 @@
               return make ? copy[key] : obj[key];
           },
           set: function (_, key, val) {
-              console.log('111');
               copy[key] = val;
               make = true;
               return true;
           }
       };
       return new Proxy(state, handler);
-  }
-  function defineProperty(state) {
-      var copy = JSON.parse(JSON.stringify(state));
-      var newState = {};
-      Object.keys(copy).forEach(function (key) {
-          if (typeof copy[key] === 'object')
-              defineProperty(copy[key]);
-          newState = walk(copy, key, copy[key]);
-      });
-      function walk(obj, key, val) {
-          return Object.defineProperty(obj, key, {
-              get: function () {
-                  return val;
-              },
-              set: function (newVal) {
-                  if (newVal !== val) {
-                      val = newVal;
-                  }
-              },
-              enumerable: true
-          });
-      }
-      return newState;
   }
   //# sourceMappingURL=index.js.map
 
@@ -79,18 +55,16 @@
       return __assign.apply(this, arguments);
   };
 
-  function setPartialState(path, value, source) {
+  function setState(path, value, source) {
       var target = {};
       if (path.length) {
           target[path[0]] =
-              path.length > 1
-                  ? setPartialState(path.slice(1), value, source[path[0]])
-                  : value;
+              path.length > 1 ? setState(path.slice(1), value, source[path[0]]) : value;
           return __assign({}, source, target);
       }
       return value;
   }
-  function getPartialState(path, source) {
+  function getState(path, source) {
       var i = 0;
       while (i < path.length) {
           source = source[path[i++]];
@@ -103,28 +77,38 @@
       function Store(_a) {
           var _b = _a.state, state = _b === void 0 ? {} : _b, _c = _a.actions, actions = _c === void 0 ? {} : _c;
           this.state = state;
-          this.actions = this.wireActions([], state, actions);
+          this.actions = this._wireActions([], state, actions);
+          this.subs = [];
       }
-      Store.prototype.wireActions = function (path, state, actions) {
+      Store.prototype._wireActions = function (path, state, actions) {
           var _this = this;
           Object.keys(actions).forEach(function (key) {
               typeof actions[key] === 'function'
                   ? (function (key, action) {
                       actions[key] = function (data) {
-                          var res = action(state, data);
-                          if (typeof res === 'function') {
-                              res = res(getPartialState(path, this.state));
+                          var res = produce(state, function (draft) {
+                              action(draft, data);
+                          });
+                          if (res && res !== getState(path, this.state) && !res.then) {
+                              this.state = setState(path, res, this.state);
+                              this.subs.forEach(function (v) { return v(); });
                           }
-                          this.state = setPartialState(path, res, this.state);
                           return res;
-                      };
+                      }.bind(_this);
                   })(key, actions[key])
-                  : _this.wireActions(path.concat(key), state[key], actions[key]);
+                  : _this._wireActions(path.concat(key), state[key], actions[key]);
           });
           return actions;
       };
+      Store.prototype.subscribe = function (sub) {
+          return this.subs.push(sub);
+      };
+      Store.prototype.unsubscribe = function (sub) {
+          return this.subs.filter(function (f) { return f !== sub; });
+      };
       return Store;
   }());
+  //# sourceMappingURL=store.js.map
 
   var state = {
       counter: {
@@ -133,14 +117,15 @@
   };
   var actions = {
       counter: {
-          up: function (state, data) {
-              state.count + data;
+          up: function (state) {
+              state.count++;
           }
       }
   };
   var store = new Store({ state: state, actions: actions });
-  console.log(store.actions.counter.up(1));
-  //# sourceMappingURL=index.js.map
+  store.actions.counter.up();
+  store.actions.counter.up();
+  store.subscribe(console.log(store.state));
 
   exports.produce = produce;
   exports.Store = Store;

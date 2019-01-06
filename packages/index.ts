@@ -8,13 +8,16 @@ let state = {
 
 let actions = {
   counter: {
-    up(state, data) {
-      state.count + data
+    up(state) {
+      state.count++
     }
   }
 }
 
 let store = new Store({ state, actions })
-console.log(store.actions.counter.up(1))
+store.actions.counter.up()
+store.actions.counter.up()
 
-export { produce , Store}
+store.subscribe(console.log(store.state))
+
+export { produce, Store }
