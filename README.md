@@ -61,7 +61,7 @@ import { map } from 'smox'
 
 @map({
   state: ['count'],
-  actions: ['up'],
+  actions: ['up','down'],
   effects:['upAsync']
 })
 ```
@@ -73,6 +73,7 @@ class App extends React.Component {
       <div>
         <h1>现在是{this.props.count}</h1>
         <button onClick={this.props.up}>加一</button>
+        <button onClick={this.props.down}>减一</button>
         <button onClick={this.props.upAsync}>异步加一</button>
       </div>
     )
@@ -108,7 +109,7 @@ const actions = {
 
 @map({
   state:['counter/count'],
-  actions:['counter/up']
+  actions:['counter/up','counter/down']
 })
 
 ```
