@@ -1,7 +1,7 @@
 <p align="right"><b>v2.0 - beta0</b></p>
 <p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuqe61tlej30b40b4gn6.jpg" alt="smox logo" width="220"></p>
 
-# Smox  [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)  [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
+# Smox [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox) [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 
 > Fast 2kB state management based on path-proxing.
 
@@ -35,23 +35,20 @@ const state = {
   count: 2
 }
 
-const effects = {
-  async add() {
+const actions = {
+  up(state, data) {
+    state.count += data
+  },
+  down(state, data) {
+    state.count -= data
+  },
+  async up(actions) {
     await new Promise(t => setTimeout(t, 1000))
     actions.up()
   }
 }
 
-const actions = {
-  up(state) {
-    state.count++
-  },
-  down(state) {
-    state.count--
-  }
-}
-
-const store = new Store({ state, actions, effects })
+const store = new Store({ state, actions })
 
 ReactDOM.render(
   <Provider store={store}>
