@@ -1,4 +1,4 @@
-<p align="right"><b>v2.0 - beta0</b></p>
+<p align="right"><b>v2.0 - beta.0</b></p>
 <p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuqe61tlej30b40b4gn6.jpg" alt="smox logo" width="220"></p>
 
 # Smox [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox) [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
