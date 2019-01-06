@@ -57,9 +57,9 @@ ReactDOM.render(
 
 ```javascript
 import React from 'react'
-import { inject } from 'smox'
+import { map } from 'smox'
 
-@inject({
+@map({
   state: ['count'],
   actions: ['up','down'],
   effects:['upAsync']
@@ -104,7 +104,7 @@ const actions = {
   }
 }
 
-@inject({
+@map({
   state:['counter/count'],
   actions:['counter/up','counter/down']
 })
