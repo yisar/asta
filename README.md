@@ -11,10 +11,6 @@
 
 :jack_o_lantern: Tiny size, 2Kb gzipped, no Dependencies
 
-## Docs
-
-[smox documents](https://smox.js.org)
-
 ## Install
 
 ```shell
@@ -49,7 +45,7 @@ const effects = {
   }
 }
 
-const store = new Store({ state, actions })
+const store = new Store({ state, actions, effects })
 
 ReactDOM.render(
   <Provider store={store}>
@@ -65,7 +61,8 @@ import { map } from 'smox'
 
 @map({
   state: ['count'],
-  actions: ['add','upAsync']
+  actions: ['up'],
+  effects:['upAsync']
 })
 ```
 
@@ -76,7 +73,6 @@ class App extends React.Component {
       <div>
         <h1>现在是{this.props.count}</h1>
         <button onClick={this.props.up}>加一</button>
-        <button onClick={this.props.down}>减一</button>
         <button onClick={this.props.upAsync}>异步加一</button>
       </div>
     )
@@ -85,6 +81,40 @@ class App extends React.Component {
 
 export default App
 ```
+
+### Nexted
+
+if you want to split the store , you can make the state/actions/effects into a object , they will to be nested tree .
+
+the object key will be the path , theris arguments are nexted .
+
+```Javascript
+const state = {
+  counter:{
+    count: 2
+  }
+}
+
+const actions = {
+  counter: {
+    up(state, data) {
+      state.count += data
+    },
+    down(state, data) {
+      state.count -= data
+    }
+  }
+}
+
+@map({
+  state:['counter/count'],
+  actions:['counter/up']
+})
+
+```
+We made an appointment. state and actions and effects must have the same key , and in a same level object , must to be same types
+
+### Immed
 
 if you only SetState , there is also a `produce` API turn to immutable easy
 
@@ -123,7 +153,7 @@ smox 终于快要完成 2.0 的 feature 了，唠几句，smox 2.0 的致命之�
 
 ## Demo
 
-- [Counter](https://github.com/132yse/smox-counter)
+- [Counter](https://github.com/132yse/smox/tree/master/examples/counter)
 - [爱弹幕后台](https://github.com/132yse/idanmu-admin)
 
 ### Author

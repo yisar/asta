@@ -1,7 +1,7 @@
 {
   "name": "smox",
-  "version": "1.4.0",
-  "description": "Just 1kB state management based on New context api which is similar to Vuex.",
+  "version": "2.0.0-beta.0",
+  "description": "Fast 1kB state management that path-updating.",
   "main": "./dist/smox.js",
   "scripts": {
     "test": "jest",
@@ -16,11 +16,14 @@
     "url": "git@github.com:132yse/smox.git"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-react": "^7.0.0",
     "@types/react": "^16.7.18",
+    "babel-core": "^6.26.3",
     "rollup": "^1.0.1",
+    "rollup-plugin-babel": "^4.2.0",
+    "rollup-plugin-tsx": "^1.0.2",
     "rollup-plugin-typescript": "^1.0.0",
     "tslib": "^1.9.3"
-  },
-  "dependencies": {
   }
 }
