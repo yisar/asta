@@ -1,10 +1,11 @@
-<a href="https://smox.js.org">
-  <img align="right" width="220" height="220" src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuqe61tlej30b40b4gn6.jpg" />
-</a>
+<img align="right" height="200" src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuqe61tlej30b40b4gn6.jpg" />
 
-# Smox [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox) [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
-
+# Smox 
 > Fast 1kB state management based on nexed-proxy.
+
+[![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox) 
+[![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
+
 
 ### Feature
 
