@@ -6,9 +6,7 @@ const state = {
   counter: {
     count: 0
   },
-  sexer: {
-    sex: 'boy'
-  }
+  sex: 'boy'
 }
 
 const actions = {
@@ -17,10 +15,8 @@ const actions = {
       state.count += data
     }
   },
-  sexer: {
-    change(state) {
-      state.sex = state.sex === 'boy' ? 'girl' : 'boy'
-    }
+  change(state) {
+    state.sex = state.sex === 'boy' ? 'girl' : 'boy'
   }
 }
 
@@ -36,8 +32,8 @@ const effects = {
 const store = new Smox({ state, actions, effects })
 
 @map({
-  state: ['counter/count', 'sexer/sex'],
-  actions: ['counter/up', 'sexer/change'],
+  state: ['counter/count', 'sex'],
+  actions: ['counter/up', 'counter/up', 'change'],
   effects: ['counter/upAsync']
 })
 class App extends React.Component {
