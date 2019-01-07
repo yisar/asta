@@ -34,7 +34,7 @@ export const map = ({
         props: {}
       }
     }
-    componentWillMount() {
+    componentDidMount() {
       this._isMounted = true
       this.context.subscribe(() => this.update())
       this.update()
