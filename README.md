@@ -4,11 +4,11 @@
 
 # Smox [![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox) [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 
-> Fast 1kB state management based on path-updating.
+> Fast 1kB state management based on nexed-proxy.
 
 ### Feature
 
-:pig_nose: New Context Api、path updating、Es6 proxy ……
+:pig_nose: New Context Api、path updating、Es6 proxy、nexted ……
 
 :jack_o_lantern: Tiny size, 1Kb gzipped, no Dependencies
 
