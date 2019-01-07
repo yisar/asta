@@ -6,7 +6,7 @@ export function produce(state: Object, produce: Function): Object {
 
   produce(newState)
   if (Proxy) {
-    return make ? copy : state
+    return { ...state, ...copy }
   } else {
     return defineProperty(state)
   }
