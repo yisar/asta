@@ -21,11 +21,11 @@ const actions = {
 }
 
 const effects = {
-  counter: {
-    async upAsync(actions, data) {
-      await new Promise(t => setTimeout(t, 1000))
-      actions.up(data)
-    }
+  async getList(actions){
+    const data = await axios.get('http://www.baidu.com').then(res=>{
+      return res.data
+    })
+    actions.render(data)
   }
 }
 

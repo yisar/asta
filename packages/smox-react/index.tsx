@@ -66,7 +66,7 @@ export const map = ({
 
 function mapToMethods(paths, source) {
   let res = {}
-  paths.map(key => {
+  paths.forEach(key => {
     let path = key.split('/')
     res[path[path.length - 1]] = getPlain(path, source)
   })
