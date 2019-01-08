@@ -1,4 +1,5 @@
 import { produce } from '../immed/index'
+import { setPlain } from './util'
 
 export class Smox {
   state: any
@@ -17,7 +18,7 @@ export class Smox {
       typeof actions[key] === 'function'
         ? ((key, action) => {
             actions[key] = function(data) {
-              let res: any = produce(state, draft => {
+              let res: any = produce(state, path, draft => {
                 action(draft, data)
               })
               this.state = setPlain(path, res, this.state)
@@ -50,14 +51,4 @@ export class Smox {
   unsubscribe(sub) {
     this.subs.filter(f => f !== sub)
   }
-}
-
-function setPlain(path: string[], value: any, source: any) {
-  let target = {}
-  if (path.length) {
-    target[path[0]] =
-      path.length > 1 ? setPlain(path.slice(1), value, source[path[0]]) : value
-    return { ...source, ...target }
-  }
-  return value
 }

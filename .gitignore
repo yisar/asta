@@ -3,7 +3,6 @@ examples/counter/node_modules/
 .vscode/
 .idea/
 .cache/
-dist/
 ignore/
 npm-debug.log
 yarn-error.log

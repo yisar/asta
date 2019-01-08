@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+// import { Smox, Provider, map } from '../../dist/smox'
+// import { Smox, Provider, map } from 'smox'
 import { Smox, Provider, map } from '../../packages/index'
 
 const state = {
@@ -13,6 +15,9 @@ const actions = {
   counter: {
     up(state, data) {
       state.count += data
+    },
+    down(state, data) {
+      state.count -= data
     }
   },
   change(state) {
@@ -21,11 +26,11 @@ const actions = {
 }
 
 const effects = {
-  async getList(actions){
-    const data = await axios.get('http://www.baidu.com').then(res=>{
-      return res.data
-    })
-    actions.render(data)
+  counter: {
+    async upAsync(actions, data) {
+      await new Promise(t => setTimeout(t, 1000))
+      actions.up(data)
+    }
   }
 }
 
@@ -33,7 +38,7 @@ const store = new Smox({ state, actions, effects })
 
 @map({
   state: ['counter/count', 'sex'],
-  actions: ['counter/up', 'counter/up', 'change'],
+  actions: ['counter/up', 'counter/down', 'change'],
   effects: ['counter/upAsync']
 })
 class App extends React.Component {

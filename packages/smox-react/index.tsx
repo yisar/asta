@@ -1,5 +1,5 @@
 import * as React from 'react'
-
+import { mapToProps } from '../smox/util'
 const Context = React.createContext(null)
 
 export class Provider extends React.Component {
@@ -28,6 +28,9 @@ export const map = ({
     props: any
     _isMounted: boolean
     state: any
+    stateProps: any
+    actionsProps: any
+    effectsProps: any
     constructor(props) {
       super(props)
       this.state = {
@@ -36,6 +39,8 @@ export const map = ({
     }
     componentDidMount() {
       this._isMounted = true
+      this.actionsProps = mapToProps(actions, this.context.actions)
+      this.effectsProps = mapToProps(effects, this.context.effects)
       this.context.subscribe(() => this.update())
       this.update()
     }
@@ -45,15 +50,13 @@ export const map = ({
     }
     update() {
       if (this._isMounted) {
-        const stateProps = mapToMethods(state, this.context.state)
-        const actionsProps = mapToMethods(actions, this.context.actions)
-        const effectsProps = mapToMethods(effects, this.context.effects)
+        this.stateProps = mapToProps(state, this.context.state)
         this.setState({
           props: {
             ...this.state.porps,
-            ...stateProps,
-            ...actionsProps,
-            ...effectsProps
+            ...this.stateProps,
+            ...this.actionsProps,
+            ...this.effectsProps
           }
         })
       }
@@ -62,21 +65,4 @@ export const map = ({
       return <Component {...this.state.props} />
     }
   }
-}
-
-function mapToMethods(paths, source) {
-  let res = {}
-  paths.forEach(key => {
-    let path = key.split('/')
-    res[path[path.length - 1]] = getPlain(path, source)
-  })
-  return res
-}
-
-function getPlain(path: string[], source: any) {
-  let i = 0
-  while (i < path.length) {
-    source = source[path[i++]]
-  }
-  return source
 }
