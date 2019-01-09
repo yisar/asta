@@ -2,11 +2,11 @@ let copy: Object = {}
 let make
 let oldPath
 
-export function produce(state: Object, path, produce: Function): Object {
+export function produce(state: Object, path:string[], produce: Function): Object {
   let newState: object = proxy(state)
   if (oldPath !== path) make = false
   oldPath = path
-  
+
   produce(newState)
   if (Proxy) {
     return make ? copy : state
@@ -23,7 +23,7 @@ function proxy(state: Object) {
       }
       return make ? copy[key] : obj[key]
     },
-    set(obj: Object, key: string, val: any) {
+    set(_: undefined, key: string, val: any) {
       copy[key] = val
       make = true
       return true

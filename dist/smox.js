@@ -5,10 +5,13 @@
 }(this, function (exports, React) { 'use strict';
 
   var copy = {};
-  var make = false;
-  function produce(state, produce) {
+  var make;
+  var oldPath;
+  function produce(state, path, produce) {
       var newState = proxy(state);
-      copy = state;
+      if (oldPath !== path)
+          make = false;
+      oldPath = path;
       produce(newState);
       if (Proxy) {
           return make ? copy : state;
@@ -25,7 +28,7 @@
               }
               return make ? copy[key] : obj[key];
           },
-          set: function (_, key, val) {
+          set: function (obj, key, val) {
               copy[key] = val;
               make = true;
               return true;
@@ -136,7 +139,7 @@
               typeof actions[key] === 'function'
                   ? (function (key, action) {
                       actions[key] = function (data) {
-                          var res = produce(state, function (draft) {
+                          var res = produce(state, path, function (draft) {
                               action(draft, data);
                           });
                           this.state = setPlain(path, res, this.state);
