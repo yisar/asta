@@ -6,7 +6,7 @@ _tiny but perfect state management_
 
 [![](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 [![](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
-[![](https://img.shields.io/bundlephobia/minzip/smox.svg?style=flat-square&color=ff69b4)](https://bundlephobia.com/result?p=smox)
+[![](https://img.shields.io/bundlephobia/minzip/gzip-smox-ff69b4.svg?style=flat-square)](https://bundlephobia.com/result?p=smox)
 
 ### Feature
 
