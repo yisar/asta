@@ -29,7 +29,7 @@ import App from './app.js'
 import { Store, Provider } from 'smox'
 
 const state = {
-  count: 2
+  count: 0
 }
 
 const actions = {
@@ -92,7 +92,7 @@ the object key will be the path , theris arguments are nexted .
 ```Javascript
 const state = {
   counter:{
-    count: 2
+    count: 0
   }
 }
 
