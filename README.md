@@ -1,11 +1,11 @@
 <img align="right" height="150" src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuqe61tlej30b40b4gn6.jpg" />
 
-# Smox 
+# Smox
+
 _tiny but perfect state management_
 
-[![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox) 
+[![NPM version](https://img.shields.io/npm/v/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
 [![NPM downloads](https://img.shields.io/npm/dm/smox.svg?style=flat-square)](https://npmjs.com/package/smox)
-
 
 ### Feature
 
@@ -63,8 +63,8 @@ import { map } from 'smox'
 
 @map({
   state: ['count'],
-  actions: ['up','down'],
-  effects:['upAsync']
+  actions: ['up', 'down'],
+  effects: ['upAsync']
 })
 class App extends React.Component {
   render() {
@@ -112,6 +112,7 @@ const actions = {
 })
 
 ```
+
 We made an appointment. state and actions and effects must have the same key , and in a same level object , must to be same types
 
 ### Immed
@@ -137,7 +138,8 @@ export default App
 
 ### p.s.
 
-smox 终于快要完成 2.0 的 feature 了，唠几句，smox 2.0 的致命之处：
+<details>
+  <summary>Why not？</summary>
 
 1. 和 rematch、redux 不同，smox 完全移除了 model 、reducers、dispatch、action(type) 等 API，只保留 state、actions、effects 三个 API
 
@@ -147,17 +149,13 @@ smox 终于快要完成 2.0 的 feature 了，唠几句，smox 2.0 的致命之�
 
 4. rematch 等库，需要保证 reducer 同步的 return 一个新对象，来保证不可变，会丑。smox 自己实现了一个精巧的劫持，不可变的同时，不需要 return（其他库也可以通过 immer）
 
-5. and so on……（1kb 尺寸、API 的设计度等等）
+5. and so on……（1kb 尺寸、API 的设计度等等)
+
+</details>
 
 ## Demo
 
 - [Counter](https://github.com/132yse/smox/tree/master/examples/counter)
-- [爱弹幕后台](https://github.com/132yse/idanmu-admin)
-
-### Author
-
-- blog: [伊撒尔の窝](http://www.yisaer.com)
-- weibo: [@世界倒数第一公主殿下](http://weibo.com/oreshura)
 
 ### License
 
