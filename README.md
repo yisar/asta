@@ -33,18 +33,18 @@ const state = {
 }
 
 const actions = {
-  up(state, data) {
-    state.count += data
+  up(state) {
+    state.count++
   },
-  down(state, data) {
-    state.count -= data
+  down(state) {
+    state.count--
   }
 }
 
 const effects = {
-  async upAsync(actions, data) {
+  async upAsync(actions) {
     await new Promise(t => setTimeout(t, 1000))
-    actions.up(data)
+    actions.up()
   }
 }
 
