@@ -1,6 +1,6 @@
 {
   "name": "smox",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Fast 1kB state management that path-updating.",
   "main": "./dist/smox.js",
   "scripts": {
@@ -25,9 +25,8 @@
     "rollup-plugin-tsx": "^1.0.2",
     "rollup-plugin-typescript": "^1.0.0",
     "tslib": "^1.9.3",
-    "typescript": "^3.3.3"
-  },
-  "dependencies": {
+    "typescript": "^3.3.3",
     "react": "^16.8.1"
-  }
+  },
+  "dependencies": {}
 }
