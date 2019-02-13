@@ -116,6 +116,12 @@ const actions = {
 
 We made an appointment. state and actions and effects must have the same key , and in a same level object , must to be same types
 
+### Proxy
+
+immed package using Es6 Proxy,IE is not supported by default.
+
+Use this [polyfill](https://github.com/GoogleChrome/proxy-polyfill) can make it compatible with IE 9+
+
 ### Immed
 
 if you only SetState , there is also a `produce` API turn to immutable easy

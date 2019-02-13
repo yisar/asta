@@ -13,12 +13,7 @@
           make = false;
       oldPath = path;
       produce(newState);
-      if (Proxy) {
-          return make ? copy : state;
-      }
-      else {
-          return defineProperty(state);
-      }
+      return make ? copy : state;
   }
   function proxy(state) {
       var handler = {
@@ -28,36 +23,13 @@
               }
               return make ? copy[key] : obj[key];
           },
-          set: function (obj, key, val) {
+          set: function (_, key, val) {
               copy[key] = val;
               make = true;
               return true;
           }
       };
       return new Proxy(state, handler);
-  }
-  function defineProperty(state) {
-      var copy = JSON.parse(JSON.stringify(state));
-      var newState = {};
-      Object.keys(copy).forEach(function (key) {
-          if (typeof copy[key] === 'object')
-              defineProperty(copy[key]);
-          newState = walk(copy, key, copy[key]);
-      });
-      function walk(obj, key, val) {
-          return Object.defineProperty(obj, key, {
-              get: function () {
-                  return val;
-              },
-              set: function (newVal) {
-                  if (newVal !== val) {
-                      val = newVal;
-                  }
-              },
-              enumerable: true
-          });
-      }
-      return newState;
   }
 
   var extendStatics = function(d, b) {
