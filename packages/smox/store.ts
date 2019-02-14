@@ -49,6 +49,6 @@ export class Smox {
     this.subs.push(sub)
   }
   unsubscribe(sub) {
-    this.subs.filter(f => f !== sub)
+    this.subs = this.subs.filter(f => f !== sub)
   }
 }
