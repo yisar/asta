@@ -26,7 +26,7 @@ npm i smox -S
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './app.js'
-import { Store, Provider } from 'smox'
+import { Smox, Provider } from 'smox'
 
 const state = {
   count: 0
@@ -48,7 +48,7 @@ const effects = {
   }
 }
 
-const store = new Store({ state, actions, effects })
+const store = new Smox({ state, actions, effects })
 
 ReactDOM.render(
   <Provider store={store}>
