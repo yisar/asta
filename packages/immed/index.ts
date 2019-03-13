@@ -4,8 +4,8 @@ let oldPath
 
 export function produce(
   state: Object,
-  path: string[],
-  produce: Function
+  produce: Function,
+  path: string[]
 ): Object {
   let newState: object = proxy(state)
   if (oldPath !== path) make = false

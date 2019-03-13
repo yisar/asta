@@ -6,8 +6,6 @@
 
 Ⅰ 默认使用 Proxy 进行劫持，get 的时候进行递归，是按需递归，嵌套越浅，访问越深，性能越好
 
-Ⅱ 使用 Object.defineproperty 做 IE 兼容，默认会使用 JOSN.stringify 深拷贝(此处可手动使用 JSON schema 优化)，嵌套越浅，性能越好
-
 #### immed vs immer
 
 默认情况下，immer 性能更好，因为它内部做了很多优化
@@ -33,12 +31,14 @@ produce(state, draft => {
 })
 ```
 
-p.s.
-目前只写了 get 和 set，足以应对百分之九十的场景
+第三个参数是 path，可选传入，能够根据 path 寻找最小劫持距离
 
-然后如果用于 IE，Object.defineproperty 无法劫持数组的 item，所以如果涉及到数组操作，可以直接替换整个数组
-
-```JavaScript
-draft.nums = ['1','2']
+```javascript
+produce(state, fn, ['boy', 'love', 'boy'])
 ```
-目前我遇到的场景都是这种全量的替换，这块儿欢迎 issue
+
+同时，immed 为了凑字数，还提供了时间切片的双向绑定功能
+
+只需要在你的 dom 结构中加上 v-model 属性
+
+```
