@@ -169,23 +169,6 @@ class App extends React.Component {
 export default App
 ```
 
-### p.s.
-
-<details>
-  <summary>Why not？</summary>
-
-1. 和 rematch、redux 不同，smox 完全移除了 model 、reducers、dispatch、action(type) 等 API，只保留 state、actions、effects 三个 API
-
-2. redux 中，只有 dispatch 的 action 才会触发进而修改 state ，smox 也一样，只有 actions 被触发才会修改 state，而 actions 可以被 effects 调用，形成一个闭环，完美的架构设计
-
-3. rematch、dva 中，models 用来划分 store，显式定义命名空间，单层作用域，笨拙且局限。smox 独创 path 机制，不需要手动定义 model，会根据 key 自动生成作用域，这是 smox 2.0 最成功的一个机制，精巧又灵活
-
-4. rematch 等库，需要保证 reducer 同步的 return 一个新对象，来保证不可变，会丑。smox 自己实现了一个精巧的劫持，不可变的同时，不需要 return（其他库也可以通过 immer）
-
-5. and so on……（1kb 尺寸、API 的设计度等等)
-
-</details>
-
 ## Demo
 
 - [Counter](https://github.com/132yse/smox/tree/master/examples/counter)
