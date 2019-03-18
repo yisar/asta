@@ -96,8 +96,7 @@ const state = {
 
 const actions = {
   counter: {
-    up(state, data) {
-      //此处的 state 为同路径的 { count:0 }
+    up(state, data) { //此处的 state 为同路径的 { count:0 }
       state.count += data
     },
     down(state, data) {
@@ -108,8 +107,7 @@ const actions = {
 
 const effects = {
   counter: {
-    async upAsync(actions) {
-      //此处的 actions 为同路径的 { up(), down() }
+    async upAsync(actions) { //此处的 actions 为同路径的 { up(), down() }
       await new Promise(t => setTimeout(t, 1000))
       actions.up()
     }
@@ -124,11 +122,31 @@ const effects = {
 
 ```
 
-### Proxy
+### Proxy、async/await
 
 Proxy 可以使得 action 代码同步，更好看
 
-Use this [polyfill](https://github.com/GoogleChrome/proxy-polyfill) can make it compatible with IE 9+
+```javascript
+const actions = {
+  up(state) {
+    state.count += 1
+    state.count += 2
+  }
+}
+```
+使用这个 [polyfill](https://github.com/GoogleChrome/proxy-polyfill) 可以兼容 ie9+
+
+同时 effects 下面，配合 async/await，也能同步的编写逻辑
+
+```JavaScript
+const effects = {
+  async upAsync(actions) {
+    await new Promise(t => setTimeout(t, 1000))
+    actions.up()
+    actions.down()
+  }
+}
+```
 
 ### Immed
 
