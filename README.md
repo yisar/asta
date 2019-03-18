@@ -85,9 +85,7 @@ export default App
 
 ### Nexted
 
-if you want to split the store , you can make the state/actions/effects into a object , they will to be nested tree .
-
-the object key will be the path , theris arguments are nexted .
+nexted 是 smox 的 store 划分机制，它会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
 
 ```Javascript
 const state = {
@@ -99,6 +97,7 @@ const state = {
 const actions = {
   counter: {
     up(state, data) {
+      //此处的 state 为同路径的 { count:0 }
       state.count += data
     },
     down(state, data) {
@@ -107,18 +106,27 @@ const actions = {
   }
 }
 
+const effects = {
+  counter: {
+    async upAsync(actions) {
+      //此处的 actions 为同路径的 { up(), down() }
+      await new Promise(t => setTimeout(t, 1000))
+      actions.up()
+    }
+  }
+}
+
 @map({
   state:['counter/count'],
-  actions:['counter/up','counter/down']
+  actions:['counter/up','counter/down'],
+  effects:['counter/upAsync']
 })
 
 ```
 
-We made an appointment. state and actions and effects must have the same key , and in a same level object , must to be same types
-
 ### Proxy
 
-immed package using Es6 Proxy,IE is not supported by default.
+Proxy 可以使得 action 代码同步，更好看
 
 Use this [polyfill](https://github.com/GoogleChrome/proxy-polyfill) can make it compatible with IE 9+
 
