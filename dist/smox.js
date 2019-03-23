@@ -147,14 +147,9 @@
   }());
 
   function useStore(store) {
-    const [state, setter] = React__default.useState(store.state);
-
-    let update = () => setter(store.state);
-
-    store.subscribe(update);
-    return { ...store,
-      state
-    };
+    const setter = React__default.useState(store.state)[1];
+    store.subscribe(() => setter(store.state));
+    return store;
   }
 
   var Context = React.createContext(null);

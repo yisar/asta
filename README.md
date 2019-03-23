@@ -26,7 +26,7 @@ npm i smox -S
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './app.js'
-import { Smox, Provider } from 'smox'
+import { Store } from 'smox'
 
 const state = {
   count: 0
@@ -50,7 +50,9 @@ const effects = {
 
 const store = new Store({ state, actions, effects })
 ```
-以上，就这样创建了一个中心化的 store，然后……
+以上，smox 的部分就结束啦，创建了一个 store
+
+然后就是如何用于 react：
 
 #### Class
 
