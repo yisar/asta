@@ -49,17 +49,12 @@ const effects = {
 }
 
 const store = new Store({ state, actions, effects })
-
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
 ```
+以上，就这样创建了一个中心化的 store，然后……
+
 #### Class
 
-用于 class，可以试用 map API，它和 vuex 的 mapXxx 类似，传递魔法字符串
+用于 class，需要使用 Provider 和 map，它和 vuex 的 mapXxx 类似，传递魔法字符串
 
 ```javascript
 import React from 'react'
@@ -83,7 +78,12 @@ class App extends React.Component {
   }
 }
 
-export default App
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
 ```
 
 #### Hooks API
@@ -146,7 +146,6 @@ const effects = {
   actions:['counter/up','counter/down'],
   effects:['counter/upAsync']
 })
-
 ```
 
 ### Proxy、async/await
