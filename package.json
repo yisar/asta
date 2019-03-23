@@ -20,13 +20,13 @@
     "@babel/preset-react": "^7.0.0",
     "@types/react": "^16.7.18",
     "babel-core": "^6.26.3",
+    "react": "^16.8.5",
     "rollup": "^1.0.1",
     "rollup-plugin-babel": "^4.2.0",
     "rollup-plugin-tsx": "^1.0.2",
     "rollup-plugin-typescript": "^1.0.0",
     "tslib": "^1.9.3",
-    "typescript": "^3.3.3",
-    "react": "^16.8.1"
+    "typescript": "^3.3.4000"
   },
   "dependencies": {}
 }

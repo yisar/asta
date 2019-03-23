@@ -4,10 +4,12 @@
   (global = global || self, factory(global.smox = {}, global.React));
 }(this, function (exports, React) { 'use strict';
 
+  var React__default = 'default' in React ? React['default'] : React;
+
   var copy = {};
   var make;
   var oldPath;
-  function produce(state, path, produce) {
+  function produce(state, produce, path) {
       var newState = proxy(state);
       if (oldPath !== path)
           make = false;
@@ -31,6 +33,22 @@
       };
       return new Proxy(state, handler);
   }
+
+  /*! *****************************************************************************
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+  this file except in compliance with the License. You may obtain a copy of the
+  License at http://www.apache.org/licenses/LICENSE-2.0
+
+  THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+  WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+  MERCHANTABLITY OR NON-INFRINGEMENT.
+
+  See the Apache Version 2.0 License for specific language governing permissions
+  and limitations under the License.
+  ***************************************************************************** */
+  /* global Reflect, Promise */
 
   var extendStatics = function(d, b) {
       extendStatics = Object.setPrototypeOf ||
@@ -95,9 +113,9 @@
               typeof actions[key] === 'function'
                   ? (function (key, action) {
                       actions[key] = function (data) {
-                          var res = produce(state, path, function (draft) {
+                          var res = produce(state, function (draft) {
                               action(draft, data);
-                          });
+                          }, path);
                           this.state = setPlain(path, res, this.state);
                           this.subs.forEach(function (fun) { return fun(); });
                       }.bind(_this);
@@ -123,10 +141,21 @@
           this.subs.push(sub);
       };
       Smox.prototype.unsubscribe = function (sub) {
-          this.subs.filter(function (f) { return f !== sub; });
+          this.subs = this.subs.filter(function (f) { return f !== sub; });
       };
       return Smox;
   }());
+
+  function useStore(store) {
+    const [state, setter] = React__default.useState(store.state);
+
+    let update = () => setter(store.state);
+
+    store.subscribe(update);
+    return { ...store,
+      state
+    };
+  }
 
   var Context = React.createContext(null);
   var Provider = (function (_super) {
@@ -185,10 +214,11 @@
       };
   };
 
-  exports.produce = produce;
-  exports.Smox = Smox;
   exports.Provider = Provider;
+  exports.Smox = Smox;
   exports.map = map;
+  exports.produce = produce;
+  exports.useStore = useStore;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
