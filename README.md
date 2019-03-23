@@ -48,7 +48,7 @@ const effects = {
   }
 }
 
-const store = new Smox({ state, actions, effects })
+const store = new Store({ state, actions, effects })
 
 ReactDOM.render(
   <Provider store={store}>
@@ -57,6 +57,9 @@ ReactDOM.render(
   document.getElementById('root')
 )
 ```
+#### Class
+
+用于 class，可以试用 map API，它和 vuex 的 mapXxx 类似，传递魔法字符串
 
 ```javascript
 import React from 'react'
@@ -81,6 +84,30 @@ class App extends React.Component {
 }
 
 export default App
+```
+
+#### Hooks API
+用于 hooks 比较简单，不会出现魔法字符串，如下：
+
+```javascript
+import React from 'react'
+import { map } from 'smox'
+
+function App () {
+  const { state, actions, effects } = useStore(store)
+
+  return (
+    <>
+      <div>{state.count}</div>
+      <button onClick={() => actions.up(1)}>+</button>
+      <button onClick={() => effects.upAsync(1)}>x</button>
+    </>
+  )
+}
+```
+如果 store 嵌套太深，可以使用解构的骚操作随意解构呀(⊙o⊙)…：
+```javascript
+const {sex,{coutner:{cout}}} = useStore({state})
 ```
 
 ### Nexted
