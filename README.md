@@ -91,7 +91,7 @@ ReactDOM.render(
 
 ```javascript
 import React from 'react'
-import { map } from 'smox'
+import { useStore } from 'smox'
 
 function App () {
   const { state, actions, effects } = useStore(store)
