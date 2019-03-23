@@ -26572,14 +26572,14 @@ function setPlain(path, value, source) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Smox = void 0;
+exports.Store = void 0;
 
 var _index = require("../immed/index");
 
 var _util = require("./util");
 
-var Smox = function () {
-  function Smox(_a) {
+var Store = function () {
+  function Store(_a) {
     var _b = _a.state,
         state = _b === void 0 ? {} : _b,
         _c = _a.actions,
@@ -26592,7 +26592,7 @@ var Smox = function () {
     this.subs = [];
   }
 
-  Smox.prototype.wireActions = function (path, state, actions) {
+  Store.prototype.wireActions = function (path, state, actions) {
     var _this = this;
 
     Object.keys(actions).forEach(function (key) {
@@ -26611,7 +26611,7 @@ var Smox = function () {
     return actions;
   };
 
-  Smox.prototype.wireEffects = function (path, actions, effects) {
+  Store.prototype.wireEffects = function (path, actions, effects) {
     var _this = this;
 
     Object.keys(effects).forEach(function (key) {
@@ -26624,20 +26624,20 @@ var Smox = function () {
     return effects;
   };
 
-  Smox.prototype.subscribe = function (sub) {
+  Store.prototype.subscribe = function (sub) {
     this.subs.push(sub);
   };
 
-  Smox.prototype.unsubscribe = function (sub) {
+  Store.prototype.unsubscribe = function (sub) {
     this.subs = this.subs.filter(function (f) {
       return f !== sub;
     });
   };
 
-  return Smox;
+  return Store;
 }();
 
-exports.Smox = Smox;
+exports.Store = Store;
 },{"../immed/index":"../../packages/immed/index.ts","./util":"../../packages/smox/util.ts"}],"../../node_modules/object-assign/index.js":[function(require,module,exports) {
 /*
 object-assign
@@ -28786,32 +28786,13 @@ var _react = _interopRequireDefault(require("react"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function useStore(store) {
-  var _React$useState = _react.default.useState(store.state),
-      _React$useState2 = _slicedToArray(_React$useState, 2),
-      state = _React$useState2[0],
-      setter = _React$useState2[1];
+  var setter = _react.default.useState(store.state)[1];
 
-  var update = function update() {
+  store.subscribe(function () {
     return setter(store.state);
-  };
-
-  store.subscribe(update);
-  return _objectSpread({}, store, {
-    state: state
   });
+  return store;
 }
 },{"react":"../../node_modules/react/index.js"}],"../../packages/smox-react/index.tsx":[function(require,module,exports) {
 "use strict";
@@ -28966,10 +28947,10 @@ Object.defineProperty(exports, "produce", {
     return _index.produce;
   }
 });
-Object.defineProperty(exports, "Smox", {
+Object.defineProperty(exports, "Store", {
   enumerable: true,
   get: function () {
-    return _store.Smox;
+    return _store.Store;
   }
 });
 Object.defineProperty(exports, "useStore", {
@@ -29000,6 +28981,11 @@ var _index2 = require("./hooks/index");
 var _index3 = require("./smox-react/index");
 },{"./immed/index":"../../packages/immed/index.ts","./smox/store":"../../packages/smox/store.ts","./hooks/index":"../../packages/hooks/index.js","./smox-react/index":"../../packages/smox-react/index.tsx"}],"index.js":[function(require,module,exports) {
 "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useStore = useStore;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -29066,14 +29052,23 @@ var effects = {
     }()
   }
 };
-var store = new _index.Smox({
+var store = new _index.Store({
   state: state,
   actions: actions,
   effects: effects
 });
 
+function useStore(store) {
+  var setter = _react.default.useState(store.state)[1];
+
+  store.subscribe(function () {
+    return setter(store.state);
+  });
+  return store;
+}
+
 function App() {
-  var _useStore = (0, _index.useStore)(store),
+  var _useStore = useStore(store),
       state = _useStore.state,
       actions = _useStore.actions,
       effects = _useStore.effects;
@@ -29117,7 +29112,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60379" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65318" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

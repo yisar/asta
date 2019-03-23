@@ -1,11 +1,9 @@
 import React from 'react'
 
 export function useStore (store) {
-  const [state, setter] = React.useState(store.state)
+  const setter = React.useState(store.state)[1]
 
-  let update = () => setter(store.state)
-
-  store.subscribe(update)
-
-  return { ...store, state }
+  store.subscribe(() => setter(store.state))
+  
+  return store
 }

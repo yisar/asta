@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Store, useStore } from '../../packages/index'
+import { Store } from '../../packages/index'
 
 const state = {
   counter: {
@@ -33,6 +33,14 @@ const effects = {
 }
 
 const store = new Store({ state, actions, effects })
+
+export function useStore (store) {
+  const setter = React.useState(store.state)[1]
+
+  store.subscribe(() => setter(store.state))
+  
+  return store
+}
 
 function App () {
   const { state, actions, effects } = useStore(store)
