@@ -99,15 +99,15 @@
       return __assign({}, source, value);
   }
 
-  var Smox = (function () {
-      function Smox(_a) {
+  var Store = (function () {
+      function Store(_a) {
           var _b = _a.state, state = _b === void 0 ? {} : _b, _c = _a.actions, actions = _c === void 0 ? {} : _c, _d = _a.effects, effects = _d === void 0 ? {} : _d;
           this.state = state;
           this.actions = this.wireActions([], state, actions);
           this.effects = this.wireEffects([], actions, effects);
           this.subs = [];
       }
-      Smox.prototype.wireActions = function (path, state, actions) {
+      Store.prototype.wireActions = function (path, state, actions) {
           var _this = this;
           Object.keys(actions).forEach(function (key) {
               typeof actions[key] === 'function'
@@ -124,7 +124,7 @@
           });
           return actions;
       };
-      Smox.prototype.wireEffects = function (path, actions, effects) {
+      Store.prototype.wireEffects = function (path, actions, effects) {
           var _this = this;
           Object.keys(effects).forEach(function (key) {
               typeof effects[key] === 'function'
@@ -137,13 +137,13 @@
           });
           return effects;
       };
-      Smox.prototype.subscribe = function (sub) {
+      Store.prototype.subscribe = function (sub) {
           this.subs.push(sub);
       };
-      Smox.prototype.unsubscribe = function (sub) {
+      Store.prototype.unsubscribe = function (sub) {
           this.subs = this.subs.filter(function (f) { return f !== sub; });
       };
-      return Smox;
+      return Store;
   }());
 
   function useStore(store) {
@@ -215,7 +215,7 @@
   };
 
   exports.Provider = Provider;
-  exports.Smox = Smox;
+  exports.Store = Store;
   exports.map = map;
   exports.produce = produce;
   exports.useStore = useStore;

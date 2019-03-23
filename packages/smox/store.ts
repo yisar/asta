@@ -1,7 +1,7 @@
 import { produce } from '../immed/index'
 import { setPlain } from './util'
 
-export class Smox {
+export class Store {
   state: any
   actions: any
   effects: any

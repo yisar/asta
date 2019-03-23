@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Smox, useStore } from '../../packages/index'
+import { Store, useStore } from '../../packages/index'
 
 const state = {
   counter: {
@@ -32,7 +32,7 @@ const effects = {
   }
 }
 
-const store = new Smox({ state, actions, effects })
+const store = new Store({ state, actions, effects })
 
 function App () {
   const { state, actions, effects } = useStore(store)
