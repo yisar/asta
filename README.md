@@ -99,8 +99,8 @@ function App () {
   return (
     <>
       <div>{state.count}</div>
-      <button onClick={() => actions.up(1)}>+</button>
-      <button onClick={() => effects.upAsync(1)}>x</button>
+      <button onClick={() => actions.up()}>+</button>
+      <button onClick={() => effects.upAsync()}>x</button>
     </>
   )
 }
