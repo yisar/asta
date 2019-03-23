@@ -105,7 +105,10 @@ function App () {
   )
 }
 ```
-如果 store 嵌套太深，可以使用解构的骚操作随意解构呀(⊙o⊙)…
+hooks API 解决了魔法字符串的问题，但是如果 store 嵌套过深
+
+不妨试试魔法解构(⊙o⊙)…
+
 ```javascript
 const {sex,{coutner:{count}}} = useStore({state})
 ```
