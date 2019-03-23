@@ -89,9 +89,9 @@ ReactDOM.render(
 ```
 
 #### Hooks API
-值得一提，smox 是个中心化 store，而官方的 useReduer 是允许 use 多次，多个多个不同的 reducer 的
+值得一提，smox 是个中心化 store，而官方的 useReduer 是允许 use 多次多个不同的 reducer 的
 
-smox 的 useStore 不要这样做，仍然要坚持 单 store 的原则，store 全局 new 一次，每个组件只 use 一次
+smox 的 useStore 不要这样做，要坚持 单 store 的原则，store 全局 new 一次，每个组件只 use 一次
 
 ```javascript
 import React from 'react'
