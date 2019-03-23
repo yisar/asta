@@ -105,9 +105,9 @@ function App () {
   )
 }
 ```
-如果 store 嵌套太深，可以使用解构的骚操作随意解构呀(⊙o⊙)…：
+如果 store 嵌套太深，可以使用解构的骚操作随意解构呀(⊙o⊙)…
 ```javascript
-const {sex,{coutner:{cout}}} = useStore({state})
+const {sex,{coutner:{count}}} = useStore({state})
 ```
 
 ### Nexted
