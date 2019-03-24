@@ -29037,14 +29037,15 @@ var Subscribe = function (_super) {
   Subscribe.prototype.componentDidMount = function () {
     var _this = this;
 
+    this._isMounted = true;
     this.context.subscribe(function () {
-      return _this.setState(_this.context);
+      return _this.setState({});
     });
+    this.setState(this.context);
   };
 
   Subscribe.prototype.render = function () {
-    console.log(this.context.state);
-    return this.props.to(this.context);
+    return this._isMounted ? this.props.to(this.context) : null;
   };
 
   Subscribe.prototype.componentWillUnmount = function () {
@@ -29052,7 +29053,7 @@ var Subscribe = function (_super) {
 
     this._isMounted = false;
     this.context.unsubscribe(function () {
-      return _this.setState(_this.context);
+      return _this.setState({});
     });
   };
 
@@ -29158,8 +29159,6 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _index = require("../../packages/index");
 
-var _index2 = require("../../packages/smox-react/index");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var state = {
@@ -29263,7 +29262,7 @@ function (_React$Component) {
 _reactDom.default.render(_react.default.createElement(_index.Provider, {
   store: store
 }, _react.default.createElement(App, null)), document.getElementById('root'));
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/regenerator":"node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"node_modules/@babel/runtime/helpers/asyncToGenerator.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","../../packages/index":"../../packages/index.ts","../../packages/smox-react/index":"../../packages/smox-react/index.tsx"}],"C:/Users/Administrator/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/regenerator":"node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"node_modules/@babel/runtime/helpers/asyncToGenerator.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","../../packages/index":"../../packages/index.ts"}],"C:/Users/Administrator/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29290,7 +29289,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55580" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59337" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

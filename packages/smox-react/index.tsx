@@ -26,7 +26,7 @@ export const map = ({
   return class extends React.Component {
     static contextType = Context
     props: any
-    isMounted: boolean
+    _isMounted: boolean
     state: any
     stateProps: any
     actionsProps: any
@@ -40,18 +40,18 @@ export const map = ({
       }
     }
     componentDidMount() {
-      this.isMounted = true
+      this._isMounted = true
       this.actionsProps = mapToProps(actions, this.context.actions)
       this.effectsProps = mapToProps(effects, this.context.effects)
       this.context.subscribe(() => this.update())
       this.update()
     }
     componentWillUnmount() {
-      this.isMounted = false
+      this._isMounted = false
       this.context.unsubscribe(() => this.update())
     }
     update() {
-      if (this.isMounted) {
+      if (this._isMounted) {
         this.stateProps = mapToProps(state, this.context.state)
         this.setState({
           props: {
@@ -70,7 +70,7 @@ export const map = ({
 }
 
 export class Subscribe extends React.Component {
-  isMounted: boolean
+  _isMounted: boolean
   context: any
   state: any
   setState: Function
@@ -81,14 +81,15 @@ export class Subscribe extends React.Component {
   }
   static contextType = Context
   componentDidMount() {
-    this.isMounted = false
-    this.context.subscribe(() => this.setState(this.context))
+    this._isMounted = true
+    this.context.subscribe(() => this.setState({}))
+    this.setState(this.context)
   }
   render() {
-    return this.isMounted ? this.props.to(this.context) : null
+    return this._isMounted ? this.props.to(this.context) : null
   }
   componentWillUnmount() {
-    this.isMounted = false
-    this.context.unsubscribe(() => this.setState(this.context))
+    this._isMounted = false
+    this.context.unsubscribe(() => this.setState({}))
   }
 }

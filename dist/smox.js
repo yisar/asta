@@ -174,7 +174,7 @@
                   }
                   class_1.prototype.componentDidMount = function () {
                       var _this = this;
-                      this.isMounted = true;
+                      this._isMounted = true;
                       this.actionsProps = mapToProps(actions, this.context.actions);
                       this.effectsProps = mapToProps(effects, this.context.effects);
                       this.context.subscribe(function () { return _this.update(); });
@@ -182,11 +182,11 @@
                   };
                   class_1.prototype.componentWillUnmount = function () {
                       var _this = this;
-                      this.isMounted = false;
+                      this._isMounted = false;
                       this.context.unsubscribe(function () { return _this.update(); });
                   };
                   class_1.prototype.update = function () {
-                      if (this.isMounted) {
+                      if (this._isMounted) {
                           this.stateProps = mapToProps(state, this.context.state);
                           this.setState({
                               props: __assign({}, this.state.porps, this.stateProps, this.actionsProps, this.effectsProps),
@@ -211,16 +211,17 @@
       }
       Subscribe.prototype.componentDidMount = function () {
           var _this = this;
-          this.isMounted = false;
-          this.context.subscribe(function () { return _this.setState(_this.context); });
+          this._isMounted = true;
+          this.context.subscribe(function () { return _this.setState({}); });
+          this.setState(this.context);
       };
       Subscribe.prototype.render = function () {
-          return this.isMounted ? this.props.to(this.context) : null;
+          return this._isMounted ? this.props.to(this.context) : null;
       };
       Subscribe.prototype.componentWillUnmount = function () {
           var _this = this;
-          this.isMounted = false;
-          this.context.unsubscribe(function () { return _this.setState(_this.context); });
+          this._isMounted = false;
+          this.context.unsubscribe(function () { return _this.setState({}); });
       };
       Subscribe.contextType = Context;
       return Subscribe;
