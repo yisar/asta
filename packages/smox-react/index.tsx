@@ -84,7 +84,6 @@ export class Subscribe extends React.Component {
     this.context.subscribe(() => this.setState(this.context))
   }
   render() {
-    console.log(this.context.state)
     return this.props.to(this.context)
   }
   componentWillUnmount() {
