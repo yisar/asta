@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Store, Provider, Subscribe } from '../../packages/index'
-import { Context } from '../../packages/smox-react/index'
 
 const state = {
   counter: {

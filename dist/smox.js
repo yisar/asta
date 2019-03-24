@@ -146,12 +146,6 @@
       return Store;
   }());
 
-  function useStore(store) {
-    const setter = React__default.useState(store.state)[1];
-    store.subscribe(() => setter(store.state));
-    return store;
-  }
-
   var Context = React.createContext(null);
   var Provider = (function (_super) {
       __extends(Provider, _super);
@@ -174,13 +168,13 @@
                   function class_1(props) {
                       var _this = _super.call(this, props) || this;
                       _this.state = {
-                          props: {}
+                          props: {},
                       };
                       return _this;
                   }
                   class_1.prototype.componentDidMount = function () {
                       var _this = this;
-                      this._isMounted = true;
+                      this.isMounted = true;
                       this.actionsProps = mapToProps(actions, this.context.actions);
                       this.effectsProps = mapToProps(effects, this.context.effects);
                       this.context.subscribe(function () { return _this.update(); });
@@ -188,14 +182,14 @@
                   };
                   class_1.prototype.componentWillUnmount = function () {
                       var _this = this;
-                      this._isMounted = false;
+                      this.isMounted = false;
                       this.context.unsubscribe(function () { return _this.update(); });
                   };
                   class_1.prototype.update = function () {
-                      if (this._isMounted) {
+                      if (this.isMounted) {
                           this.stateProps = mapToProps(state, this.context.state);
                           this.setState({
-                              props: __assign({}, this.state.porps, this.stateProps, this.actionsProps, this.effectsProps)
+                              props: __assign({}, this.state.porps, this.stateProps, this.actionsProps, this.effectsProps),
                           });
                       }
                   };
@@ -208,9 +202,40 @@
               _a;
       };
   };
+  var Subscribe = (function (_super) {
+      __extends(Subscribe, _super);
+      function Subscribe(props) {
+          var _this = _super.call(this, props) || this;
+          _this.state = {};
+          return _this;
+      }
+      Subscribe.prototype.componentDidMount = function () {
+          var _this = this;
+          this.isMounted = false;
+          this.context.subscribe(function () { return _this.setState(_this.context); });
+      };
+      Subscribe.prototype.render = function () {
+          return this.isMounted ? this.props.to(this.context) : null;
+      };
+      Subscribe.prototype.componentWillUnmount = function () {
+          var _this = this;
+          this.isMounted = false;
+          this.context.unsubscribe(function () { return _this.setState(_this.context); });
+      };
+      Subscribe.contextType = Context;
+      return Subscribe;
+  }(React.Component));
+
+  function useStore(store) {
+    if (!store) store = React__default.useContext(Context);
+    const setter = React__default.useState(store.state)[1];
+    store.subscribe(() => setter(store.state));
+    return store;
+  }
 
   exports.Provider = Provider;
   exports.Store = Store;
+  exports.Subscribe = Subscribe;
   exports.map = map;
   exports.produce = produce;
   exports.useStore = useStore;
