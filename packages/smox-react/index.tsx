@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { mapToProps } from '../smox/util'
-const Context = React.createContext(null)
+export const Context = React.createContext(null)
 
 export class Provider extends React.Component {
   store: any
@@ -21,7 +21,7 @@ export class Provider extends React.Component {
 export const map = ({
   state = [],
   actions = [],
-  effects = []
+  effects = [],
 }) => Component => {
   return class extends React.Component {
     static contextType = Context
@@ -31,10 +31,12 @@ export const map = ({
     stateProps: any
     actionsProps: any
     effectsProps: any
+    context: any
+    setState: Function
     constructor(props) {
       super(props)
       this.state = {
-        props: {}
+        props: {},
       }
     }
     componentDidMount() {
@@ -56,13 +58,37 @@ export const map = ({
             ...this.state.porps,
             ...this.stateProps,
             ...this.actionsProps,
-            ...this.effectsProps
-          }
+            ...this.effectsProps,
+          },
         })
       }
     }
     render() {
       return <Component {...this.state.props} />
     }
+  }
+}
+
+export class Subscribe extends React.Component {
+  _isMounted: boolean
+  context: any
+  state: any
+  setState: Function
+  props: any
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+  static contextType = Context
+  componentDidMount() {
+    this.context.subscribe(() => this.setState(this.context))
+  }
+  render() {
+    console.log(this.context.state)
+    return this.props.to(this.context)
+  }
+  componentWillUnmount() {
+    this._isMounted = false
+    this.context.unsubscribe(() => this.setState(this.context))
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Store } from '../../packages/index'
+import { Store, Provider, Subscribe } from '../../packages/index'
+import { Context } from '../../packages/smox-react/index'
 
 const state = {
   counter: {
@@ -34,24 +35,35 @@ const effects = {
 
 const store = new Store({ state, actions, effects })
 
-export function useStore (store) {
-  const setter = React.useState(store.state)[1]
+// export function useStore (store) {
+//   if (!store) store = React.useContext(Context)
 
-  store.subscribe(() => setter(store.state))
-  
-  return store
+//   const setter = React.useState(store.state)[1]
+//   store.subscribe(() => setter(store.state))
+
+//   return store
+// }
+
+class App extends React.Component {
+  render () {
+    return (
+      <Subscribe
+        to={({state,actions,effects}) => (
+          <>
+          {console.log(state)}
+            <div>{state.counter.count}</div>
+            <button onClick={() => actions.counter.up(1)}>+</button>
+            <button onClick={() => effects.counter.upAsync(1)}>x</button>
+          </>
+        )}
+      />
+    )
+  }
 }
 
-function App () {
-  const { state, actions, effects } = useStore(store)
-
-  return (
-    <>
-      <div>{state.counter.count}</div>
-      <button onClick={() => actions.counter.up(1)}>+</button>
-      <button onClick={() => effects.counter.upAsync(1)}>x</button>
-    </>
-  )
-}
-
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
