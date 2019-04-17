@@ -48,7 +48,7 @@ const effects = {
   },
 }
 
-const store = new Store({ state, actions, effects })
+const store = new Smox({ state, actions, effects })
 ```
 
 以上，smox 的部分就结束啦，创建了一个 store
@@ -117,6 +117,7 @@ render props 的方式是最为简洁的，需要使用 smox 提供的 Path 组�
 
 ```javascript
 import { Path } from 'smox'
+
 class App extends React.Component {
   render() {
     return (
@@ -206,10 +207,9 @@ const effects = {
 
 ### Immed
 
-if you only SetState , there is also a `produce` API turn to immutable easy
+immed 是 smox 内部的一个子包，它和 immer 类似，但是和 path 结合使用，性能更好
 
 ```javascript
-import React from 'react'
 import { produce } from 'smox'
 
 class App extends React.Component {

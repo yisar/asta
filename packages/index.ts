@@ -1,6 +1,6 @@
 import { produce } from './immed/index'
-import { Store } from './smox/store'
-import { useStore } from './hooks/index'
-import { Provider, map, Subscribe } from './smox-react/index'
+import { Smox } from './smox/store'
+import { usePath } from './hooks/index'
+import { Provider, path, Path } from './smox-react/index'
 
-export { produce, Store, Provider, map, useStore, Subscribe }
+export { Smox, Provider, path, Path, usePath, produce }
