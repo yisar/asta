@@ -1,12 +1,3 @@
-export function mapToProps(paths, source) {
-  let res = {}
-  paths.forEach(key => {
-    let path = key.split('/')
-    res[path[path.length - 1]] = getPlain(path, source)
-  })
-  return res
-}
-
 export function getPlain(path: string[], source: any) {
   let i = 0
   while (i < path.length) {
