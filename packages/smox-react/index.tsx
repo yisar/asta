@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { mapToProps } from '../smox/util'
+import { getPlain } from '../smox/util'
 export const Context = React.createContext(null)
 
 export class Provider extends React.Component {
@@ -18,11 +18,7 @@ export class Provider extends React.Component {
   }
 }
 
-export const map = ({
-  state = [],
-  actions = [],
-  effects = [],
-}) => Component => {
+export const path = (path: string) => (Component: any) => {
   return class extends React.Component {
     static contextType = Context
     props: any
@@ -32,7 +28,7 @@ export const map = ({
     actionsProps: any
     effectsProps: any
     context: any
-    setState: Function
+    setState: any
     constructor(props) {
       super(props)
       this.state = {
@@ -41,8 +37,8 @@ export const map = ({
     }
     componentDidMount() {
       this._isMounted = true
-      this.actionsProps = mapToProps(actions, this.context.actions)
-      this.effectsProps = mapToProps(effects, this.context.effects)
+      this.actionsProps = getPlain(path.split('/'), this.context.actions)
+      this.effectsProps = getPlain(path.split('/'), this.context.effects)
       this.context.subscribe(() => this.update())
       this.update()
     }
@@ -52,7 +48,7 @@ export const map = ({
     }
     update() {
       if (this._isMounted) {
-        this.stateProps = mapToProps(state, this.context.state)
+        this.stateProps = getPlain(path.split('/'), this.context.state)
         this.setState({
           props: {
             ...this.state.porps,
@@ -69,24 +65,32 @@ export const map = ({
   }
 }
 
-export class Subscribe extends React.Component {
+export class Path extends React.Component {
   _isMounted: boolean
   context: any
   state: any
-  setState: Function
+  setState: any
   props: any
-  constructor(props) {
+  store: any
+  constructor({ props }) {
     super(props)
     this.state = {}
+    let path = props.to.split('/')
+    const { state, actions, effects } = this.context
+    this.store = {
+      state: getPlain(path, state),
+      actions: getPlain(path, actions),
+      effects: getPlain(path, effects),
+    }
   }
   static contextType = Context
   componentDidMount() {
     this._isMounted = true
     this.context.subscribe(() => this.setState({}))
-    this.setState(this.context)
+    this.setState(this.store)
   }
   render() {
-    return this._isMounted ? this.props.to(this.context) : null
+    return this._isMounted ? this.props.children(this.store) : null
   }
   componentWillUnmount() {
     this._isMounted = false

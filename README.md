@@ -10,7 +10,7 @@ _tiny but perfect state management_
 
 ### Feature
 
-:pig_nose: New Context Api、path updating、Es6 proxy、nexted ……
+:pig_nose: New Context Api、path updating、Es6 proxy、nested ……
 
 :jack_o_lantern: Tiny size, 1Kb gzipped, no Dependencies
 
@@ -184,7 +184,7 @@ function App() {
 const {sex,{coutner:{count}}} = useStore({state})
 ```
 
-### Nexted
+### Nested
 
 nexted 是 smox 的 store 划分机制，它会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
 
