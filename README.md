@@ -53,136 +53,6 @@ const store = new Store({ state, actions, effects })
 
 以上，smox 的部分就结束啦，创建了一个 store
 
-然后就是如何用于 react：
-
-### Class API
-
-smox 提供两种两种 Class 组件调用方式，各有优缺点，在项目里可以结合 HOC 和 render props 的优缺点结合使用
-
-这两种方式，都是使用了 new Context API，都需要实现 Provider 提供顶部 store
-
-#### Provider
-
-```JavaScript
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
-```
-然后，子组件——
-
-#### render props
-
-render props 的方式是最为简洁的，需要使用 smox 提供的 Subscribe 组件，它和 unstated 的 Subscribe 类似
-
-```javascript
-class App extends React.Component {
-  render () {
-    return (
-      <Subscribe to={({state,actions,effects}) => <>
-          <div>{state.count}</div>
-          <button onClick={() => actions.up()}>+</button>
-          <button onClick={() => effects.upAsync()}>x</button>
-        </>}
-      />
-    )
-  }
-}
-```
-如上，它的本质是 render props，to 的参数是一个函数，参数为 store，可以魔法解构
-
-优点是，不会产生魔法字符串，不会产生多余的组件嵌套
-
-缺点就，可能看上去不怎么整洁，各种括号……
-
-#### HOC
-
-smox 还提供了 HOC 的封装，map 这个 API 和 redux 的 connect 类似，语义和 vuex 的 mapXxx 一致
-
-它的作用就是根据 path，将对应的方法和状态 map 到 props 中
-
-```javascript
-import React from 'react'
-import { map } from 'smox'
-
-@map({
-  state: ['count'],
-  actions: ['up', 'down'],
-  effects: ['upAsync'],
-})
-class App extends React.Component {
-  render() {
-    return (
-      <>
-        <h1>现在是{this.props.count}</h1>
-        <button onClick={this.props.up}>加一</button>
-        <button onClick={this.props.down}>减一</button>
-        <button onClick={this.props.upAsync}>异步加一</button>
-      </>
-    )
-  }
-}
-```
-
-HOC 的优点是代码比较简洁，缺点是魔法字符串和嵌套地狱
-
-#### Hooks API
-
-smox 提供 hooks 支持，它的 API 无比简单，只有一个 useStore API
-
-```javascript
-import React from 'react'
-import { useStore } from 'smox'
-
-function App() {
-  const { state, actions, effects } = useStore(store)
-
-  return (
-    <>
-      <div>{state.count}</div>
-      <button onClick={() => actions.up()}>+</button>
-      <button onClick={() => effects.upAsync()}>x</button>
-    </>
-  )
-}
-```
-值得一提，smox 是个中心化 store，而官方的 useReduer 是允许 use 多次多个不同的 reducer 的
-
-smox 的 useStore 不要这样做，要坚持 单 store 的原则，store 全局 new 一次，每个组件只 use 一次
-
-为了保证 store 只注册一次，仍然可以借助 Provider 组件，将 store 放到 context 里
-
-```JavaScript
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
-```
-这样一来，useStore 就不需要接受 store 作为参数了
-```javascript
-function App() {
-  const { state, actions, effects } = useStore() //不需要参数，会从 context 里取
-
-  return (
-    <>
-      <div>{state.count}</div>
-      <button onClick={() => actions.up()}>+</button>
-      <button onClick={() => effects.upAsync()}>x</button>
-    </>
-  )
-}
-```
-最后，hooks API 解决了魔法字符串的问题，但是如果 store 嵌套过深（不建议）
-
-不妨试试魔法解构(⊙o⊙)…同样的魔法解构也适用于 render props
-
-```javascript
-const {sex,{coutner:{count}}} = useStore({state})
-```
 
 ### Nested
 
@@ -214,17 +84,102 @@ const effects = {
     }
   }
 }
+```
 
-@map({
-  state:['counter/count'],
-  actions:['counter/up','counter/down'],
-  effects:['counter/upAsync']
-})
+以上，smox 最基本的机制就搞定了，接下来看看如何用于 react——
+
+## React
+
+在阅读下面内容之前，需要理解晓得 smox 有个 path 机制
+
+path 机制通俗的来讲，就是，给定一个 path，然后通过 path 去匹配全局 store 的局部 state 和 方法
+
+react 没办法自动生成 path，只能手动给，往下看——
+
+#### Provider
+
+不管怎样，由于 smox 使用了 new Context API，所以首先需要使用 provier 来生产整个 store
+
+```JavaScript
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+```
+
+然后，子组件，smox 分别提供了三种不同的方式来使用 path
+
+#### render props
+
+render props 的方式是最为简洁的，需要使用 smox 提供的 Path 组件，它和 Consumer 类似，本质是 render children，to 接受 path 参数
+
+```javascript
+import { Path } from 'smox'
+class App extends React.Component {
+  render() {
+    return (
+      <Path to="counter/count">
+        {({ state, actions, effects }) => (
+          <>
+            <div>{state.count}</div>
+            <button onClick={() => actions.up()}>+</button>
+            <button onClick={() => effects.upAsync()}>x</button>
+          </>
+        )}
+      </Path>
+    )
+  }
+}
+```
+
+#### HOC
+
+smox 还提供了 HOC 的封装，path（小写） 这个 API 和 redux 的 connect 类似，同样接受一个字符串的 path
+
+```javascript
+import { path } from 'smox'
+
+@path('counter/count')
+class App extends React.Component {
+  render() {
+    return (
+      <>
+        <h1>现在是{this.props.count}</h1>
+        <button onClick={this.props.up}>加一</button>
+        <button onClick={this.props.down}>减一</button>
+        <button onClick={this.props.upAsync}>异步加一</button>
+      </>
+    )
+  }
+}
+```
+
+#### Hooks API
+
+smox 提供 hooks 支持，它的 API 无比简单，使用 usePath ，参数一致
+
+```javascript
+import React from 'react'
+import { useStore } from 'smox'
+
+function App() {
+  const { state, actions, effects } = usePath('counter/count')
+
+  return (
+    <>
+      <div>{state.count}</div>
+      <button onClick={() => actions.up()}>+</button>
+      <button onClick={() => effects.upAsync()}>x</button>
+    </>
+  )
+}
 ```
 
 ### Proxy、async/await
 
-Proxy 可以使得 action 代码同步，更好看
+Proxy、async/await 可以使得 actions 代码同步，更好看
 
 ```javascript
 const actions = {
@@ -268,6 +223,16 @@ class App extends React.Component {
 }
 
 export default App
+```
+
+### 魔法字符串
+
+最后，很多人觉得 path 的魔法字符串的问题比较绝望，如果不传 path 的话，默认将会把整个 store
+
+性能可能会有影响，但是如果确实需要，不妨试试魔法解构(⊙o⊙)…
+
+```javascript
+const {coutner:{count}} = usePath()
 ```
 
 ## Demo
