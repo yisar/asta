@@ -71,26 +71,27 @@ export class Path extends React.Component {
   state: any
   setState: any
   props: any
-  store: any
-  constructor({ props }) {
+  path: Array<string>
+  constructor(props) {
     super(props)
     this.state = {}
-    let path = props.to.split('/')
-    const { state, actions, effects } = this.context
-    this.store = {
-      state: getPlain(path, state),
-      actions: getPlain(path, actions),
-      effects: getPlain(path, effects),
-    }
+    this.path = props.to.split('/')
   }
   static contextType = Context
   componentDidMount() {
     this._isMounted = true
     this.context.subscribe(() => this.setState({}))
-    this.setState(this.store)
+    this.setState({})
   }
   render() {
-    return this._isMounted ? this.props.children(this.store) : null
+    const { state, actions, effects } = this.context
+    return this._isMounted
+      ? this.props.children({
+          state: getPlain(this.path, state),
+          actions: getPlain(this.path, actions),
+          effects: getPlain(this.path, effects),
+        })
+      : null
   }
   componentWillUnmount() {
     this._isMounted = false

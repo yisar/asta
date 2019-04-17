@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Store, Provider, Subscribe } from '../../packages/index'
+import { Smox, Provider, Path, path } from '../../packages/index'
 
 const state = {
   counter: {
@@ -12,10 +12,10 @@ const state = {
 const actions = {
   counter: {
     up (state, data) {
-      state.count += data
+      state.count++
     },
     down (state, data) {
-      state.count -= data
+      state.count--
     }
   },
   change (state) {
@@ -32,33 +32,48 @@ const effects = {
   }
 }
 
-const store = new Store({ state, actions, effects })
+const store = new Smox({ state, actions, effects })
 
-// export function useStore (store) {
-//   if (!store) store = React.useContext(Context)
-
-//   const setter = React.useState(store.state)[1]
-//   store.subscribe(() => setter(store.state))
-
-//   return store
+// class App extends React.Component {
+//   render () {
+//     return (
+//       <Path to='counter'>
+//         {({ state, actions, effects }) => (
+//           <>
+//             <div>{state.count}</div>
+//             <button onClick={() => actions.up()}>+</button>
+//             <button onClick={() => effects.upAsync()}>x</button>
+//           </>
+//         )}
+//       </Path>
+//     )
+//   }
 // }
 
+@path('counter')
 class App extends React.Component {
   render () {
     return (
-      <Subscribe
-        to={({state,actions,effects}) => (
-          <>
-          {console.log(state)}
-            <div>{state.counter.count}</div>
-            <button onClick={() => actions.counter.up(1)}>+</button>
-            <button onClick={() => effects.counter.upAsync(1)}>x</button>
-          </>
-        )}
-      />
+      <>
+        <h1>{this.props.count}</h1>
+        <button onClick={this.props.up}>+</button>
+        <button onClick={this.props.upAsync}>x</button>
+      </>
     )
   }
 }
+
+// function App () {
+//   const { state, actions, effects } = usePath('counter')
+
+//   return (
+//     <>
+//       <div>{state.count}</div>
+//       <button onClick={() => actions.up()}>+</button>
+//       <button onClick={() => effects.upAsync()}>x</button>
+//     </>
+//   )
+// }
 
 ReactDOM.render(
   <Provider store={store}>

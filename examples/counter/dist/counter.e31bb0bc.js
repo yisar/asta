@@ -104,114 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"node_modules/@babel/runtime/helpers/classCallCheck.js":[function(require,module,exports) {
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-module.exports = _classCallCheck;
-},{}],"node_modules/@babel/runtime/helpers/createClass.js":[function(require,module,exports) {
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
-module.exports = _createClass;
-},{}],"node_modules/@babel/runtime/helpers/typeof.js":[function(require,module,exports) {
-function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
-
-function _typeof(obj) {
-  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return _typeof2(obj);
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
-    };
-  }
-
-  return _typeof(obj);
-}
-
-module.exports = _typeof;
-},{}],"node_modules/@babel/runtime/helpers/assertThisInitialized.js":[function(require,module,exports) {
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return self;
-}
-
-module.exports = _assertThisInitialized;
-},{}],"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js":[function(require,module,exports) {
-var _typeof = require("../helpers/typeof");
-
-var assertThisInitialized = require("./assertThisInitialized");
-
-function _possibleConstructorReturn(self, call) {
-  if (call && (_typeof(call) === "object" || typeof call === "function")) {
-    return call;
-  }
-
-  return assertThisInitialized(self);
-}
-
-module.exports = _possibleConstructorReturn;
-},{"../helpers/typeof":"node_modules/@babel/runtime/helpers/typeof.js","./assertThisInitialized":"node_modules/@babel/runtime/helpers/assertThisInitialized.js"}],"node_modules/@babel/runtime/helpers/getPrototypeOf.js":[function(require,module,exports) {
-function _getPrototypeOf(o) {
-  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-    return o.__proto__ || Object.getPrototypeOf(o);
-  };
-  return _getPrototypeOf(o);
-}
-
-module.exports = _getPrototypeOf;
-},{}],"node_modules/@babel/runtime/helpers/setPrototypeOf.js":[function(require,module,exports) {
-function _setPrototypeOf(o, p) {
-  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  return _setPrototypeOf(o, p);
-}
-
-module.exports = _setPrototypeOf;
-},{}],"node_modules/@babel/runtime/helpers/inherits.js":[function(require,module,exports) {
-var setPrototypeOf = require("./setPrototypeOf");
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) setPrototypeOf(subClass, superClass);
-}
-
-module.exports = _inherits;
-},{"./setPrototypeOf":"node_modules/@babel/runtime/helpers/setPrototypeOf.js"}],"node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
+})({"node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -26679,14 +26572,14 @@ function setPlain(path, value, source) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Store = void 0;
+exports.Smox = void 0;
 
 var _index = require("../immed/index");
 
 var _util = require("./util");
 
-var Store = function () {
-  function Store(_a) {
+var Smox = function () {
+  function Smox(_a) {
     var _b = _a.state,
         state = _b === void 0 ? {} : _b,
         _c = _a.actions,
@@ -26699,7 +26592,7 @@ var Store = function () {
     this.subs = [];
   }
 
-  Store.prototype.wireActions = function (path, state, actions) {
+  Smox.prototype.wireActions = function (path, state, actions) {
     var _this = this;
 
     Object.keys(actions).forEach(function (key) {
@@ -26718,7 +26611,7 @@ var Store = function () {
     return actions;
   };
 
-  Store.prototype.wireEffects = function (path, actions, effects) {
+  Smox.prototype.wireEffects = function (path, actions, effects) {
     var _this = this;
 
     Object.keys(effects).forEach(function (key) {
@@ -26731,20 +26624,20 @@ var Store = function () {
     return effects;
   };
 
-  Store.prototype.subscribe = function (sub) {
+  Smox.prototype.subscribe = function (sub) {
     this.subs.push(sub);
   };
 
-  Store.prototype.unsubscribe = function (sub) {
+  Smox.prototype.unsubscribe = function (sub) {
     this.subs = this.subs.filter(function (f) {
       return f !== sub;
     });
   };
 
-  return Store;
+  return Smox;
 }();
 
-exports.Store = Store;
+exports.Smox = Smox;
 },{"../immed/index":"../../packages/immed/index.ts","./util":"../../packages/smox/util.ts"}],"../../node_modules/object-assign/index.js":[function(require,module,exports) {
 /*
 object-assign
@@ -28887,7 +28780,7 @@ if ("development" === 'production') {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Subscribe = exports.map = exports.Provider = exports.Context = void 0;
+exports.Path = exports.path = exports.Provider = exports.Context = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
@@ -28961,13 +28854,7 @@ var Provider = function (_super) {
 
 exports.Provider = Provider;
 
-var map = function map(_a) {
-  var _b = _a.state,
-      state = _b === void 0 ? [] : _b,
-      _c = _a.actions,
-      actions = _c === void 0 ? [] : _c,
-      _d = _a.effects,
-      effects = _d === void 0 ? [] : _d;
+var path = function path(_path) {
   return function (Component) {
     var _a;
 
@@ -28987,8 +28874,8 @@ var map = function map(_a) {
         var _this = this;
 
         this._isMounted = true;
-        this.actionsProps = (0, _util.mapToProps)(actions, this.context.actions);
-        this.effectsProps = (0, _util.mapToProps)(effects, this.context.effects);
+        this.actionsProps = (0, _util.getPlain)(_path.split('/'), this.context.actions);
+        this.effectsProps = (0, _util.getPlain)(_path.split('/'), this.context.effects);
         this.context.subscribe(function () {
           return _this.update();
         });
@@ -29006,7 +28893,7 @@ var map = function map(_a) {
 
       class_1.prototype.update = function () {
         if (this._isMounted) {
-          this.stateProps = (0, _util.mapToProps)(state, this.context.state);
+          this.stateProps = (0, _util.getPlain)(_path.split('/'), this.context.state);
           this.setState({
             props: __assign({}, this.state.porps, this.stateProps, this.actionsProps, this.effectsProps)
           });
@@ -29022,33 +28909,42 @@ var map = function map(_a) {
   };
 };
 
-exports.map = map;
+exports.path = path;
 
-var Subscribe = function (_super) {
-  __extends(Subscribe, _super);
+var Path = function (_super) {
+  __extends(Path, _super);
 
-  function Subscribe(props) {
+  function Path(props) {
     var _this = _super.call(this, props) || this;
 
     _this.state = {};
+    _this.path = props.to.split('/');
     return _this;
   }
 
-  Subscribe.prototype.componentDidMount = function () {
+  Path.prototype.componentDidMount = function () {
     var _this = this;
 
     this._isMounted = true;
     this.context.subscribe(function () {
       return _this.setState({});
     });
-    this.setState(this.context);
+    this.setState({});
   };
 
-  Subscribe.prototype.render = function () {
-    return this._isMounted ? this.props.to(this.context) : null;
+  Path.prototype.render = function () {
+    var _a = this.context,
+        state = _a.state,
+        actions = _a.actions,
+        effects = _a.effects;
+    return this._isMounted ? this.props.children({
+      state: (0, _util.getPlain)(this.path, state),
+      actions: (0, _util.getPlain)(this.path, actions),
+      effects: (0, _util.getPlain)(this.path, effects)
+    }) : null;
   };
 
-  Subscribe.prototype.componentWillUnmount = function () {
+  Path.prototype.componentWillUnmount = function () {
     var _this = this;
 
     this._isMounted = false;
@@ -29057,36 +28953,37 @@ var Subscribe = function (_super) {
     });
   };
 
-  Subscribe.contextType = Context;
-  return Subscribe;
+  Path.contextType = Context;
+  return Path;
 }(React.Component);
 
-exports.Subscribe = Subscribe;
-},{"react":"../../node_modules/react/index.js","../smox/util":"../../packages/smox/util.ts"}],"../../packages/hooks/index.js":[function(require,module,exports) {
+exports.Path = Path;
+},{"react":"../../node_modules/react/index.js","../smox/util":"../../packages/smox/util.ts"}],"../../packages/hooks/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useStore = useStore;
+exports.usePath = usePath;
 
-var _react = _interopRequireDefault(require("react"));
+var React = _interopRequireWildcard(require("react"));
 
 var _index = require("../smox-react/index");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _util = require("../smox/util");
 
-function useStore(store) {
-  if (!store) store = _react.default.useContext(_index.Context);
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
-  var setter = _react.default.useState(store.state)[1];
-
+function usePath(path, store) {
+  if (!store) store = React.useContext(_index.Context);
+  var state = (0, _util.getPlain)(path.split('/'), store.state);
+  var setter = React.useState(state)[1];
   store.subscribe(function () {
-    return setter(store.state);
+    return setter(state);
   });
   return store;
 }
-},{"react":"../../node_modules/react/index.js","../smox-react/index":"../../packages/smox-react/index.tsx"}],"../../packages/index.ts":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js","../smox-react/index":"../../packages/smox-react/index.tsx","../smox/util":"../../packages/smox/util.ts"}],"../../packages/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29098,16 +28995,16 @@ Object.defineProperty(exports, "produce", {
     return _index.produce;
   }
 });
-Object.defineProperty(exports, "Store", {
+Object.defineProperty(exports, "Smox", {
   enumerable: true,
   get: function () {
-    return _store.Store;
+    return _store.Smox;
   }
 });
-Object.defineProperty(exports, "useStore", {
+Object.defineProperty(exports, "usePath", {
   enumerable: true,
   get: function () {
-    return _index2.useStore;
+    return _index2.usePath;
   }
 });
 Object.defineProperty(exports, "Provider", {
@@ -29116,16 +29013,16 @@ Object.defineProperty(exports, "Provider", {
     return _index3.Provider;
   }
 });
-Object.defineProperty(exports, "map", {
+Object.defineProperty(exports, "path", {
   enumerable: true,
   get: function () {
-    return _index3.map;
+    return _index3.path;
   }
 });
-Object.defineProperty(exports, "Subscribe", {
+Object.defineProperty(exports, "Path", {
   enumerable: true,
   get: function () {
-    return _index3.Subscribe;
+    return _index3.Path;
   }
 });
 
@@ -29136,18 +29033,8 @@ var _store = require("./smox/store");
 var _index2 = require("./hooks/index");
 
 var _index3 = require("./smox-react/index");
-},{"./immed/index":"../../packages/immed/index.ts","./smox/store":"../../packages/smox/store.ts","./hooks/index":"../../packages/hooks/index.js","./smox-react/index":"../../packages/smox-react/index.tsx"}],"index.js":[function(require,module,exports) {
+},{"./immed/index":"../../packages/immed/index.ts","./smox/store":"../../packages/smox/store.ts","./hooks/index":"../../packages/hooks/index.ts","./smox-react/index":"../../packages/smox-react/index.tsx"}],"index.js":[function(require,module,exports) {
 "use strict";
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -29170,10 +29057,10 @@ var state = {
 var actions = {
   counter: {
     up: function up(state, data) {
-      state.count += data;
+      state.count++;
     },
     down: function down(state, data) {
-      state.count -= data;
+      state.count--;
     }
   },
   change: function change(state) {
@@ -29214,55 +29101,59 @@ var effects = {
     }()
   }
 };
-var store = new _index.Store({
+var store = new _index.Smox({
   state: state,
   actions: actions,
   effects: effects
-}); // export function useStore (store) {
-//   if (!store) store = React.useContext(Context)
-//   const setter = React.useState(store.state)[1]
-//   store.subscribe(() => setter(store.state))
-//   return store
+}); // class App extends React.Component {
+//   render () {
+//     return (
+//       <Path to='counter'>
+//         {({ state, actions, effects }) => (
+//           <>
+//             <div>{state.count}</div>
+//             <button onClick={() => actions.up()}>+</button>
+//             <button onClick={() => effects.upAsync()}>x</button>
+//           </>
+//         )}
+//       </Path>
+//     )
+//   }
+// }
+// @path('counter')
+// class App extends React.Component {
+//   render () {
+//     return (
+//       <>
+//         <h1>{this.props.count}</h1>
+//         <button onClick={this.props.up}>+</button>
+//         <button onClick={this.props.upAsync}>x</button>
+//       </>
+//     )
+//   }
 // }
 
-var App =
-/*#__PURE__*/
-function (_React$Component) {
-  (0, _inherits2.default)(App, _React$Component);
+function App() {
+  var _usePath = usePath('counter'),
+      state = _usePath.state,
+      actions = _usePath.actions,
+      effects = _usePath.effects;
 
-  function App() {
-    (0, _classCallCheck2.default)(this, App);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(App).apply(this, arguments));
-  }
-
-  (0, _createClass2.default)(App, [{
-    key: "render",
-    value: function render() {
-      return _react.default.createElement(_index.Subscribe, {
-        to: function to(_ref) {
-          var state = _ref.state,
-              actions = _ref.actions,
-              effects = _ref.effects;
-          return _react.default.createElement(_react.default.Fragment, null, console.log(state), _react.default.createElement("div", null, state.counter.count), _react.default.createElement("button", {
-            onClick: function onClick() {
-              return actions.counter.up(1);
-            }
-          }, "+"), _react.default.createElement("button", {
-            onClick: function onClick() {
-              return effects.counter.upAsync(1);
-            }
-          }, "x"));
-        }
-      });
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("div", null, state.count), _react.default.createElement("button", {
+    onClick: function onClick() {
+      return actions.up();
     }
-  }]);
-  return App;
-}(_react.default.Component);
+  }, "+"), _react.default.createElement("button", {
+    onClick: function onClick() {
+      return effects.upAsync();
+    }
+  }, "x"));
+}
 
 _reactDom.default.render(_react.default.createElement(_index.Provider, {
   store: store
 }, _react.default.createElement(App, null)), document.getElementById('root'));
-},{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/regenerator":"node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"node_modules/@babel/runtime/helpers/asyncToGenerator.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","../../packages/index":"../../packages/index.ts"}],"C:/Users/Administrator/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"@babel/runtime/regenerator":"node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"node_modules/@babel/runtime/helpers/asyncToGenerator.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","../../packages/index":"../../packages/index.ts"}],"C:/Users/Administrator/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29289,7 +29180,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59337" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55604" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

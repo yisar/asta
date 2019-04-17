@@ -4,8 +4,6 @@
   (global = global || self, factory(global.smox = {}, global.React));
 }(this, function (exports, React) { 'use strict';
 
-  var React__default = 'default' in React ? React['default'] : React;
-
   var copy = {};
   var make;
   var oldPath;
@@ -74,14 +72,6 @@
       return __assign.apply(this, arguments);
   };
 
-  function mapToProps(paths, source) {
-      var res = {};
-      paths.forEach(function (key) {
-          var path = key.split('/');
-          res[path[path.length - 1]] = getPlain(path, source);
-      });
-      return res;
-  }
   function getPlain(path, source) {
       var i = 0;
       while (i < path.length) {
@@ -99,15 +89,15 @@
       return __assign({}, source, value);
   }
 
-  var Store = (function () {
-      function Store(_a) {
+  var Smox = (function () {
+      function Smox(_a) {
           var _b = _a.state, state = _b === void 0 ? {} : _b, _c = _a.actions, actions = _c === void 0 ? {} : _c, _d = _a.effects, effects = _d === void 0 ? {} : _d;
           this.state = state;
           this.actions = this.wireActions([], state, actions);
           this.effects = this.wireEffects([], actions, effects);
           this.subs = [];
       }
-      Store.prototype.wireActions = function (path, state, actions) {
+      Smox.prototype.wireActions = function (path, state, actions) {
           var _this = this;
           Object.keys(actions).forEach(function (key) {
               typeof actions[key] === 'function'
@@ -124,7 +114,7 @@
           });
           return actions;
       };
-      Store.prototype.wireEffects = function (path, actions, effects) {
+      Smox.prototype.wireEffects = function (path, actions, effects) {
           var _this = this;
           Object.keys(effects).forEach(function (key) {
               typeof effects[key] === 'function'
@@ -137,13 +127,13 @@
           });
           return effects;
       };
-      Store.prototype.subscribe = function (sub) {
+      Smox.prototype.subscribe = function (sub) {
           this.subs.push(sub);
       };
-      Store.prototype.unsubscribe = function (sub) {
+      Smox.prototype.unsubscribe = function (sub) {
           this.subs = this.subs.filter(function (f) { return f !== sub; });
       };
-      return Store;
+      return Smox;
   }());
 
   var Context = React.createContext(null);
@@ -159,87 +149,95 @@
       };
       return Provider;
   }(React.Component));
-  var map = function (_a) {
-      var _b = _a.state, state = _b === void 0 ? [] : _b, _c = _a.actions, actions = _c === void 0 ? [] : _c, _d = _a.effects, effects = _d === void 0 ? [] : _d;
-      return function (Component) {
-          var _a;
-          return _a = (function (_super) {
-                  __extends(class_1, _super);
-                  function class_1(props) {
-                      var _this = _super.call(this, props) || this;
-                      _this.state = {
-                          props: {},
-                      };
-                      return _this;
+  var path = function (path) { return function (Component) {
+      var _a;
+      return _a = (function (_super) {
+              __extends(class_1, _super);
+              function class_1(props) {
+                  var _this = _super.call(this, props) || this;
+                  _this.state = {
+                      props: {},
+                  };
+                  return _this;
+              }
+              class_1.prototype.componentDidMount = function () {
+                  var _this = this;
+                  this._isMounted = true;
+                  this.actionsProps = getPlain(path.split('/'), this.context.actions);
+                  this.effectsProps = getPlain(path.split('/'), this.context.effects);
+                  this.context.subscribe(function () { return _this.update(); });
+                  this.update();
+              };
+              class_1.prototype.componentWillUnmount = function () {
+                  var _this = this;
+                  this._isMounted = false;
+                  this.context.unsubscribe(function () { return _this.update(); });
+              };
+              class_1.prototype.update = function () {
+                  if (this._isMounted) {
+                      this.stateProps = getPlain(path.split('/'), this.context.state);
+                      this.setState({
+                          props: __assign({}, this.state.porps, this.stateProps, this.actionsProps, this.effectsProps),
+                      });
                   }
-                  class_1.prototype.componentDidMount = function () {
-                      var _this = this;
-                      this._isMounted = true;
-                      this.actionsProps = mapToProps(actions, this.context.actions);
-                      this.effectsProps = mapToProps(effects, this.context.effects);
-                      this.context.subscribe(function () { return _this.update(); });
-                      this.update();
-                  };
-                  class_1.prototype.componentWillUnmount = function () {
-                      var _this = this;
-                      this._isMounted = false;
-                      this.context.unsubscribe(function () { return _this.update(); });
-                  };
-                  class_1.prototype.update = function () {
-                      if (this._isMounted) {
-                          this.stateProps = mapToProps(state, this.context.state);
-                          this.setState({
-                              props: __assign({}, this.state.porps, this.stateProps, this.actionsProps, this.effectsProps),
-                          });
-                      }
-                  };
-                  class_1.prototype.render = function () {
-                      return React.createElement(Component, __assign({}, this.state.props));
-                  };
-                  return class_1;
-              }(React.Component)),
-              _a.contextType = Context,
-              _a;
-      };
-  };
-  var Subscribe = (function (_super) {
-      __extends(Subscribe, _super);
-      function Subscribe(props) {
+              };
+              class_1.prototype.render = function () {
+                  return React.createElement(Component, __assign({}, this.state.props));
+              };
+              return class_1;
+          }(React.Component)),
+          _a.contextType = Context,
+          _a;
+  }; };
+  var Path = (function (_super) {
+      __extends(Path, _super);
+      function Path(props) {
           var _this = _super.call(this, props) || this;
           _this.state = {};
+          _this.path = props.to.split('/');
           return _this;
       }
-      Subscribe.prototype.componentDidMount = function () {
+      Path.prototype.componentDidMount = function () {
           var _this = this;
           this._isMounted = true;
           this.context.subscribe(function () { return _this.setState({}); });
-          this.setState(this.context);
+          this.setState({});
       };
-      Subscribe.prototype.render = function () {
-          return this._isMounted ? this.props.to(this.context) : null;
+      Path.prototype.render = function () {
+          var _a = this.context, state = _a.state, actions = _a.actions, effects = _a.effects;
+          return this._isMounted
+              ? this.props.children({
+                  state: getPlain(this.path, state),
+                  actions: getPlain(this.path, actions),
+                  effects: getPlain(this.path, effects),
+              })
+              : null;
       };
-      Subscribe.prototype.componentWillUnmount = function () {
+      Path.prototype.componentWillUnmount = function () {
           var _this = this;
           this._isMounted = false;
           this.context.unsubscribe(function () { return _this.setState({}); });
       };
-      Subscribe.contextType = Context;
-      return Subscribe;
+      Path.contextType = Context;
+      return Path;
   }(React.Component));
 
-  function useStore(store) {
-    if (!store) store = React__default.useContext(Context);
-    const setter = React__default.useState(store.state)[1];
-    store.subscribe(() => setter(store.state));
-    return store;
+  function usePath(path) {
+      var store = React.useContext(Context);
+      var state = getPlain(path.split('/'), store.state);
+      var actions = getPlain(path.split('/'), store.actions);
+      var effects = getPlain(path.split('/'), store.effects);
+      var setter = React.useState(state)[1];
+      store.subscribe(function () { return setter(state); });
+      return { state: state, actions: actions, effects: effects };
   }
 
+  exports.Path = Path;
   exports.Provider = Provider;
-  exports.Store = Store;
-  exports.Subscribe = Subscribe;
-  exports.map = map;
+  exports.Smox = Smox;
+  exports.path = path;
   exports.produce = produce;
-  exports.useStore = useStore;
+  exports.usePath = usePath;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
