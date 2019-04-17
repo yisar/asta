@@ -29,7 +29,7 @@ import App from './app.js'
 import { Store } from 'smox'
 
 const state = {
-  count: 0,
+  count: 0
 }
 
 const actions = {
