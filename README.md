@@ -23,10 +23,7 @@ npm i smox -S
 ## Use
 
 ```js
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './app.js'
-import { Store } from 'smox'
+import { Smox } from 'smox'
 
 const state = {
   count: 0
