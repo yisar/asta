@@ -22,7 +22,7 @@ npm i smox -S
 
 ## Use
 
-```javascript
+```js
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './app.js'
@@ -56,9 +56,9 @@ const store = new Smox({ state, actions, effects })
 
 ### Nested
 
-nexted 是 smox 的 store 划分机制，它会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
+path-proxy 是 smox 的 store 划分机制，它会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
 
-```Javascript
+```js
 const state = {
   counter:{
     count: 0
@@ -115,7 +115,7 @@ ReactDOM.render(
 
 render props 的方式是最为简洁的，需要使用 smox 提供的 Path 组件，它和 Consumer 类似，本质是 render children，to 接受 path 参数
 
-```javascript
+```js
 import { Path } from 'smox'
 
 class App extends React.Component {
@@ -139,7 +139,7 @@ class App extends React.Component {
 
 smox 还提供了 HOC 的封装，path（小写） 这个 API 和 redux 的 connect 类似，同样接受一个字符串的 path
 
-```javascript
+```js
 import { path } from 'smox'
 
 @path('counter/count')
@@ -161,9 +161,8 @@ class App extends React.Component {
 
 smox 提供 hooks 支持，它的 API 无比简单，使用 usePath ，参数一致
 
-```javascript
-import React from 'react'
-import { useStore } from 'smox'
+```js
+import { usePath } from 'smox'
 
 function App() {
   const { state, actions, effects } = usePath('counter/count')
@@ -182,7 +181,7 @@ function App() {
 
 Proxy、async/await 可以使得 actions 代码同步，更好看
 
-```javascript
+```js
 const actions = {
   up(state) {
     state.count += 1
@@ -195,7 +194,7 @@ const actions = {
 
 同时 effects 下面，配合 async/await，也能同步的编写逻辑
 
-```JavaScript
+```js
 const effects = {
   async upAsync(actions) {
     await new Promise(t => setTimeout(t, 1000))
@@ -209,7 +208,7 @@ const effects = {
 
 immed 是 smox 内部的一个子包，它和 immer 类似，但是和 path 结合使用，性能更好
 
-```javascript
+```js
 import { produce } from 'smox'
 
 class App extends React.Component {
@@ -225,13 +224,13 @@ class App extends React.Component {
 export default App
 ```
 
-### 魔法字符串
+##### 魔法字符串
 
 最后，很多人觉得 path 的魔法字符串的问题比较绝望，如果不传 path 的话，默认将会把整个 store
 
 性能可能会有影响，但是如果确实需要，不妨试试魔法解构(⊙o⊙)…
 
-```javascript
+```js
 const {coutner:{count}} = usePath()
 ```
 
