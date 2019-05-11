@@ -12,7 +12,14 @@ export class Provider extends React.Component {
   render() {
     return (
       <Context.Provider value={this.store}>
-        {this.props.children}
+        {React.Children.map(this.props.children, child => {
+          console.log(child)
+          return React.cloneElement(
+            child,
+            { path: child.type.name.toLowerCase(), ...child.props },
+            child.children
+          )
+        })}
       </Context.Provider>
     )
   }
