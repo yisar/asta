@@ -7,7 +7,7 @@
 <a href="https://bundlephobia.com/result?p=smox"><img src="https://img.shields.io/bundlephobia/minzip/smox.svg?style=flat-square"></a>
 </p>
 
-## Use
+### Use
 
 ```shell
 npm i smox -S
@@ -76,7 +76,7 @@ const effects = {
 
 以上，了解嵌套的机制后，接下来看看如何用于 react——
 
-## React
+### React
 
 smox 用于 react 的核心在于 path 机制，新版本的 path 由 smox 自动生成，无需手动给
 
@@ -95,7 +95,7 @@ ReactDOM.render(
 
 然后，看看子组件，怎么用
 
-#### render props
+### render props
 
 smox 新版本只提供 render props 的封装，因为 render props 同时适用于 class 组件和 hook 组件，是最完美的拓展方式
 
@@ -176,7 +176,7 @@ class App extends React.Component {
 
 export default App
 ```
-## Demo
+### Demo
 
 - [Counter](https://ws1.sinaimg.cn/mw690/0065Zy9egy1g3cih8llu2j314a0ycdp6.jpg)
 

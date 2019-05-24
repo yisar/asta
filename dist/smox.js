@@ -181,9 +181,7 @@
           var _a = this.context, state = _a.state, actions = _a.actions, effects = _a.effects;
           var pathStr = this.getPath(null);
           pathStr = pathStr.replace('/consumer', '').replace('/provider/', '');
-          var path = pathStr.split('/');
-          if (path.length === 1)
-              path = [];
+          var path = pathStr.split('/').splice(0);
           return this._isMounted
               ? this.props.children({
                   state: getPlain(path, state),
