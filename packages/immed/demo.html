@@ -9,15 +9,13 @@
   </head>
   <body>
     <script>
-      let state = {
-        name: ['123']
-      }
-
-      produce(state, draft => {
-        draft.name = ['132']
-        console.log(draft.name)
-        console.log(state.name)
-      })
+    var obj = { name: 132, age: 20 }
+    var proxy = new Immed(obj)
+    var state = proxy.getState()
+    state.name = 'yse'
+    console.log(state) // state { name: 'yse', age: 20 }
+    var patches = proxy.getPatches()
+    console.log(patches) // patches [{op: "replace", path: "/name", value: "yse"}]
     </script>
   </body>
 </html>
