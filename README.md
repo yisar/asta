@@ -1,7 +1,7 @@
 <p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuqe61tlej30b40b4gn6.jpg" alt="smox" width="150"/></p>
 <p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3cjhwzv7dj31d80yck2x.jpg" alt="smox" width="1000"/></p>
 <h3 align="center">Smox .tiny but perfect state management.</h3>
-<p aligin="center">
+<p align="center">
 <a href="https://npmjs.com/package/smox"><img src="https://img.shields.io/npm/v/smox.svg?style=flat-square"></a>
 <a href="https://npmjs.com/package/smox"><img src="https://img.shields.io/npm/dt/smox.svg?style=flat-square"></a>
 <a href="https://bundlephobia.com/result?p=smox"><img src="https://img.shields.io/bundlephobia/minzip/smox.svg?style=flat-square"></a>
