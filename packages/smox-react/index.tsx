@@ -47,8 +47,7 @@ export class Consumer extends React.Component {
     const { state, actions, effects } = this.context
     let pathStr = this.getPath(null)
     pathStr = pathStr.replace('/consumer', '').replace('/provider/', '')
-    let path = pathStr.split('/')
-    if(path.length===1) path=[]
+    let path = pathStr.split('/').splice(0)
     return this._isMounted
       ? this.props.children({
           state: getPlain(path, state),
