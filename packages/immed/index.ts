@@ -27,6 +27,11 @@ function proxy(state: Object) {
       copy[key] = val
       make = true
       return true
+    },
+    deleteProperty(_,key){
+      delete copy[key]
+      make = true
+      return true
     }
   }
 

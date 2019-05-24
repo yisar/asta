@@ -12,77 +12,30 @@ export class Provider extends React.Component {
   render() {
     return (
       <Context.Provider value={this.store}>
-        {React.Children.map(this.props.children, child => {
-          console.log(child)
-          return React.cloneElement(
-            child,
-            { path: child.type.name.toLowerCase(), ...child.props },
-            child.children
-          )
-        })}
+        {this.props.children}
       </Context.Provider>
     )
   }
 }
 
-export const path = (path: string) => (Component: any) => {
-  return class extends React.Component {
-    static contextType = Context
-    props: any
-    _isMounted: boolean
-    state: any
-    stateProps: any
-    actionsProps: any
-    effectsProps: any
-    context: any
-    setState: any
-    constructor(props) {
-      super(props)
-      this.state = {
-        props: {},
-      }
-    }
-    componentDidMount() {
-      this._isMounted = true
-      this.actionsProps = getPlain(path.split('/'), this.context.actions)
-      this.effectsProps = getPlain(path.split('/'), this.context.effects)
-      this.context.subscribe(() => this.update())
-      this.update()
-    }
-    componentWillUnmount() {
-      this._isMounted = false
-      this.context.unsubscribe(() => this.update())
-    }
-    update() {
-      if (this._isMounted) {
-        this.stateProps = getPlain(path.split('/'), this.context.state)
-        this.setState({
-          props: {
-            ...this.state.porps,
-            ...this.stateProps,
-            ...this.actionsProps,
-            ...this.effectsProps,
-          },
-        })
-      }
-    }
-    render() {
-      return <Component {...this.state.props} />
-    }
-  }
-}
-
-export class Path extends React.Component {
+export class Consumer extends React.Component {
   _isMounted: boolean
   context: any
   state: any
   setState: any
   props: any
-  path: Array<string>
   constructor(props) {
     super(props)
     this.state = {}
-    this.path = props.to.split('/')
+  }
+  getPath(fiber) {
+    if (fiber === null) fiber = (this as any)._reactInternalFiber
+    let path =
+      typeof fiber.elementType === 'function'
+        ? `/${fiber.elementType.name.toLowerCase()}`
+        : ''
+    if (fiber.return) path = `${this.getPath(fiber.return)}${path}`
+    return path
   }
   static contextType = Context
   componentDidMount() {
@@ -92,11 +45,15 @@ export class Path extends React.Component {
   }
   render() {
     const { state, actions, effects } = this.context
+    let pathStr = this.getPath(null)
+    pathStr = pathStr.replace('/consumer', '').replace('/provider/', '')
+    let path = pathStr.split('/')
+    if(path.length===1) path=[]
     return this._isMounted
       ? this.props.children({
-          state: getPlain(this.path, state),
-          actions: getPlain(this.path, actions),
-          effects: getPlain(this.path, effects),
+          state: getPlain(path, state),
+          actions: getPlain(path, actions),
+          effects: getPlain(path, effects),
         })
       : null
   }

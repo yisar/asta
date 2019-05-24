@@ -27,6 +27,11 @@
               copy[key] = val;
               make = true;
               return true;
+          },
+          deleteProperty: function (_, key) {
+              delete copy[key];
+              make = true;
+              return true;
           }
       };
       return new Proxy(state, handler);
@@ -149,95 +154,57 @@
       };
       return Provider;
   }(React.Component));
-  var path = function (path) { return function (Component) {
-      var _a;
-      return _a = (function (_super) {
-              __extends(class_1, _super);
-              function class_1(props) {
-                  var _this = _super.call(this, props) || this;
-                  _this.state = {
-                      props: {},
-                  };
-                  return _this;
-              }
-              class_1.prototype.componentDidMount = function () {
-                  var _this = this;
-                  this._isMounted = true;
-                  this.actionsProps = getPlain(path.split('/'), this.context.actions);
-                  this.effectsProps = getPlain(path.split('/'), this.context.effects);
-                  this.context.subscribe(function () { return _this.update(); });
-                  this.update();
-              };
-              class_1.prototype.componentWillUnmount = function () {
-                  var _this = this;
-                  this._isMounted = false;
-                  this.context.unsubscribe(function () { return _this.update(); });
-              };
-              class_1.prototype.update = function () {
-                  if (this._isMounted) {
-                      this.stateProps = getPlain(path.split('/'), this.context.state);
-                      this.setState({
-                          props: __assign({}, this.state.porps, this.stateProps, this.actionsProps, this.effectsProps),
-                      });
-                  }
-              };
-              class_1.prototype.render = function () {
-                  return React.createElement(Component, __assign({}, this.state.props));
-              };
-              return class_1;
-          }(React.Component)),
-          _a.contextType = Context,
-          _a;
-  }; };
-  var Path = (function (_super) {
-      __extends(Path, _super);
-      function Path(props) {
+  var Consumer = (function (_super) {
+      __extends(Consumer, _super);
+      function Consumer(props) {
           var _this = _super.call(this, props) || this;
           _this.state = {};
-          _this.path = props.to.split('/');
           return _this;
       }
-      Path.prototype.componentDidMount = function () {
+      Consumer.prototype.getPath = function (fiber) {
+          if (fiber === null)
+              fiber = this._reactInternalFiber;
+          var path = typeof fiber.elementType === 'function'
+              ? "/" + fiber.elementType.name.toLowerCase()
+              : '';
+          if (fiber.return)
+              path = "" + this.getPath(fiber.return) + path;
+          return path;
+      };
+      Consumer.prototype.componentDidMount = function () {
           var _this = this;
           this._isMounted = true;
           this.context.subscribe(function () { return _this.setState({}); });
           this.setState({});
       };
-      Path.prototype.render = function () {
+      Consumer.prototype.render = function () {
           var _a = this.context, state = _a.state, actions = _a.actions, effects = _a.effects;
+          var pathStr = this.getPath(null);
+          pathStr = pathStr.replace('/consumer', '').replace('/provider/', '');
+          var path = pathStr.split('/');
+          if (path.length === 1)
+              path = [];
           return this._isMounted
               ? this.props.children({
-                  state: getPlain(this.path, state),
-                  actions: getPlain(this.path, actions),
-                  effects: getPlain(this.path, effects),
+                  state: getPlain(path, state),
+                  actions: getPlain(path, actions),
+                  effects: getPlain(path, effects),
               })
               : null;
       };
-      Path.prototype.componentWillUnmount = function () {
+      Consumer.prototype.componentWillUnmount = function () {
           var _this = this;
           this._isMounted = false;
           this.context.unsubscribe(function () { return _this.setState({}); });
       };
-      Path.contextType = Context;
-      return Path;
+      Consumer.contextType = Context;
+      return Consumer;
   }(React.Component));
 
-  function usePath(path) {
-      var store = React.useContext(Context);
-      var state = getPlain(path.split('/'), store.state);
-      var actions = getPlain(path.split('/'), store.actions);
-      var effects = getPlain(path.split('/'), store.effects);
-      var setter = React.useState(state)[1];
-      store.subscribe(function () { return setter(state); });
-      return { state: state, actions: actions, effects: effects };
-  }
-
-  exports.Path = Path;
+  exports.Consumer = Consumer;
   exports.Provider = Provider;
   exports.Smox = Smox;
-  exports.path = path;
   exports.produce = produce;
-  exports.usePath = usePath;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

@@ -1,25 +1,49 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Smox, Provider, Consumer } from '../../dist/smox'
 
-class PathComponent extends React.Component {
-  constructor (props) {
-    super(props)
-    this.props = {
-      path: []
-    }
+const state = {
+  count: 0
+}
+
+const actions = {
+  up (state) {
+    state.count++
+  },
+  down (state) {
+    state.count--
   }
 }
 
-class App extends PathComponent {
+const effects = {
+  async upAsync (actions) {
+    await new Promise(t => setTimeout(t, 1000))
+    actions.up()
+  }
+}
+
+const store = new Smox({ state, actions, effects })
+
+class App extends React.Component {
   render () {
-    return <Child />
+    return (
+      <Consumer>
+        {({ state, actions, effects }) => (
+          <>
+            <h1>{state.count}</h1>
+            <button onClick={actions.up}>+</button>
+            <button onClick={actions.down}>-</button>
+            <button onClick={effects.upAsync}>x</button>
+          </>
+        )}
+      </Consumer>
+    )
   }
 }
 
-class Child extends PathComponent {
-  render () {
-    console.log(this.props.path.concat(this.constructor.name.toLowerCase()))
-  }
-}
-
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
