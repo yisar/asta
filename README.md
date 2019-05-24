@@ -187,7 +187,7 @@ export default App
 ```
 ## Demo
 
-- [Counter](https://github.com/132yse/smox/tree/master/examples/counter)
+- [Counter](https://ws1.sinaimg.cn/mw690/0065Zy9egy1g3cih8llu2j314a0ycdp6.jpg)
 
 ### License
 
