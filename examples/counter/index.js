@@ -26,7 +26,7 @@ const store = new Smox({ state, actions, effects })
 
 class App extends React.Component {
   render () {
-    return (
+    return <>
       <Consumer>
         {({ state, actions, effects }) => (
           <>
@@ -37,7 +37,8 @@ class App extends React.Component {
           </>
         )}
       </Consumer>
-    )
+      <Counter />
+    </>
   }
 }
 

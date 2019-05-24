@@ -53,7 +53,7 @@ const store = new Smox({ state, actions, effects })
 
 ### Nested
 
-path-proxy 是 smox 的 store 划分机制，它会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
+smox 会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
 
 ```js
 const state = {
@@ -83,15 +83,11 @@ const effects = {
 }
 ```
 
-以上，smox 最基本的机制就搞定了，接下来看看如何用于 react——
+以上，了解嵌套的机制后，接下来看看如何用于 react——
 
 ## React
 
-在阅读下面内容之前，需要理解晓得 smox 有个 path 机制
-
-path 机制通俗的来讲，就是，给定一个 path，然后通过 path 去匹配全局 store 的局部 state 和 方法
-
-react 没办法自动生成 path，只能手动给，往下看——
+smox 用于 react 的核心在于 path 机制，新版本的 path 由 smox 自动生成，无需手动给
 
 #### Provider
 
@@ -106,72 +102,42 @@ ReactDOM.render(
 )
 ```
 
-然后，子组件，smox 分别提供了三种不同的方式来使用 path
+然后，看看子组件，怎么用
 
 #### render props
 
-render props 的方式是最为简洁的，需要使用 smox 提供的 Path 组件，它和 Consumer 类似，本质是 render children，to 接受 path 参数
+smox 新版本只提供 render props 的封装，因为 render props 同时适用于 class 组件和 hook 组件，是最完美的拓展方式
+
+和 Context API 极为相似，需要使用 Consumer 组件
 
 ```js
-import { Path } from 'smox'
+import { Consumer } from 'smox'
 
 class App extends React.Component {
-  render() {
+  render () {
     return (
-      <Path to="counter/count">
-        {({ state, actions, effects }) => (
+      <Consumer>
+        {({ state, actions, effects }) => ( //此处对应的 store 根目录的 state
           <>
-            <div>{state.count}</div>
-            <button onClick={() => actions.up()}>+</button>
-            <button onClick={() => effects.upAsync()}>x</button>
+            <h1>{state.count}</h1>
+            <button onClick={actions.up}>+</button>
+            <button onClick={actions.down}>-</button>
+            <button onClick={effects.upAsync}>x</button>
           </>
         )}
-      </Path>
+      </Consumer>
     )
   }
 }
 ```
+以上，看上去没什么不同，重点来了，也就是 smox 的 path 机制
 
-#### HOC
+因为太难解释了，所以我 p 了一张图：
+![](https://ws1.sinaimg.cn/large/0065Zy9egy1g3ci9k5766j315o12eam2.jpg)
 
-smox 还提供了 HOC 的封装，path（小写） 这个 API 和 redux 的 connect 类似，同样接受一个字符串的 path
+图中，相同的颜色，意味着 store 与 react 应用匹配到的作用域
 
-```js
-import { path } from 'smox'
-
-@path('counter/count')
-class App extends React.Component {
-  render() {
-    return (
-      <>
-        <h1>{this.props.count}</h1>
-        <button onClick={this.props.up}>+</button>
-        <button onClick={this.props.upAsync}>x</button>
-      </>
-    )
-  }
-}
-```
-
-#### Hooks API
-
-smox 提供 hooks 支持，它的 API 无比简单，使用 usePath ，参数一致
-
-```js
-import { usePath } from 'smox'
-
-function App() {
-  const { state, actions, effects } = usePath('counter/count')
-
-  return (
-    <>
-      <div>{state.count}</div>
-      <button onClick={() => actions.up()}>+</button>
-      <button onClick={() => effects.upAsync()}>x</button>
-    </>
-  )
-}
-```
+不知道你看懂了没【汗颜】
 
 ### Proxy、async/await
 

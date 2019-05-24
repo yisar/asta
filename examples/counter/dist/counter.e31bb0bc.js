@@ -29080,7 +29080,7 @@ function (_React$Component) {
   (0, _createClass2.default)(App, [{
     key: "render",
     value: function render() {
-      return _react.default.createElement(_smox.Consumer, null, function (_ref) {
+      return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_smox.Consumer, null, function (_ref) {
         var state = _ref.state,
             actions = _ref.actions,
             effects = _ref.effects;
@@ -29091,7 +29091,7 @@ function (_React$Component) {
         }, "-"), _react.default.createElement("button", {
           onClick: effects.upAsync
         }, "x"));
-      });
+      }), _react.default.createElement(Counter, null));
     }
   }]);
   return App;
