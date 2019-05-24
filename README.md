@@ -1,4 +1,4 @@
-<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1fyuqe61tlej30b40b4gn6.jpg" alt="smox" width="150"/></p>
+<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3cki7ywukj30dw0dwgnn.jpg" alt="smox" width="150"/></p>
 <p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3cjhwzv7dj31d80yck2x.jpg" alt="smox" width="800"/></p>
 <h3 align="center">Smox .tiny but perfect state management.</h3>
 <p align="center">
