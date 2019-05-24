@@ -1,5 +1,5 @@
 <p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3cki7ywukj30dw0dwgnn.jpg" alt="smox" width="150"/></p>
-<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3cjhwzv7dj31d80yck2x.jpg" alt="smox" width="800"/></p>
+<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3ckuofl2oj31d80ycap2.jpg" alt="smox" width="800"/></p>
 <h3 align="center">Smox .tiny but perfect state management.</h3>
 <p align="center">
 <a href="https://npmjs.com/package/smox"><img src="https://img.shields.io/npm/v/smox.svg?style=flat-square"></a>
@@ -123,12 +123,11 @@ class App extends React.Component {
 ```
 以上，看上去没什么不同，重点来了，也就是 smox 的 path 机制
 
-因为太难解释了，所以我 p 了一张图：
-![](https://ws1.sinaimg.cn/mw690/0065Zy9egy1g3citm0pacj31e00ycgxk.jpg)
+因为太难解释了，所以我 p 了一张图：[戳我](https://ws1.sinaimg.cn/large/0065Zy9egy1g3ckuofl2oj31d80ycap2.jpg)
 
 图中，相同的颜色，意味着 store 与 react 应用匹配到的作用域
 
-不知道你看懂了没【汗颜】
+能看懂就算我赢！
 
 ### Proxy、async/await
 
