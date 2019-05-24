@@ -133,7 +133,7 @@ class App extends React.Component {
 以上，看上去没什么不同，重点来了，也就是 smox 的 path 机制
 
 因为太难解释了，所以我 p 了一张图：
-![](https://ws1.sinaimg.cn/large/0065Zy9egy1g3ci9k5766j315o12eam2.jpg)
+![](https://ws1.sinaimg.cn/mw690/0065Zy9egy1g3citm0pacj31e00ycgxk.jpg)
 
 图中，相同的颜色，意味着 store 与 react 应用匹配到的作用域
 
