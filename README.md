@@ -185,17 +185,6 @@ class App extends React.Component {
 
 export default App
 ```
-
-##### 魔法字符串
-
-最后，很多人觉得 path 的魔法字符串的问题比较绝望，如果不传 path 的话，默认将会把整个 store
-
-性能可能会有影响，但是如果确实需要，不妨试试魔法解构(⊙o⊙)…
-
-```js
-const {coutner:{count}} = usePath()
-```
-
 ## Demo
 
 - [Counter](https://github.com/132yse/smox/tree/master/examples/counter)
