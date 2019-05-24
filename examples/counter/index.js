@@ -23,18 +23,3 @@ class Child extends PathComponent {
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
-
-// export class PathComponent extends React.Component {
-//   constructor (props) {
-//     super(props)
-//     this.path = props.path.concat(this.disPlayName)
-//   }
-
-//   render () {
-//     return React.Children.map(this.props.children, child => {
-//       React.cloneElement(child, {
-//         path: this.path
-//       })
-//     })
-//   }
-// }
