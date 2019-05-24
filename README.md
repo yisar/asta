@@ -1,5 +1,5 @@
-<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3cki7ywukj30dw0dwgnn.jpg" alt="smox" width="150"/></p>
-<p align="center"><img src="https://ws1.sinaimg.cn/large/0065Zy9egy1g3ckuofl2oj31d80ycap2.jpg" alt="smox" width="800"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/12951461/58321687-6e549b00-7e51-11e9-9312-9f81889bf4fa.jpg" width="150"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/12951461/58321688-6eed3180-7e51-11e9-8bc8-275db9dbdc19.jpg"  width="800"/></p>
 <h3 align="center">Smox .tiny but perfect state management.</h3>
 <p align="center">
 <a href="https://npmjs.com/package/smox"><img src="https://img.shields.io/npm/v/smox.svg?style=flat-square"></a>
@@ -17,7 +17,7 @@ npm i smox -S
 import { Smox } from 'smox'
 
 const state = {
-  count: 0
+  count: 0,
 }
 
 const actions = {
@@ -41,36 +41,37 @@ const store = new Smox({ state, actions, effects })
 
 以上，smox 的部分就结束啦，创建了一个 store
 
-
 ### Nested
 
 smox 会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
 
 ```js
 const state = {
-  counter:{
-    count: 0
-  }
+  counter: {
+    count: 0,
+  },
 }
 
 const actions = {
   counter: {
-    up(state, data) { //此处的 state 为同路径的 { count:0 }
+    up(state, data) {
+      //此处的 state 为同路径的 { count:0 }
       state.count += data
     },
     down(state, data) {
       state.count -= data
-    }
-  }
+    },
+  },
 }
 
 const effects = {
   counter: {
-    async upAsync(actions) { //此处的 actions 为同路径的 { up(), down() }
+    async upAsync(actions) {
+      //此处的 actions 为同路径的 { up(), down() }
       await new Promise(t => setTimeout(t, 1000))
       actions.up()
-    }
-  }
+    },
+  },
 }
 ```
 
@@ -105,10 +106,12 @@ smox 新版本只提供 render props 的封装，因为 render props 同时适�
 import { Consumer } from 'smox'
 
 class App extends React.Component {
-  render () {
+  render() {
     return (
       <Consumer>
-        {({ state, actions, effects }) => ( //此处对应的 store 根目录的 state
+        {(
+          { state, actions, effects } //此处对应的 store 根目录的 state
+        ) => (
           <>
             <h1>{state.count}</h1>
             <button onClick={actions.up}>+</button>
@@ -121,6 +124,7 @@ class App extends React.Component {
   }
 }
 ```
+
 以上，看上去没什么不同，重点来了，也就是 smox 的 path 机制
 
 因为太难解释了，所以我 p 了一张图：[戳我](https://ws1.sinaimg.cn/large/0065Zy9egy1g3ckuofl2oj31d80ycap2.jpg)
@@ -152,7 +156,7 @@ const effects = {
     await new Promise(t => setTimeout(t, 1000))
     actions.up()
     actions.down()
-  }
+  },
 }
 ```
 
@@ -175,6 +179,7 @@ class App extends React.Component {
 
 export default App
 ```
+
 ### Demo
 
 - [Counter](https://ws1.sinaimg.cn/mw690/0065Zy9egy1g3cih8llu2j314a0ycdp6.jpg)
