@@ -128,7 +128,12 @@ function App() {
 function Counter() {
   return (
     <Consumer>
-      {({ state, actions, effects }) => ( //此处是 counter 对象中的 { state:{ count }, actions:{ up(), down() }, effects:{ asyncUp() } }
+      {({ state, actions, effects }) => ( 
+        /*此处是 counter 对象中的 
+        { state:{ count }, 
+          actions:{ up(), down() }, 
+          effects:{ asyncUp() } 
+        }*/
         <>
           <h1>{state.count}</h1>
           <button onClick={actions.up}>+</button>
