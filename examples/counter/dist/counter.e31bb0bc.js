@@ -28870,7 +28870,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         typeof actions[key] === 'function' ? function (key, action) {
           actions[key] = function (data) {
             var res = produce(state, function (draft) {
-              action(draft, data);
+              return action(draft, data);
             }, path);
             this.state = setPlain(path, res, this.state);
             this.subs.forEach(function (fun) {

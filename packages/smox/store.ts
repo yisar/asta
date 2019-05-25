@@ -18,13 +18,7 @@ export class Smox {
       typeof actions[key] === 'function'
         ? ((key, action) => {
             actions[key] = function(data) {
-              let res: any = produce(
-                state,
-                draft => {
-                  action(draft, data)
-                },
-                path
-              )
+              let res: any = produce(state, draft => action(draft, data), path)
               this.state = setPlain(path, res, this.state)
               this.subs.forEach(fun => fun())
             }.bind(this)

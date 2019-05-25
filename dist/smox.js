@@ -36,6 +36,7 @@
       };
       return new Proxy(state, handler);
   }
+  //# sourceMappingURL=index.js.map
 
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -93,6 +94,7 @@
       }
       return __assign({}, source, value);
   }
+  //# sourceMappingURL=util.js.map
 
   var Smox = (function () {
       function Smox(_a) {
@@ -108,9 +110,7 @@
               typeof actions[key] === 'function'
                   ? (function (key, action) {
                       actions[key] = function (data) {
-                          var res = produce(state, function (draft) {
-                              action(draft, data);
-                          }, path);
+                          var res = produce(state, function (draft) { return action(draft, data); }, path);
                           this.state = setPlain(path, res, this.state);
                           this.subs.forEach(function (fun) { return fun(); });
                       }.bind(_this);
@@ -189,6 +189,9 @@
       Consumer.contextType = Context;
       return Consumer;
   }(React.Component));
+  //# sourceMappingURL=index.js.map
+
+  //# sourceMappingURL=index.js.map
 
   exports.Consumer = Consumer;
   exports.Provider = Provider;
