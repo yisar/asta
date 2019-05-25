@@ -41,45 +41,11 @@ const store = new Smox({ state, actions, effects })
 
 以上，smox 的部分就结束啦，创建了一个 store
 
-### Nested
-
-smox 会根据嵌套对象的 key 作为 path，然后根据 path 来限定作用域，命中局部的状态和方法，如下：
-
-```js
-const state = {
-  counter: {
-    count: 0,
-  },
-}
-
-const actions = {
-  counter: {
-    up(state, data) {
-      //此处的 state 为同路径的 { count:0 }
-      state.count += data
-    },
-    down(state, data) {
-      state.count -= data
-    },
-  },
-}
-
-const effects = {
-  counter: {
-    async upAsync(actions) {
-      //此处的 actions 为同路径的 { up(), down() }
-      await new Promise(t => setTimeout(t, 1000))
-      actions.up()
-    },
-  },
-}
-```
-
-以上，了解嵌套的机制后，接下来看看如何用于 react——
-
 ### React
 
-smox 用于 react 的核心在于 path 机制，新版本的 path 由 smox 自动生成，无需手动给
+使用 render porps ，可以方便的用于 react 组件中
+
+为什么使用 render props 而不是 HOC？由于 hooks API 的出现，导致 HOC 只适用于 hooks API，render props 可同时适用于 class 和 function，是最合适的拓展机制
 
 ```js
 import { Provider, Consumer } from 'smox'
