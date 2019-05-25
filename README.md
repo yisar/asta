@@ -97,7 +97,6 @@ class App extends React.Component {
           </>
         )}
       </Consumer>
-      <Counter />
     </>
   }
 }
