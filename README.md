@@ -43,9 +43,11 @@ const store = new Smox({ state, actions, effects })
 
 ### React
 
-使用 render porps ，可以方便的用于 react 组件中
+对外暴露 Provider 和 Consumer 组件，可以方便的用于 react 组件中
 
 为什么使用 render props 而不是 HOC？由于 hooks API 的出现，导致 HOC 只适用于 hooks API，render props 可同时适用于 class 和 function，是最合适的拓展机制
+
+其中，Provider 组件接受 store 作为参数，而 Consumer 可以接受到 path 限定过的 part store
 
 ```js
 import { Provider, Consumer } from 'smox'
@@ -74,6 +76,47 @@ ReactDOM.render(
   document.getElementById('root')
 )
 ```
+
+### Path
+
+path 是一个匹配机制，举例说明：
+
+```js
+const state = {
+  counter: {
+    count: 0,
+  },
+}
+
+const actions = {
+  counter: {
+    up(state, data) {
+      //此处的 state 为同路径的 { count:0 }
+      state.count += data
+    },
+    down(state, data) {
+      state.count -= data
+    },
+  },
+}
+
+const effects = {
+  counter: {
+    async upAsync(actions) {
+      //此处的 actions 为同路径的 { up(), down() }
+      await new Promise(t => setTimeout(t, 1000))
+      actions.up()
+    },
+  },
+}
+```
+可以看到，跟对象下面的 counter 对象，此时的 path 是 `/counter`
+
+现在我们有个 `<App />` 跟组件，它默认匹配全局的 store，此时它的 path 是 `/`
+
+然后 `<App />` 有个子组件 `<Counter />`,这个组件的 path 是 `/counter`，那么它匹配的就是 store 对象下面的 counter 对象的属性和方法
+
+通过这个约定，我们不需要关心 store 的拆分，只需要按照规定安排 store 和 组件即可
 
 ### Proxy、async/await
 
