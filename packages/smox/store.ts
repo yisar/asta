@@ -25,7 +25,6 @@ export class Smox {
           })(key, actions[key])
         : this.wireActions(path.concat(key), state[key], actions[key])
     })
-
     return actions
   }
 
@@ -37,7 +36,6 @@ export class Smox {
           })(key, effects[key])
         : this.wireEffects(path.concat(key), actions[key], effects[key])
     })
-
     return effects
   }
 

@@ -36,6 +36,7 @@
       };
       return new Proxy(state, handler);
   }
+  //# sourceMappingURL=index.js.map
 
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -93,6 +94,7 @@
       }
       return __assign({}, source, value);
   }
+  //# sourceMappingURL=util.js.map
 
   var Smox = (function () {
       function Smox(_a) {
@@ -185,6 +187,9 @@
       Consumer.contextType = Context;
       return Consumer;
   }(React.Component));
+  //# sourceMappingURL=index.js.map
+
+  //# sourceMappingURL=index.js.map
 
   exports.Consumer = Consumer;
   exports.Provider = Provider;
