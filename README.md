@@ -45,7 +45,7 @@ const store = new Smox({ state, actions, effects })
 
 对外暴露 Provider 和 Consumer 组件，可以方便的用于 react 组件中
 
-为什么使用 render props 而不是 HOC？由于 hooks API 的出现，导致 HOC 只适用于 hooks API，render props 可同时适用于 class 和 function，是最合适的拓展机制
+为什么使用 render props 而不是 HOC？由于 hooks API 的出现，导致 HOC 只适用于 class API，render props 可同时适用于 class 和 function，是最合适的拓展机制
 
 其中，Provider 组件接受 store 作为参数，而 Consumer 可以接受到 path 限定过的 part store
 
