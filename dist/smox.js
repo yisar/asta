@@ -36,6 +36,7 @@
       };
       return new Proxy(state, handler);
   }
+  //# sourceMappingURL=index.js.map
 
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -93,6 +94,7 @@
       }
       return __assign({}, source, value);
   }
+  //# sourceMappingURL=util.js.map
 
   var Smox = (function () {
       function Smox(_a) {
@@ -140,9 +142,13 @@
       };
       return Smox;
   }());
+  //# sourceMappingURL=store.js.map
 
   var Context = React.createContext(null);
   var Unbatch = function (props) { return props.children; };
+  var isPath = function (item, index) {
+      return item !== 'provider' && item !== 'consumer' && index === 0;
+  };
   function Provider(props) {
       return (React.createElement(Context.Provider, { value: props.store }, typeof props.children.type === 'function' ? (props.children) : (React.createElement(Unbatch, null, props.children))));
   }
@@ -155,26 +161,22 @@
           if (fiber === null)
               fiber = this._reactInternalFiber;
           var path = typeof fiber.elementType === 'function'
-              ? "/" + fiber.elementType.name.toLowerCase()
-              : '';
+              ? fiber.elementType.name.toLowerCase()
+              : [];
           if (fiber.return)
-              path = "" + this.getPath(fiber.return) + path;
+              path = this.getPath(fiber.return).concat(path);
           return path;
       };
       Consumer.prototype.componentDidMount = function () {
           var _this = this;
-          this._isMounted = true;
+          this.isMount = true;
           this.context.subscribe(function () { return _this.setState({}); });
           this.setState({});
       };
       Consumer.prototype.render = function () {
           var _a = this.context, state = _a.state, actions = _a.actions, effects = _a.effects;
-          var pathStr = this.getPath(null)
-              .replace('/consumer', '')
-              .replace('/provider/', '');
-          var path = pathStr.split('/');
-          path = path.splice(1);
-          return this._isMounted
+          var path = this.getPath(null).filter(isPath);
+          return this.isMount
               ? this.props.children({
                   state: getPlain(path, state),
                   actions: getPlain(path, actions),
@@ -184,12 +186,14 @@
       };
       Consumer.prototype.componentWillUnmount = function () {
           var _this = this;
-          this._isMounted = false;
+          this.isMount = false;
           this.context.unsubscribe(function () { return _this.setState({}); });
       };
       Consumer.contextType = Context;
       return Consumer;
   }(React.Component));
+
+  //# sourceMappingURL=index.js.map
 
   exports.Consumer = Consumer;
   exports.Provider = Provider;

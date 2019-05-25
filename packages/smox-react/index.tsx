@@ -2,6 +2,8 @@ import * as React from 'react'
 import { getPlain } from '../smox/util'
 const Context = React.createContext(null)
 const Unbatch = props => props.children
+const isPath = (item, index) =>
+  item !== 'provider' && item !== 'consumer' && index === 0
 
 export function Provider(props) {
   return (
@@ -16,7 +18,7 @@ export function Provider(props) {
 }
 
 export class Consumer extends React.Component {
-  _isMounted: boolean
+  isMount: boolean
   context: any
   state: any
   setState: any
@@ -28,27 +30,22 @@ export class Consumer extends React.Component {
     if (fiber === null) fiber = (this as any)._reactInternalFiber
     let path =
       typeof fiber.elementType === 'function'
-        ? `/${fiber.elementType.name.toLowerCase()}`
-        : ''
-    if (fiber.return) path = `${this.getPath(fiber.return)}${path}`
+        ? fiber.elementType.name.toLowerCase()
+        : []
+    if (fiber.return) path = this.getPath(fiber.return).concat(path)
     return path
   }
   static contextType = Context
   componentDidMount() {
-    this._isMounted = true
+    this.isMount = true
     this.context.subscribe(() => this.setState({}))
     this.setState({})
   }
   render() {
     const { state, actions, effects } = this.context
-    let pathStr = this.getPath(null)
-      .replace('/consumer', '')
-      .replace('/provider/', '')
-    let path = pathStr.split('/')
+    let path = this.getPath(null).filter(isPath)
 
-    path = path.splice(1) //去掉第一个组件
-
-    return this._isMounted
+    return this.isMount
       ? this.props.children({
           state: getPlain(path, state),
           actions: getPlain(path, actions),
@@ -57,7 +54,7 @@ export class Consumer extends React.Component {
       : null
   }
   componentWillUnmount() {
-    this._isMounted = false
+    this.isMount = false
     this.context.unsubscribe(() => this.setState({}))
   }
 }

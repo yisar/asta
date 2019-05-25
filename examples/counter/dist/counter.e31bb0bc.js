@@ -28914,6 +28914,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     return props.children;
   };
 
+  var isPath = function isPath(item, index) {
+    return item !== 'provider' && item !== 'consumer' && index === 0;
+  };
+
   function Provider(props) {
     return React.createElement(Context.Provider, {
       value: props.store
@@ -28929,15 +28933,15 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
     Consumer.prototype.getPath = function (fiber) {
       if (fiber === null) fiber = this._reactInternalFiber;
-      var path = typeof fiber.elementType === 'function' ? "/" + fiber.elementType.name.toLowerCase() : '';
-      if (fiber.return) path = "" + this.getPath(fiber.return) + path;
+      var path = typeof fiber.elementType === 'function' ? fiber.elementType.name.toLowerCase() : [];
+      if (fiber.return) path = this.getPath(fiber.return).concat(path);
       return path;
     };
 
     Consumer.prototype.componentDidMount = function () {
       var _this = this;
 
-      this._isMounted = true;
+      this.isMount = true;
       this.context.subscribe(function () {
         return _this.setState({});
       });
@@ -28949,10 +28953,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           state = _a.state,
           actions = _a.actions,
           effects = _a.effects;
-      var pathStr = this.getPath(null).replace('/consumer', '').replace('/provider/', '');
-      var path = pathStr.split('/');
-      path = path.splice(1);
-      return this._isMounted ? this.props.children({
+      var path = this.getPath(null).filter(isPath);
+      return this.isMount ? this.props.children({
         state: getPlain(path, state),
         actions: getPlain(path, actions),
         effects: getPlain(path, effects)
@@ -28962,7 +28964,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     Consumer.prototype.componentWillUnmount = function () {
       var _this = this;
 
-      this._isMounted = false;
+      this.isMount = false;
       this.context.unsubscribe(function () {
         return _this.setState({});
       });
