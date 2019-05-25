@@ -142,24 +142,14 @@
   }());
 
   var Context = React.createContext(null);
-  var Provider = (function (_super) {
-      __extends(Provider, _super);
-      function Provider(props) {
-          var _this = _super.call(this, props) || this;
-          _this.store = _this.props.store;
-          return _this;
-      }
-      Provider.prototype.render = function () {
-          return (React.createElement(Context.Provider, { value: this.store }, this.props.children));
-      };
-      return Provider;
-  }(React.Component));
+  var Unbatch = function (props) { return props.children; };
+  function Provider(props) {
+      return (React.createElement(Context.Provider, { value: props.store }, typeof props.children.type === 'function' ? (props.children) : (React.createElement(Unbatch, null, props.children))));
+  }
   var Consumer = (function (_super) {
       __extends(Consumer, _super);
       function Consumer(props) {
-          var _this = _super.call(this, props) || this;
-          _this.state = {};
-          return _this;
+          return _super.call(this, props) || this;
       }
       Consumer.prototype.getPath = function (fiber) {
           if (fiber === null)
@@ -179,9 +169,11 @@
       };
       Consumer.prototype.render = function () {
           var _a = this.context, state = _a.state, actions = _a.actions, effects = _a.effects;
-          var pathStr = this.getPath(null);
-          pathStr = pathStr.replace('/consumer', '').replace('/provider/', '');
-          var path = pathStr.split('/').splice(0);
+          var pathStr = this.getPath(null)
+              .replace('/consumer', '')
+              .replace('/provider/', '');
+          var path = pathStr.split('/');
+          path = path.splice(1);
           return this._isMounted
               ? this.props.children({
                   state: getPlain(path, state),

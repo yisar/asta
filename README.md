@@ -81,37 +81,14 @@ const effects = {
 
 smox 用于 react 的核心在于 path 机制，新版本的 path 由 smox 自动生成，无需手动给
 
-#### Provider
-
-不管怎样，由于 smox 使用了 new Context API，所以首先需要使用 provier 来生产整个 store
-
-```JavaScript
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
-```
-
-然后，看看子组件，怎么用
-
-### render props
-
-smox 新版本只提供 render props 的封装，因为 render props 同时适用于 class 组件和 hook 组件，是最完美的拓展方式
-
-和 Context API 极为相似，需要使用 Consumer 组件
-
 ```js
-import { Consumer } from 'smox'
+import { Provider, Consumer } from 'smox'
 
 class App extends React.Component {
-  render() {
-    return (
+  render () {
+    return <>
       <Consumer>
-        {(
-          { state, actions, effects } //此处对应的 store 根目录的 state
-        ) => (
+        {({ state, actions, effects }) => (
           <>
             <h1>{state.count}</h1>
             <button onClick={actions.up}>+</button>
@@ -120,18 +97,18 @@ class App extends React.Component {
           </>
         )}
       </Consumer>
-    )
+      <Counter />
+    </>
   }
 }
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
 ```
-
-以上，看上去没什么不同，重点来了，也就是 smox 的 path 机制
-
-因为太难解释了，所以我 p 了一张图：[戳我](https://ws1.sinaimg.cn/large/0065Zy9egy1g3ckuofl2oj31d80ycap2.jpg)
-
-图中，相同的颜色，意味着 store 与 react 应用匹配到的作用域
-
-能看懂就算我赢！
 
 ### Proxy、async/await
 

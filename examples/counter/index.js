@@ -37,14 +37,24 @@ class App extends React.Component {
           </>
         )}
       </Consumer>
-      <Counter />
     </>
   }
 }
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <>
+      <Consumer>
+        {({ state, actions, effects }) => (
+          <>
+            <h1>{state.count}</h1>
+            <button onClick={actions.up}>+</button>
+            <button onClick={actions.down}>-</button>
+            <button onClick={effects.upAsync}>x</button>
+          </>
+        )}
+      </Consumer>
+    </>
   </Provider>,
   document.getElementById('root')
 )

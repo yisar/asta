@@ -28910,33 +28910,21 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
   var Context = React.createContext(null);
 
-  var Provider = function (_super) {
-    __extends(Provider, _super);
+  var Unbatch = function Unbatch(props) {
+    return props.children;
+  };
 
-    function Provider(props) {
-      var _this = _super.call(this, props) || this;
-
-      _this.store = _this.props.store;
-      return _this;
-    }
-
-    Provider.prototype.render = function () {
-      return React.createElement(Context.Provider, {
-        value: this.store
-      }, this.props.children);
-    };
-
-    return Provider;
-  }(React.Component);
+  function Provider(props) {
+    return React.createElement(Context.Provider, {
+      value: props.store
+    }, typeof props.children.type === 'function' ? props.children : React.createElement(Unbatch, null, props.children));
+  }
 
   var Consumer = function (_super) {
     __extends(Consumer, _super);
 
     function Consumer(props) {
-      var _this = _super.call(this, props) || this;
-
-      _this.state = {};
-      return _this;
+      return _super.call(this, props) || this;
     }
 
     Consumer.prototype.getPath = function (fiber) {
@@ -28961,10 +28949,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           state = _a.state,
           actions = _a.actions,
           effects = _a.effects;
-      var pathStr = this.getPath(null);
-      pathStr = pathStr.replace('/consumer', '').replace('/provider/', '');
+      var pathStr = this.getPath(null).replace('/consumer', '').replace('/provider/', '');
       var path = pathStr.split('/');
-      if (path.length === 1) path = [];
+      path = path.splice(1);
       return this._isMounted ? this.props.children({
         state: getPlain(path, state),
         actions: getPlain(path, actions),
@@ -29091,7 +29078,7 @@ function (_React$Component) {
         }, "-"), _react.default.createElement("button", {
           onClick: effects.upAsync
         }, "x"));
-      }), _react.default.createElement(Counter, null));
+      }));
     }
   }]);
   return App;
@@ -29099,7 +29086,18 @@ function (_React$Component) {
 
 _reactDom.default.render(_react.default.createElement(_smox.Provider, {
   store: store
-}, _react.default.createElement(App, null)), document.getElementById('root'));
+}, _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_smox.Consumer, null, function (_ref2) {
+  var state = _ref2.state,
+      actions = _ref2.actions,
+      effects = _ref2.effects;
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("h1", null, state.count), _react.default.createElement("button", {
+    onClick: actions.up
+  }, "+"), _react.default.createElement("button", {
+    onClick: actions.down
+  }, "-"), _react.default.createElement("button", {
+    onClick: effects.upAsync
+  }, "x"));
+}))), document.getElementById('root'));
 },{"@babel/runtime/helpers/classCallCheck":"node_modules/@babel/runtime/helpers/classCallCheck.js","@babel/runtime/helpers/createClass":"node_modules/@babel/runtime/helpers/createClass.js","@babel/runtime/helpers/possibleConstructorReturn":"node_modules/@babel/runtime/helpers/possibleConstructorReturn.js","@babel/runtime/helpers/getPrototypeOf":"node_modules/@babel/runtime/helpers/getPrototypeOf.js","@babel/runtime/helpers/inherits":"node_modules/@babel/runtime/helpers/inherits.js","@babel/runtime/regenerator":"node_modules/@babel/runtime/regenerator/index.js","@babel/runtime/helpers/asyncToGenerator":"node_modules/@babel/runtime/helpers/asyncToGenerator.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","../../dist/smox":"../../dist/smox.js"}],"C:/Users/Administrator/AppData/Roaming/npm/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -29128,7 +29126,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "14084" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2758" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

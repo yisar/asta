@@ -1,21 +1,18 @@
 import * as React from 'react'
 import { getPlain } from '../smox/util'
-export const Context = React.createContext(null)
+const Context = React.createContext(null)
+const Unbatch = props => props.children
 
-export class Provider extends React.Component {
-  store: any
-  props: any
-  constructor(props) {
-    super(props)
-    this.store = this.props.store
-  }
-  render() {
-    return (
-      <Context.Provider value={this.store}>
-        {this.props.children}
-      </Context.Provider>
-    )
-  }
+export function Provider(props) {
+  return (
+    <Context.Provider value={props.store}>
+      {typeof props.children.type === 'function' ? (
+        props.children
+      ) : (
+        <Unbatch>{props.children}</Unbatch>
+      )}
+    </Context.Provider>
+  )
 }
 
 export class Consumer extends React.Component {
@@ -26,7 +23,6 @@ export class Consumer extends React.Component {
   props: any
   constructor(props) {
     super(props)
-    this.state = {}
   }
   getPath(fiber) {
     if (fiber === null) fiber = (this as any)._reactInternalFiber
@@ -46,8 +42,12 @@ export class Consumer extends React.Component {
   render() {
     const { state, actions, effects } = this.context
     let pathStr = this.getPath(null)
-    pathStr = pathStr.replace('/consumer', '').replace('/provider/', '')
-    let path = pathStr.split('/').splice(0)
+      .replace('/consumer', '')
+      .replace('/provider/', '')
+    let path = pathStr.split('/')
+
+    path = path.splice(1) //去掉第一个组件
+
     return this._isMounted
       ? this.props.children({
           state: getPlain(path, state),
