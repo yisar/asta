@@ -33,9 +33,7 @@ export class Smox {
     Object.keys(effects).forEach(key => {
       typeof effects[key] === 'function'
         ? ((key, effect) => {
-            effects[key] = function(data) {
-              effect(actions, data)
-            }
+            effects[key] = data => effect(actions, data)
           })(key, effects[key])
         : this.wireEffects(path.concat(key), actions[key], effects[key])
     })

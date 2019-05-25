@@ -124,9 +124,7 @@
           Object.keys(effects).forEach(function (key) {
               typeof effects[key] === 'function'
                   ? (function (key, effect) {
-                      effects[key] = function (data) {
-                          effect(actions, data);
-                      };
+                      effects[key] = function (data) { return effect(actions, data); };
                   })(key, effects[key])
                   : _this.wireEffects(path.concat(key), actions[key], effects[key]);
           });
