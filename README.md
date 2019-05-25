@@ -53,19 +53,21 @@ const store = new Smox({ state, actions, effects })
 import { Provider, Consumer } from 'smox'
 
 class App extends React.Component {
-  render () {
-    return <>
-      <Consumer>
-        {({ state, actions, effects }) => (
-          <>
-            <h1>{state.count}</h1>
-            <button onClick={actions.up}>+</button>
-            <button onClick={actions.down}>-</button>
-            <button onClick={effects.upAsync}>x</button>
-          </>
-        )}
-      </Consumer>
-    </>
+  render() {
+    return (
+      <>
+        <Consumer>
+          {({ state, actions, effects }) => (
+            <>
+              <h1>{state.count}</h1>
+              <button onClick={actions.up}>+</button>
+              <button onClick={actions.down}>-</button>
+              <button onClick={effects.upAsync}>x</button>
+            </>
+          )}
+        </Consumer>
+      </>
+    )
   }
 }
 
@@ -110,11 +112,34 @@ const effects = {
   },
 }
 ```
+
 可以看到，跟对象下面的 counter 对象，此时的 path 是 `/counter`
 
 现在我们有个 `<App />` 跟组件，它默认匹配全局的 store，此时它的 path 是 `/`
 
 然后 `<App />` 有个子组件 `<Counter />`,这个组件的 path 是 `/counter`，那么它匹配的就是 store 对象下面的 counter 对象的属性和方法
+
+```js
+function App() {
+  //跟组件匹配的是全局 store
+  return <Counter />
+}
+
+function Counter() {
+  return (
+    <Consumer>
+      {({ state, actions, effects }) => ( //此处是 counter 对象中的 { state:{ count }, actions:{ up(), down() }, effects:{ asyncUp() } }
+        <>
+          <h1>{state.count}</h1>
+          <button onClick={actions.up}>+</button>
+          <button onClick={actions.down}>-</button>
+          <button onClick={effects.upAsync}>x</button>
+        </>
+      )}
+    </Consumer>
+  )
+}
+```
 
 通过这个约定，我们不需要关心 store 的拆分，只需要按照规定安排 store 和 组件即可
 
