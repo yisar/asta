@@ -1,5 +1,5 @@
 node_modules/
-examples/counter/node_modules/
+examples/node_modules/
 .vscode/
 .idea/
 .cache/

@@ -1,6 +1,6 @@
 {
   "name": "smox",
-  "version": "2.5.3",
+  "version": "2.5.5",
   "description": "Fast 1kB state management that path-updating.",
   "main": "./dist/smox.js",
   "scripts": {
