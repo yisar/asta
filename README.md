@@ -68,9 +68,9 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <Provider store={store}>
+  <Global store={store}>
     <App />
-  </Provider>,
+  </Global>,
   document.getElementById('root')
 )
 ```
