@@ -2,10 +2,10 @@ import * as React from 'react'
 import { getPlain } from '../smox/util'
 const Context = React.createContext(null)
 const Unbatch = props => props.children
-const isPath = (item, index) =>
-  item !== 'provider' && item !== 'consumer' && index === 0
+const realPath = (item, index) =>
+  item !== 'global' && item !== 'local' && index === 0
 
-export function Provider(props) {
+export function Global(props) {
   return (
     <Context.Provider value={props.store}>
       {typeof props.children.type === 'function' ? (
@@ -17,7 +17,7 @@ export function Provider(props) {
   )
 }
 
-export class Consumer extends React.Component {
+export class Local extends React.Component {
   isMount: boolean
   context: any
   state: any
@@ -43,7 +43,7 @@ export class Consumer extends React.Component {
   }
   render() {
     const { state, actions, effects } = this.context
-    let path = this.getPath(null).filter(isPath)
+    let path = this.getPath(null).filter(realPath)
 
     return this.isMount
       ? this.props.children({

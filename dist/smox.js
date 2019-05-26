@@ -138,21 +138,22 @@
       };
       return Smox;
   }());
+  //# sourceMappingURL=store.js.map
 
   var Context = React.createContext(null);
   var Unbatch = function (props) { return props.children; };
-  var isPath = function (item, index) {
-      return item !== 'provider' && item !== 'consumer' && index === 0;
+  var realPath = function (item, index) {
+      return item !== 'global' && item !== 'local' && index === 0;
   };
-  function Provider(props) {
+  function Global(props) {
       return (React.createElement(Context.Provider, { value: props.store }, typeof props.children.type === 'function' ? (props.children) : (React.createElement(Unbatch, null, props.children))));
   }
-  var Consumer = (function (_super) {
-      __extends(Consumer, _super);
-      function Consumer(props) {
+  var Local = (function (_super) {
+      __extends(Local, _super);
+      function Local(props) {
           return _super.call(this, props) || this;
       }
-      Consumer.prototype.getPath = function (fiber) {
+      Local.prototype.getPath = function (fiber) {
           if (fiber === null)
               fiber = this._reactInternalFiber;
           var path = typeof fiber.elementType === 'function'
@@ -162,15 +163,15 @@
               path = this.getPath(fiber.return).concat(path);
           return path;
       };
-      Consumer.prototype.componentDidMount = function () {
+      Local.prototype.componentDidMount = function () {
           var _this = this;
           this.isMount = true;
           this.context.subscribe(function () { return _this.setState({}); });
           this.setState({});
       };
-      Consumer.prototype.render = function () {
+      Local.prototype.render = function () {
           var _a = this.context, state = _a.state, actions = _a.actions, effects = _a.effects;
-          var path = this.getPath(null).filter(isPath);
+          var path = this.getPath(null).filter(realPath);
           return this.isMount
               ? this.props.children({
                   state: getPlain(path, state),
@@ -179,20 +180,19 @@
               })
               : null;
       };
-      Consumer.prototype.componentWillUnmount = function () {
+      Local.prototype.componentWillUnmount = function () {
           var _this = this;
           this.isMount = false;
           this.context.unsubscribe(function () { return _this.setState({}); });
       };
-      Consumer.contextType = Context;
-      return Consumer;
+      Local.contextType = Context;
+      return Local;
   }(React.Component));
-  //# sourceMappingURL=index.js.map
 
   //# sourceMappingURL=index.js.map
 
-  exports.Consumer = Consumer;
-  exports.Provider = Provider;
+  exports.Global = Global;
+  exports.Local = Local;
   exports.Smox = Smox;
   exports.produce = produce;
 
