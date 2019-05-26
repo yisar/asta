@@ -43,30 +43,26 @@ const store = new Smox({ state, actions, effects })
 
 ### React
 
-对外暴露 Provider 和 Consumer 组件，可以方便的用于 react 组件中
+对外暴露 Global 和 Local 组件，意思是全局 store 和 局部（经过 path 匹配过的） store
 
 为什么使用 render props 而不是 HOC？由于 hooks API 的出现，导致 HOC 只适用于 class API，render props 可同时适用于 class 和 function，是最合适的拓展机制
 
-其中，Provider 组件接受 store 作为参数，而 Consumer 可以接受到 path 限定过的 part store
-
 ```js
-import { Provider, Consumer } from 'smox'
+import { Global, Local } from 'smox'
 
 class App extends React.Component {
   render() {
     return (
-      <>
-        <Consumer>
-          {({ state, actions, effects }) => (
-            <>
-              <h1>{state.count}</h1>
-              <button onClick={actions.up}>+</button>
-              <button onClick={actions.down}>-</button>
-              <button onClick={effects.upAsync}>x</button>
-            </>
-          )}
-        </Consumer>
-      </>
+      <Local>
+        {store => (
+          <>
+            <h1>{store.state.count}</h1>
+            <button onClick={store.actions.up}>+</button>
+            <button onClick={store.actions.down}>-</button>
+            <button onClick={store.effects.upAsync}>x</button>
+          </>
+        )}
+      </Local>
     )
   }
 }
@@ -127,8 +123,8 @@ function App() {
 
 function Counter() {
   return (
-    <Consumer>
-      {({ state, actions, effects }) => ( 
+    <Local>
+      {({ state, actions, effects }) => (
         /*此处是 counter 对象中的 
         { state:{ count }, 
           actions:{ up(), down() }, 
@@ -141,7 +137,7 @@ function Counter() {
           <button onClick={effects.upAsync}>x</button>
         </>
       )}
-    </Consumer>
+    </Local>
   )
 }
 ```
