@@ -1,12 +1,12 @@
 import { produce } from '../immed/index'
 import { setPlain } from './util'
 
-export class Smox {
+class Smox {
   state: any
   actions: any
   effects: any
   subs: Function[]
-  constructor({ state = {}, actions = {}, effects = {} }) {
+  constructor({ state, actions, effects}) {
     this.state = state
     this.actions = this.wireActions([], state, actions)
     this.effects = this.wireEffects([], actions, effects)
@@ -45,4 +45,8 @@ export class Smox {
   unsubscribe(sub) {
     this.subs = this.subs.filter(f => f !== sub)
   }
+}
+
+export function createStore({state = {}, actions = {}, effects = {}}){
+  return new Smox({state, actions, effects})
 }
