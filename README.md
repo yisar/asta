@@ -14,7 +14,7 @@ npm i smox -S
 ```
 
 ```js
-import { Smox } from 'smox'
+import { createStore } from 'smox'
 
 const state = {
   count: 0,
@@ -36,7 +36,7 @@ const effects = {
   },
 }
 
-const store = new Smox({ state, actions, effects })
+const store = createStore({ state, actions, effects })
 ```
 
 以上，smox 的部分就结束啦，创建了一个 store
