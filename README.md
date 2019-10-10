@@ -2,6 +2,7 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/12951461/58321688-6eed3180-7e51-11e9-8bc8-275db9dbdc19.jpg"  width="800"/></p>
 <h3 align="center">Smox .Fast 1kB state management with prefect API.</h3>
 <p align="center">
+<a href="https://github.com/132yse/smox"><img src="https://img.shields.io/github/stars/132yse/smox?style=flat-square"></a>
 <a href="https://npmjs.com/package/smox"><img src="https://img.shields.io/npm/v/smox.svg?style=flat-square"></a>
 <a href="https://npmjs.com/package/smox"><img src="https://img.shields.io/npm/dt/smox.svg?style=flat-square"></a>
 <a href="https://bundlephobia.com/result?p=smox"><img src="https://img.shields.io/bundlephobia/minzip/smox.svg?style=flat-square"></a>
