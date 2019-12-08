@@ -8,7 +8,7 @@
 <a href="https://bundlephobia.com/result?p=smox"><img src="https://img.shields.io/bundlephobia/minzip/smox.svg?style=flat-square"></a>
 </p>
 
-> hooks 出现后，不再需要状态管理了，状态管理大乱斗的时代可以结束啦，smox 宣布弃坑，大家可以出门右转 fre
+> hooks 出现后，不再需要状态管理了，状态管理大乱斗的时代可以结束啦，smox 宣布弃坑，可以出门右转新坑 [https://github.com/132yse/fre](fre)
 
 ### Use
 
