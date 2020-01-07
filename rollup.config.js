@@ -5,9 +5,9 @@ import babel from 'rollup-plugin-babel'
 export default {
   input: './packages/index.ts',
   output: {
-    file: './dist/smox.js',
+    file: './dist/qox.js',
     format: 'umd',
-    name: 'smox'
+    name: 'qox'
   },
   plugins: [
     typescript(),

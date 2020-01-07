@@ -1,5 +1,0 @@
-### Run
-
-```
-yarn start
-```
