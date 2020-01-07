@@ -1,3 +1,5 @@
+import { useState, useCallback } from 'react'
+
 export function setup(fn) {
   fn.composition = true
   return fn
@@ -24,12 +26,11 @@ export function reactive(target) {
         return reactive(newValue)
       }
       let res = Reflect.get(target, key, receiver)
-    //   track(target, key)
       return res
     },
     set(target, key, value, receiver) {
       let res = Reflect.set(target, key, value, receiver)
-    //   if (key in target) trigger(target, key)
+      if (key in target) forceUpdate()
       return res
     },
     deleteProperty(target, key, receiver) {
@@ -43,4 +44,9 @@ export function reactive(target) {
   toRaw.set(observed, target)
 
   return observed
+}
+
+function forceUpdate() {
+  const update = useState()[0]
+  return useCallback(() => update({}), [])
 }
