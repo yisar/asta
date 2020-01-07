@@ -1,8 +1,8 @@
 {
-  "name": "smox",
-  "version": "2.5.5",
+  "name": "qox",
+  "version": "0.0.1",
   "description": "Fast 1kB state management that path-updating.",
-  "main": "./dist/smox.js",
+  "main": "./dist/qox.js",
   "scripts": {
     "test": "jest",
     "start": "rollup -c --watch",
@@ -13,14 +13,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:132yse/smox.git"
+    "url": "git@github.com:132yse/qox.git"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-react": "^7.0.0",
     "@types/react": "^16.7.18",
     "babel-core": "^6.26.3",
-    "react": "^16.8.5",
     "rollup": "^1.0.1",
     "rollup-plugin-babel": "^4.2.0",
     "rollup-plugin-tsx": "^1.0.2",
