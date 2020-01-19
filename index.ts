@@ -48,14 +48,13 @@ export function reactive(target) {
 }
 
 export function setup(fn) {
-  applyEffect(fn)
+  return applyEffect(fn)
 }
 
 function applyEffect(fn) {
-  const effect = function effect(...args) {
+  return function effect(...args) {
     return run(effect, fn, args)
   }
-  return effect
 }
 
 function run(effect, fn, args) {
