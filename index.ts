@@ -48,7 +48,8 @@ export function reactive(target) {
 }
 
 export function setup(fn) {
-  return applyEffect(fn)
+  const render = fn()
+  return applyEffect(render)
 }
 
 function applyEffect(fn) {

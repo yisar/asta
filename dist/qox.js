@@ -46,7 +46,8 @@
       return observed;
   }
   function setup(fn) {
-      return applyEffect(fn);
+      var render = fn();
+      return applyEffect(render);
   }
   function applyEffect(fn) {
       return function effect() {
