@@ -1,5 +1,3 @@
-import { useState, useCallback } from 'react'
-
 const activeEffect = []
 export const targetMap = new WeakMap()
 
@@ -49,12 +47,8 @@ export function reactive(target) {
   return observed
 }
 
-export function setup(fn){
-  const update = applyEffect(()=>{
-    const [,setState] = useState({})
-    setState({})
-  })
-  update()
+export function setup(fn) {
+  applyEffect(fn)
 }
 
 function applyEffect(fn) {
