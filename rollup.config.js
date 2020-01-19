@@ -1,13 +1,12 @@
 import typescript from 'rollup-plugin-typescript'
-import tsx from 'rollup-plugin-tsx'
 import babel from 'rollup-plugin-babel'
 
 export default {
-  input: './packages/index.ts',
+  input: './index.ts',
   output: {
     file: './dist/qox.js',
     format: 'umd',
-    name: 'qox'
+    name: 'Qox'
   },
   plugins: [
     typescript(),
