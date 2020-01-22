@@ -11,7 +11,7 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      const App = Qox.setup(() => {
+      const App = Qox.setup(props => {
         const data = Qox.reactive({ count: 0 })
         return () => (
           <div>
@@ -21,7 +21,7 @@
         )
       })
 
-      ReactDOM.render(<App />, document.getElementById('root'))
+      ReactDOM.render(<App msg='hello world' />, document.getElementById('root'))
     </script>
   </body>
 </html>

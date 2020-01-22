@@ -9,11 +9,12 @@ const toRaw = new WeakMap()
 const isObj = (x: any): x is object => typeof x === 'object'
 
 export function setup(component) {
-  const vdom = component()
-  return React.memo(() => {
+  let vdom
+  return React.memo(props => {
+    if (!vdom) vdom = component(props)
     const update = useForceUpdate()
     trackStack.push(() => update())
-    return vdom()
+    return vdom(props)
   })
 }
 
