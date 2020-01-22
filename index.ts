@@ -1,5 +1,7 @@
-const activeEffect = []
-export const targetMap = new WeakMap()
+import React from 'react'
+
+const trackStack = []
+const targetMap = new WeakMap()
 
 const toProxy = new WeakMap()
 const toRaw = new WeakMap()
@@ -47,38 +49,17 @@ export function reactive(target) {
   return observed
 }
 
-export function setup(fn) {
-  const render = fn()
-  return applyEffect(render)
-}
-
-function applyEffect(fn) {
-  return function effect(...args) {
-    return run(effect, fn, args)
+export function setup(component) {
+  const vdom = component()
+  return () => {
+    const update = useForceUpdate()
+    trackStack.push(() => update())
+    return vdom()
   }
-}
-
-function run(effect, fn, args) {
-  if (activeEffect.indexOf(effect) === -1) {
-    try {
-      activeEffect.push(effect)
-      return fn(...args)
-    } finally {
-      activeEffect.pop()
-    }
-  }
-}
-
-export function trigger(target, key) {
-  let deps = targetMap.get(target)
-  const effects = new Set()
-
-  deps.get(key).forEach(e => effects.add(e))
-  effects.forEach((e: any) => e())
 }
 
 export function track(target, key) {
-  const effect = activeEffect[activeEffect.length - 1]
+  const effect = trackStack.pop()
   if (effect) {
     let depsMap = targetMap.get(target)
     if (!depsMap) {
@@ -92,4 +73,16 @@ export function track(target, key) {
       dep.add(effect)
     }
   }
+}
+
+export function trigger(target, key) {
+  let deps = targetMap.get(target)
+  const effects = new Set()
+  deps.get(key).forEach(e => effects.add(e))
+  effects.forEach((e: any) => e())
+}
+
+function useForceUpdate() {
+  const [, setTick] = React.useState(0)
+  return React.useCallback(() => setTick(tick => tick + 1), [])
 }

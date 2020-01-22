@@ -11,15 +11,25 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      const App = Qox.setup(() => {
-        const data = Qox.reactive({ count: 0 })
-        return () => (
+
+      function useForceUpdate() {
+        const [, setTick] = React.useState(0)
+        const update = React.useCallback(() => {
+          setTick(tick => tick + 1)
+        }, [])
+
+        return update
+      }
+
+      const App = () => {
+        const update = useForceUpdate()
+        return (
           <div>
-            <div>{data.count}</div>
-            <button onClick={() => data.count++}>+</button>
+            <div>{new Date().toString()}</div>
+            <button onClick={update}>+</button>
           </div>
         )
-      })
+      }
 
       ReactDOM.render(<App />, document.getElementById('root'))
     </script>

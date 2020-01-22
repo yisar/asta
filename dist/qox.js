@@ -1,10 +1,12 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.Qox = {}));
-}(this, (function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
+  (global = global || self, factory(global.Qox = {}, global.React));
+}(this, (function (exports, React) { 'use strict';
 
-  var activeEffect = [];
+  React = React && React.hasOwnProperty('default') ? React['default'] : React;
+
+  var trackStack = [];
   var targetMap = new WeakMap();
   var toProxy = new WeakMap();
   var toRaw = new WeakMap();
@@ -45,38 +47,16 @@
       }
       return observed;
   }
-  function setup(fn) {
-      var render = fn();
-      return applyEffect(render);
-  }
-  function applyEffect(fn) {
-      return function effect() {
-          var args = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-              args[_i] = arguments[_i];
-          }
-          return run(effect, fn, args);
+  function setup(component) {
+      var vdom = component();
+      return function () {
+          var update = useForceUpdate();
+          trackStack.push(function () { return update(); });
+          return vdom();
       };
   }
-  function run(effect, fn, args) {
-      if (activeEffect.indexOf(effect) === -1) {
-          try {
-              activeEffect.push(effect);
-              return fn.apply(void 0, args);
-          }
-          finally {
-              activeEffect.pop();
-          }
-      }
-  }
-  function trigger(target, key) {
-      var deps = targetMap.get(target);
-      var effects = new Set();
-      deps.get(key).forEach(function (e) { return effects.add(e); });
-      effects.forEach(function (e) { return e(); });
-  }
   function track(target, key) {
-      var effect = activeEffect[activeEffect.length - 1];
+      var effect = trackStack.pop();
       if (effect) {
           var depsMap = targetMap.get(target);
           if (!depsMap) {
@@ -91,10 +71,19 @@
           }
       }
   }
+  function trigger(target, key) {
+      var deps = targetMap.get(target);
+      var effects = new Set();
+      deps.get(key).forEach(function (e) { return effects.add(e); });
+      effects.forEach(function (e) { return e(); });
+  }
+  function useForceUpdate() {
+      var _a = React.useState(0), setTick = _a[1];
+      return React.useCallback(function () { return setTick(function (tick) { return tick + 1; }); }, []);
+  }
 
   exports.reactive = reactive;
   exports.setup = setup;
-  exports.targetMap = targetMap;
   exports.track = track;
   exports.trigger = trigger;
 

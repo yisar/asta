@@ -20,8 +20,13 @@ import { setup, reactive } from 'qox'
 import { render } from 'react-dom'
 
 const App = setup(() => {
-  const data = reactive({ msg: 'hello world' })
-  return () => <div>{data.foo}</div>
+  const data = reactive({ count: 0 })
+  return () => (
+    <div>
+      <div>{data.count}</div>
+      <button onClick={() => data.count++}>+</button>
+    </div>
+  )
 })
 render(<App />, document.body)
 ```
