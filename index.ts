@@ -8,6 +8,15 @@ const toRaw = new WeakMap()
 
 const isObj = (x: any): x is object => typeof x === 'object'
 
+export function setup(component) {
+  const vdom = component()
+  return React.memo(() => {
+    const update = useForceUpdate()
+    trackStack.push(() => update())
+    return vdom()
+  })
+}
+
 export function reactive(target) {
   if (!isObj(target)) return target
 
@@ -49,16 +58,7 @@ export function reactive(target) {
   return observed
 }
 
-export function setup(component) {
-  const vdom = component()
-  return () => {
-    const update = useForceUpdate()
-    trackStack.push(() => update())
-    return vdom()
-  }
-}
-
-export function track(target, key) {
+function track(target, key) {
   const effect = trackStack.pop()
   if (effect) {
     let depsMap = targetMap.get(target)
