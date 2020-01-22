@@ -7,7 +7,7 @@
 <a href="https://bundlephobia.com/result?p=qox"><img src="https://img.shields.io/bundlephobia/minzip/qox.svg?style=flat-square"></a>
 </p>
 
-> 改名为 qox，重新开坑，在 react 中使用 composition API
+> 改名为 qox，重新开坑，在 react 中实现 composition API，弥补 hooks API 的缺陷
 
 ### Use
 
