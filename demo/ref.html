@@ -11,27 +11,17 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-
-      function useForceUpdate() {
-        const [, setTick] = React.useState(0)
-        const update = React.useCallback(() => {
-          setTick(tick => tick + 1)
-        }, [])
-
-        return update
-      }
-
-      const App = () => {
-        const update = useForceUpdate()
-        return (
+      const App = Qox.setup(props => {
+        const data = Qox.ref(0)
+        return () => (
           <div>
-            <div>{new Date().toString()}</div>
-            <button onClick={update}>+</button>
+            <div>{data.value}</div>
+            <button onClick={() => data.value++}>+</button>
           </div>
         )
-      }
+      })
 
-      ReactDOM.render(<App />, document.getElementById('root'))
+      ReactDOM.render(<App msg='hello world' />, document.getElementById('root'))
     </script>
   </body>
 </html>
