@@ -7,6 +7,20 @@ const toProxy = new WeakMap()
 const toRaw = new WeakMap()
 const isObj = (x: any): x is object => typeof x === 'object'
 const isFn = (x: any): x is Function => typeof x === 'function'
+const hasOwnProperty = Object.prototype.hasOwnProperty
+const hasOwn = (
+  val: object,
+  key: string | symbol
+): key is keyof typeof val => hasOwnProperty.call(val, key)
+
+const Types = {
+  SET: 'set',
+  ADD: 'add',
+  DELETE: 'delete',
+  ITERATE: 'iterate'
+}
+
+const ITERATE_KEY = Symbol('iterate')
 
 export function setup(component) {
   let vdom = null
@@ -14,7 +28,9 @@ export function setup(component) {
     if (!vdom) vdom = component(props)
     const update = useForceUpdate()
     trackStack.push(() => update())
-    return vdom(props)
+    let res = vdom(props)
+    trackStack.pop()
+    return res
   })
 }
 
@@ -66,8 +82,10 @@ export function reactive(target) {
       return res
     },
     set(target, key, value, receiver) {
+      let hadKey = hasOwn(target, key)
       let res = Reflect.set(target, key, value, receiver)
-      if (key in target) trigger(target, key)
+      let type = hadKey ? Types.SET : Types.ADD
+      if (key in target) trigger(target, key, type)
       return res
     },
     has(target, key) {
@@ -76,9 +94,14 @@ export function reactive(target) {
       return res
     },
     deleteProperty(target, key) {
-      let oldHas = Reflect.has(target, key) 
+      let hadKey = Reflect.has(target, key) 
       let res =  Reflect.deleteProperty(target, key)
-      if (oldHas) trigger(target, key)
+      if (hadKey) trigger(target, key, Types.DELETE)
+      return res
+    },
+    ownKeys(target) {
+      let res = Reflect.ownKeys(target)
+      track(target, undefined, Types.ITERATE)
       return res
     }
   }
@@ -95,9 +118,12 @@ export function reactive(target) {
   return observed
 }
 
-function track(target, key) {
-  const effect = trackStack.pop()
+function track(target, key, type?) {
+  const effect = trackStack[trackStack.length - 1]
   if (effect) {
+    if (type === Types.ITERATE) {
+      key = ITERATE_KEY
+    }
     let depsMap = targetMap.get(target)
     if (!depsMap) {
       targetMap.set(target, (depsMap = new Map()))
@@ -112,10 +138,14 @@ function track(target, key) {
   }
 }
 
-function trigger(target, key) {
+function trigger(target, key, type?) {
   let deps = targetMap.get(target)
   const effects = new Set()
-  deps.get(key).forEach(e => effects.add(e))
+  deps.get(key)?.forEach(e => effects.add(e))
+  if (type === Types.ADD || type === Types.DELETE) {
+    const iterationKey = Array.isArray(target) ? 'length' : ITERATE_KEY
+    deps.get(iterationKey)?.forEach(e => effects.add(e))
+  }
   effects.forEach((e: any) => e())
   watchStack.forEach(w => w())
 }
