@@ -6,7 +6,7 @@ const targetMap = new WeakMap()
 const toProxy = new WeakMap()
 const toRaw = new WeakMap()
 const isObj = (x: any): x is object => typeof x === 'object'
-const isFn = (x: any): x is function => typeof x === 'function'
+const isFn = (x: any): x is Function => typeof x === 'function'
 
 export function setup(component) {
   let vdom = null
@@ -26,7 +26,7 @@ export function ref(value) {
   return reactive(target)
 }
 
-export function watch(src, cb) {
+export function watch(src, cb?) {
   if (isFn(src)) {
     watchStack.push(() => src())
   }
@@ -70,8 +70,11 @@ export function reactive(target) {
       if (key in target) trigger(target, key)
       return res
     },
-    deleteProperty(target, key, receiver) {
-      return Reflect.defineProperty(target, key, receiver)
+    deleteProperty(target, key) {
+      let oldHas = Reflect.has(target, key) 
+      let res =  Reflect.deleteProperty(target, key)
+      if (oldHas) trigger(target, key)
+      return res
     }
   }
 
