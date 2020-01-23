@@ -86,7 +86,7 @@ function track(target, key) {
   }
 }
 
-export function trigger(target, key) {
+function trigger(target, key) {
   let deps = targetMap.get(target)
   const effects = new Set()
   deps.get(key).forEach(e => effects.add(e))

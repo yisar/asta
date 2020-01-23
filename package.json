@@ -1,6 +1,6 @@
 {
   "name": "qox",
-  "version": "0.0.1",
+  "version": "0.0.1-pre-alpha",
   "description": "Fast 1kB state management that path-updating.",
   "main": "./dist/qox.js",
   "scripts": {
@@ -20,12 +20,18 @@
     "@babel/preset-react": "^7.0.0",
     "@types/react": "^16.7.18",
     "babel-core": "^6.26.3",
+    "babel-jest": "^25.1.0",
+    "babel-preset-env": "^1.7.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "regenerator-runtime": "^0.13.3",
     "rollup": "^1.0.1",
     "rollup-plugin-babel": "^4.2.0",
     "rollup-plugin-tsx": "^1.0.2",
     "rollup-plugin-typescript": "^1.0.0",
     "tslib": "^1.9.3",
-    "typescript": "^3.3.4000"
+    "typescript": "^3.3.4000",
+    "jest": "^25.1.0"
   },
   "dependencies": {}
 }
