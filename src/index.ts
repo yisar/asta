@@ -70,6 +70,11 @@ export function reactive(target) {
       if (key in target) trigger(target, key)
       return res
     },
+    has(target, key) {
+      let res = Reflect.has(target, key)
+      track(target, key)
+      return res
+    },
     deleteProperty(target, key) {
       let oldHas = Reflect.has(target, key) 
       let res =  Reflect.deleteProperty(target, key)
