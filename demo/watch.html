@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="https://cdn.staticfile.org/react/16.11.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.11.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="../dist/qox.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const App = Qox.setup(props => {
+        const data = Qox.ref(0)
+        Qox.watch(() => console.log(111))
+        return () => (
+          <div>
+            <div>{data.value}</div>
+            <button onClick={() => data.value++}>+</button>
+          </div>
+        )
+      })
+
+      ReactDOM.render(<App msg='hello world' />, document.getElementById('root'))
+    </script>
+  </body>
+</html>

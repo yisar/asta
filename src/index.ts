@@ -1,10 +1,12 @@
 import React from 'react'
 
 const trackStack = []
+const watchStack = []
 const targetMap = new WeakMap()
 const toProxy = new WeakMap()
 const toRaw = new WeakMap()
 const isObj = (x: any): x is object => typeof x === 'object'
+const isFn = (x: any): x is function => typeof x === 'function'
 
 export function setup(component) {
   let vdom = null
@@ -24,7 +26,23 @@ export function ref(value) {
   return reactive(target)
 }
 
-export function isRef(target){
+export function watch(src, cb) {
+  if (isFn(src)) {
+    watchStack.push(() => src())
+  }
+}
+
+export function computed(getter) {
+  const ref = {
+    value: null
+  }
+  watch(() => {
+    ref.value = getter()
+  })
+  return ref
+}
+
+export function isRef(target) {
   return !!target.isRef
 }
 
@@ -91,6 +109,7 @@ function trigger(target, key) {
   const effects = new Set()
   deps.get(key).forEach(e => effects.add(e))
   effects.forEach((e: any) => e())
+  watchStack.forEach(w => w())
 }
 
 function useForceUpdate() {
