@@ -62,7 +62,7 @@ It will reserved a function and run it when data changed
 watch(() => console.log(111))
 ```
 
-### computed
+#### computed
 
 reactive with data
 
