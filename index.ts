@@ -2,20 +2,30 @@ import React from 'react'
 
 const trackStack = []
 const targetMap = new WeakMap()
-
 const toProxy = new WeakMap()
 const toRaw = new WeakMap()
-
 const isObj = (x: any): x is object => typeof x === 'object'
 
 export function setup(component) {
-  let vdom
+  let vdom = null
   return React.memo(props => {
     if (!vdom) vdom = component(props)
     const update = useForceUpdate()
     trackStack.push(() => update())
     return vdom(props)
   })
+}
+
+export function ref(value) {
+  const target = {
+    value,
+    isRef: true
+  }
+  return reactive(target)
+}
+
+export function isRef(target){
+  return !!target.isRef
 }
 
 export function reactive(target) {
