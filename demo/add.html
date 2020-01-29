@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="https://cdn.staticfile.org/react/16.11.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.11.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="../dist/qox.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const App = Qox.setup(props => {
+        const data = Qox.reactive({ count: 0 })
+        return () => (
+          <div>
+            <div>
+              data上的所有key值:{Object.keys(data).join(',')}
+            </div>
+            <button onClick={() => data.newCount = 1}>添加新属性newCount</button>
+          </div>
+        )
+      })
+
+      ReactDOM.render(<App msg='hello world' />, document.getElementById('root'))
+    </script>
+  </body>
+</html>
