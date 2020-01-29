@@ -6,7 +6,7 @@ const targetMap = new WeakMap()
 const toProxy = new WeakMap()
 const toRaw = new WeakMap()
 const isObj = (x: any): x is object => typeof x === 'object'
-const isFn = (x: any): x is function => typeof x === 'function'
+const isFn = (x: any): x is Function => typeof x === 'function'
 
 export function setup(component) {
   let vdom = null
@@ -38,7 +38,7 @@ export function computed(getter) {
   }
   watch(() => {
     ref.value = getter()
-  })
+  }, null)
   return ref
 }
 
