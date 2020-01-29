@@ -9,7 +9,8 @@
     "rootDir": "./src",
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "watch": false
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]

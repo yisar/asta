@@ -6,8 +6,7 @@
   "types": "./types/index.d.ts",
   "scripts": {
     "test": "jest",
-    "start": "rollup -c --watch",
-    "build": "tsc"
+    "start": "tsc"
   },
   "keywords": [],
   "author": "yisaer",
