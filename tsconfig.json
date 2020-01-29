@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "module": "ES2015",
-    "noImplicitAny": false,
-    "removeComments": true,
-    "lib": ["es5", "es6", "dom"],
+    "lib": ["es6", "dom"],
+    "declaration": true,
     "target": "es5",
-    "jsx": "react"
+    "jsx": "react",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["packages/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
