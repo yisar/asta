@@ -12,13 +12,14 @@ const enum Type {
   DELETE = 'delete'
 }
 
-export function watch(fn: Function): Reaction {
-  const reaction = fn[IS_REACTION]
+export function watch(fn: Function, options: Options = {}): Reaction {
+  const reaction: Reaction = fn[IS_REACTION]
     ? fn
     : function reaction() {
         return run(reaction, fn, this, arguments)
       }
   reaction[IS_REACTION] = true
+  reaction.scheduler = options.scheduler
   reaction()
   return reaction
 }
@@ -143,7 +144,7 @@ function trigger(operation: Operation) {
     const iKey = Array.isArray(target) ? 'length' : ITERATE_KEY
     add(deps, iKey, effects)
   }
-  effects.forEach((e: any) => e())
+  effects.forEach((e: Reaction) => (typeof e.scheduler === 'function' ? e.scheduler(e) : e()))
 }
 
 function add(deps, key, effects) {
@@ -162,7 +163,12 @@ export function isReactive(proxy: Object) {
 type Reaction = Function & {
   IS_REACTION?: boolean
   unwatched?: boolean
+  scheduler?: Function
   cleanup?: ReactionForKey[]
+}
+
+interface Options {
+  scheduler?: Function
 }
 
 interface Operation {
