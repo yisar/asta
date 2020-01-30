@@ -1,4 +1,5 @@
 import * as React from 'react'
+const ITERATE_KEY = Symbol('iterate')
 
 const trackStack = []
 const watchStack = []
@@ -7,20 +8,14 @@ const toProxy = new WeakMap()
 const toRaw = new WeakMap()
 const isObj = (x: any): x is object => typeof x === 'object'
 const isFn = (x: any): x is Function => typeof x === 'function'
-const hasOwnProperty = Object.prototype.hasOwnProperty
-const hasOwn = (
-  val: object,
-  key: string | symbol
-): key is keyof typeof val => hasOwnProperty.call(val, key)
+const hasOwn = (val: object, key: string | symbol): key is keyof typeof val => Object.prototype.hasOwnProperty.call(val, key)
 
-const Types = {
-  SET: 'set',
-  ADD: 'add',
-  DELETE: 'delete',
-  ITERATE: 'iterate'
+const enum Types {
+  SET = 'set',
+  ADD = 'add',
+  DELETE = 'delete',
+  ITERATE = 'iterate'
 }
-
-const ITERATE_KEY = Symbol('iterate')
 
 export function setup(component) {
   let vdom = null
@@ -32,34 +27,6 @@ export function setup(component) {
     trackStack.pop()
     return res
   })
-}
-
-export function ref(value) {
-  const target = {
-    value,
-    isRef: true
-  }
-  return reactive(target)
-}
-
-export function watch(src, cb?) {
-  if (isFn(src)) {
-    watchStack.push(() => src())
-  }
-}
-
-export function computed(getter) {
-  const ref = {
-    value: null
-  }
-  watch(() => {
-    ref.value = getter()
-  }, null)
-  return ref
-}
-
-export function isRef(target) {
-  return !!target.isRef
 }
 
 export function reactive(target) {
@@ -94,8 +61,8 @@ export function reactive(target) {
       return res
     },
     deleteProperty(target, key) {
-      let hadKey = Reflect.has(target, key) 
-      let res =  Reflect.deleteProperty(target, key)
+      let hadKey = Reflect.has(target, key)
+      let res = Reflect.deleteProperty(target, key)
       if (hadKey) trigger(target, key, Types.DELETE)
       return res
     },
