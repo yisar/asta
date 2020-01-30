@@ -24,6 +24,26 @@ const App = setup(() => {
 render(<App />, document.body)
 ```
 
+### setup
+
+Like memo or lazy, it receive a different composition compoent and return a new component
+
+```js
+const App = setup(() => {
+  return () => (
+    <div>
+      <div>{data.count}</div>
+      <button onClick={() => data.count++}>+</button>
+    </div>
+  )
+})
+```
+the composition component is different from hooks component, it return a pure render function, `return () => vdom`
+
+Because closures, and from the second time on, the component will only reexecute this function.
+
+This can solve the problem of repeated initialization rendering of hooks API.
+
 ### Composition API
 
 - [reactive](https://github.com/yisar/qox#reactive)
