@@ -28,9 +28,9 @@ render(<App />, document.body)
 
 - [reactive](https://github.com/yisar/qox#reactive)
 
-- [ref](https://github.com/yisar/qox#ref)
-
 - [watch](https://github.com/yisar/qox#watch)
+
+- [ref](https://github.com/yisar/qox#ref)
 
 - [computed](https://github.com/yisar/qox#computed)
 
@@ -45,29 +45,33 @@ data.count++
 console.log(data.count) //1
 ```
 
+#### watch
+
+It will reserved an effect function and run it when deps changed.
+
+```js
+const data = reactive({ count: 0 })
+watch(() => console.log(data.count))
+data.count++ // console 1
+```
+
 #### ref
 
-Just return a value
+ref is another type of reactive, it just return an value
 
 ```js
 const ref = ref(0)
 console.log(ref.value) //0
 ```
 
-#### watch
-
-It will reserved a function and run it when data changed
-
-```js
-watch(() => console.log(111))
-```
-
 #### computed
 
-reactive with data
+effect for reactive data, when deps changed, it will return a ref 
 
 ```js
+const data = reactive({ count: 0 })
 const double = computed(() => data.count * 2)
+data.count++
 ```
 
 ### License
