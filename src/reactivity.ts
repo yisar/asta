@@ -4,6 +4,7 @@ const rawToProxy = new WeakMap<Raw, Proxy>()
 const isObj = (x: any): x is object => typeof x === 'object'
 const hasOwnProperty = Object.prototype.hasOwnProperty
 const effectStack: Effect[] = []
+let activeEffect = null
 const ITERATE_KEY = Symbol('iterate key')
 const IS_EFFECT = Symbol('is effect')
 const enum Const {
@@ -28,12 +29,14 @@ function run(effect, fn, ctx, args) {
     return Reflect.apply(fn, ctx, args)
   }
   if (effectStack.indexOf(effect) === -1) {
-    releaseEffect(effect)
+    cleanup(effect)
     try {
       effectStack.push(effect)
+      activeEffect = effect
       return Reflect.apply(fn, ctx, args)
     } finally {
       effectStack.pop()
+      activeEffect = effectStack[effectStack.length - 1]
     }
   }
 }
@@ -41,11 +44,11 @@ function run(effect, fn, ctx, args) {
 export function unwatch(effect: Effect): void {
   if (!effect.unwatched) {
     effect.unwatched = true
-    releaseEffect(effect)
+    cleanup(effect)
   }
 }
 
-function releaseEffect(effect: Effect): void {
+function cleanup(effect: Effect): void {
   if (effect.cleanup) {
     effect.cleanup.forEach((deps: EffectForKey) => deps.delete(effect))
   }
@@ -151,6 +154,61 @@ function add(deps, key, effects) {
 
 export function raw(proxy: Proxy) {
   return proxyToRaw.get(proxy) || proxy
+}
+
+export function ref(value?: any) {
+  if (isRef(value)) return value
+  value = convert(value)
+  const r = {
+    isRef: true,
+    get value() {
+      track({ target: r, key: 'value', type: 'get' })
+      return value
+    },
+    set value(newVal) {
+      value = convert(newVal)
+      trigger({ target: r, key: 'value', value, type: 'set' })
+    }
+  }
+  return r
+}
+
+export function computed<T>(getter) {
+  let dirty = true
+  let value: T
+
+  const effect = watch(getter, {
+    scheduler: () => dirty = true
+  })
+  return {
+    isRef: true,
+    effect,
+    get value() {
+      if (dirty) {
+        value = effect()
+        dirty = false
+      }
+      trackKid(effect)
+      return value
+    },
+    set value(newValue: T) {}
+  } as any
+}
+
+function trackKid(effect) {
+  for (let i = 0; i < effect.deps.length; i++) {
+    const dep = effect.deps[i]
+    if (!dep.has(activeEffect)) {
+      dep.add(activeEffect)
+      activeEffect.deps.push(dep)
+    }
+  }
+}
+
+const convert = <T>(val: T): T => (isObj(val) ? reactive(val) : val)
+
+export function isRef(r: any): boolean {
+  return r ? r.isRef === true : false
 }
 
 export function isReactive(proxy: Object) {
