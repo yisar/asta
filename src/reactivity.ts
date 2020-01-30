@@ -28,6 +28,7 @@ function run(reaction, fn, ctx, args) {
     return Reflect.apply(fn, ctx, args)
   }
   if (reactionStack.indexOf(reaction) === -1) {
+    releaseReaction(reaction)
     try {
       reactionStack.push(reaction)
       return Reflect.apply(fn, ctx, args)
@@ -124,7 +125,7 @@ function track(operation: Operation) {
     const depsMap = targetMap.get(target)
     let deps = depsMap.get(key)
     if (!deps) {
-      depsMap.set(key, new Set())
+      depsMap.set(key, (deps = new Set()))
     }
     if (!deps.has(reaction)) {
       deps.add(reaction)
