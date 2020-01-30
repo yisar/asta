@@ -49,10 +49,10 @@ export function unwatch(effect: Effect): void {
 }
 
 function cleanup(effect: Effect): void {
-  if (effect.cleanup) {
-    effect.cleanup.forEach((deps: EffectForKey) => deps.delete(effect))
+  if (effect.deps) {
+    effect.deps.forEach((deps: EffectForKey) => deps.delete(effect))
   }
-  effect.cleanup = []
+  effect.deps = []
 }
 
 export function reactive<T extends Raw>(raw: T): T {
@@ -130,7 +130,7 @@ function track(operation: Operation) {
     }
     if (!deps.has(effect)) {
       deps.add(effect)
-      effect.cleanup.push(deps)
+      effect.deps.push(deps)
     }
   }
 }
@@ -178,7 +178,7 @@ export function computed<T>(getter) {
   let value: T
 
   const effect = watch(getter, {
-    scheduler: () => dirty = true
+    scheduler: () => (dirty = true)
   })
   return {
     isRef: true,
@@ -188,20 +188,16 @@ export function computed<T>(getter) {
         value = effect()
         dirty = false
       }
-      trackKid(effect)
+      effect.deps.forEach(trackChild)
       return value
-    },
-    set value(newValue: T) {}
+    }
   } as any
 }
 
-function trackKid(effect) {
-  for (let i = 0; i < effect.deps.length; i++) {
-    const dep = effect.deps[i]
-    if (!dep.has(activeEffect)) {
-      dep.add(activeEffect)
-      activeEffect.deps.push(dep)
-    }
+function trackChild(dep) {
+  if (!dep.has(activeEffect)) {
+    dep.add(activeEffect)
+    activeEffect.deps.push(dep)
   }
 }
 
@@ -219,7 +215,7 @@ type Effect = Function & {
   IS_EFFECT?: boolean
   unwatched?: boolean
   scheduler?: Function
-  cleanup?: EffectForKey[]
+  deps?: EffectForKey[]
 }
 
 interface Options {
