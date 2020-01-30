@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { watch, unwatch, reactive, raw, isReactive } from './reactivity'
+import { watch, unwatch, reactive, computed, ref, raw, isReactive, isRef } from './reactivity'
 
 function setup(factory, FN) {
   return React.memo(props => {
@@ -13,4 +13,4 @@ function setup(factory, FN) {
   })
 }
 
-export { setup, watch, unwatch, reactive, raw, isReactive }
+export { setup, watch, unwatch, ref, computed, reactive, raw, isReactive, isRef }

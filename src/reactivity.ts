@@ -124,6 +124,9 @@ function track(operation: Operation) {
     let { type, target, key } = operation
     if (type === 'iterate') key = ITERATE_KEY
     const depsMap = targetMap.get(target)
+    if (!depsMap) {
+      targetMap.set(target, (depsMap = new Map()))
+    }
     let deps = depsMap.get(key)
     if (!deps) {
       depsMap.set(key, (deps = new Set()))

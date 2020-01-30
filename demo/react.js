@@ -1,25 +1,16 @@
-import React, { useReducer } from 'react'
-import { watch, unwatch, reactive, raw, isReactive } from '../dist/reactivity'
-function setup(factory) {
-  var FN = null
-  var wrapped = React.memo(function(props) {
+import React from 'react'
+import { watch, unwatch, reactive, computed, ref, raw, isReactive, isRef } from '../dist/reactivity'
+
+function setup(factory, FN) {
+  return React.memo(props => {
     if (!FN) FN = factory(props)
-    var update = React.useReducer(function(s) {
-      return s + 1
-    }, 0)[1]
-    var vdom = null
-    var reaction = watch(
-      function() {
-        return (vdom = FN(props))
-      },
-      {
-        scheduler: function() {
-          return update()
-        }
-      }
-    )
+    const update = React.useReducer(s => s + 1, 0)[1]
+    let vdom = null
+    watch(() => (vdom = FN(props)), {
+      scheduler: () => update()
+    })
     return vdom
   })
-  return wrapped
 }
-export { setup, watch, unwatch, reactive, raw, isReactive }
+
+export { setup, watch, unwatch, ref, computed, reactive, raw, isReactive, isRef }
