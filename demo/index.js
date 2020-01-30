@@ -1,5 +1,5 @@
 import React from 'react'
-import { watch, unwatch, reactive } from '../dist/react'
+import { setup, reactive } from './react'
 import { render } from 'react-dom'
 
 const App = setup(() => {

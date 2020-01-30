@@ -1,9 +1,9 @@
 {
   "name": "qox",
-  "version": "0.0.1-pre-alpha",
+  "version": "0.0.1",
   "description": "Fast 1kB state management that path-updating.",
-  "main": "./dist/qox.js",
-  "types": "./types/index.d.ts",
+  "main": "./dist/react.js",
+  "types": "./types/react.d.ts",
   "scripts": {
     "test": "jest",
     "start": "tsc"
