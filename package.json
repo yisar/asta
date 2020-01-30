@@ -1,6 +1,6 @@
 {
   "name": "qox",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Fast 1kB state management that path-updating.",
   "main": "./dist/react.js",
   "types": "./types/react.d.ts",

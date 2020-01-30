@@ -3,6 +3,7 @@ import { setup, reactive, watch, computed, ref } from './react'
 import { render } from 'react-dom'
 
 const App = setup(() => {
+  console.log('once')
   const data = reactive({ count: 0 })
   const num = ref(0)
   const double = computed(() => data.count * 2)
