@@ -13,5 +13,5 @@
     "watch": false
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src"]
+  "include": ["src", "test/index.test.js"]
 }

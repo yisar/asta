@@ -8,5 +8,6 @@ const person = observable({
 
 observe(() => console.log(person.name))
 
+
 // logs 'Ann Smith'
 person.firstName = 'Ann'
