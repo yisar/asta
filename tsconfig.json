@@ -10,7 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "watch": false
+    "watch": true
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]

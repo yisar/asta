@@ -1,55 +1,55 @@
-const targetMap = new WeakMap<Raw, ReactionForRaw>()
+const targetMap = new WeakMap<Raw, EffectForRaw>()
 const proxyToRaw = new WeakMap<Proxy, Raw>()
 const rawToProxy = new WeakMap<Raw, Proxy>()
 const isObj = (x: any): x is object => typeof x === 'object'
 const hasOwnProperty = Object.prototype.hasOwnProperty
-const reactionStack: Reaction[] = []
+const effectStack: Effect[] = []
+const ITERATE_KEY = Symbol('iterate key')
+const IS_EFFECT = Symbol('is effect')
 const enum Const {
   ADD = 'add',
-  DELETE = 'delete',
-  ITERATE_KEY = Symbol('iterate key'),
-  IS_REACTION = Symbol('is reaction')
+  DELETE = 'delete'
 }
 
-export function watch(fn: Function, options: Options = {}): Reaction {
-  const reaction: Reaction = fn[Const.IS_REACTION]
+export function watch(fn: Function, options: Options = {}): Effect {
+  const effect: Effect = fn[IS_EFFECT]
     ? fn
-    : function reaction() {
-        return run(reaction, fn, this, arguments)
+    : function effect() {
+        return run(effect, fn, this, arguments)
       }
-  reaction[Const.IS_REACTION] = true
-  reaction.scheduler = options.scheduler
-  reaction()
-  return reaction
+  effect[IS_EFFECT] = true
+  effect.scheduler = options.scheduler
+  effect()
+  return effect
 }
 
-function run(reaction, fn, ctx, args) {
-  if (reaction.unwatch) {
+function run(effect, fn, ctx, args) {
+  if (effect.unwatch) {
     return Reflect.apply(fn, ctx, args)
   }
-  if (reactionStack.indexOf(reaction) === -1) {
-    releaseReaction(reaction)
+  if (effectStack.indexOf(effect) === -1) {
+    releaseEffect(effect)
     try {
-      reactionStack.push(reaction)
+      effectStack.push(effect)
       return Reflect.apply(fn, ctx, args)
     } finally {
-      reactionStack.pop()
+      effectStack.pop()
     }
   }
 }
 
-export function unwatch(reaction: Reaction): void {
-  if (!reaction.unwatched) {
-    reaction.unwatched = true
-    releaseReaction(reaction)
+export function unwatch(effect: Effect): void {
+  if (!effect.unwatched) {
+    effect.unwatched = true
+    releaseEffect(effect)
   }
 }
 
-function releaseReaction(reaction: Reaction): void {
-  if (reaction.cleanup) {
-    reaction.cleanup.forEach((deps: ReactionForKey) => deps.delete(reaction))
+function releaseEffect(effect: Effect): void {
+  if (effect.cleanup) {
+    effect.cleanup.forEach((deps: EffectForKey) => deps.delete(effect))
   }
-  reaction.cleanup = []
+  effect.cleanup = []
 }
 
 export function reactive<T extends Raw>(raw: T): T {
@@ -66,7 +66,7 @@ function createReactive<T extends Raw>(raw: T): T {
   const reactive = new Proxy(raw, baseHandlers)
   rawToProxy.set(raw, reactive)
   proxyToRaw.set(reactive, raw)
-  targetMap.set(raw, new Map() as ReactionForRaw)
+  targetMap.set(raw, new Map() as EffectForRaw)
   return reactive as T
 }
 
@@ -116,18 +116,18 @@ const baseHandlers = {
 }
 
 function track(operation: Operation) {
-  const reaction: Reaction = reactionStack[reactionStack.length - 1]
-  if (reaction) {
+  const effect: Effect = effectStack[effectStack.length - 1]
+  if (effect) {
     let { type, target, key } = operation
-    if (type === 'iterate') key = Const.ITERATE_KEY
+    if (type === 'iterate') key = ITERATE_KEY
     const depsMap = targetMap.get(target)
     let deps = depsMap.get(key)
     if (!deps) {
       depsMap.set(key, (deps = new Set()))
     }
-    if (!deps.has(reaction)) {
-      deps.add(reaction)
-      reaction.cleanup.push(deps)
+    if (!deps.has(effect)) {
+      deps.add(effect)
+      effect.cleanup.push(deps)
     }
   }
 }
@@ -138,15 +138,15 @@ function trigger(operation: Operation) {
   const effects = new Set()
   add(deps, key, effects)
   if (type === Const.ADD || type === Const.DELETE) {
-    const iKey = Array.isArray(target) ? 'length' : Const.ITERATE_KEY
+    const iKey = Array.isArray(target) ? 'length' : ITERATE_KEY
     add(deps, iKey, effects)
   }
-  effects.forEach((e: Reaction) => (typeof e.scheduler === 'function' ? e.scheduler(e) : e()))
+  effects.forEach((e: Effect) => (typeof e.scheduler === 'function' ? e.scheduler(e) : e()))
 }
 
 function add(deps, key, effects) {
-  const reactions = deps.get(key)
-  reactions && reactions.forEach(e => effects.add(e))
+  const dep = deps.get(key)
+  dep && dep.forEach(e => effects.add(e))
 }
 
 export function raw(proxy: Proxy) {
@@ -157,11 +157,11 @@ export function isReactive(proxy: Object) {
   return proxyToRaw.has(proxy)
 }
 
-type Reaction = Function & {
-  Const.IS_REACTION?: boolean
+type Effect = Function & {
+  IS_EFFECT?: boolean
   unwatched?: boolean
   scheduler?: Function
-  cleanup?: ReactionForKey[]
+  cleanup?: EffectForKey[]
 }
 
 interface Options {
@@ -175,8 +175,8 @@ interface Operation {
   value?: any
   oldValue?: any
 }
-type ReactionForKey = Set<Reaction>
-type ReactionForRaw = Map<Key, ReactionForKey>
+type EffectForKey = Set<Effect>
+type EffectForRaw = Map<Key, EffectForKey>
 type Key = string | number | symbol
 type Raw = object
 type Proxy = object
