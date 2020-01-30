@@ -1,24 +1,23 @@
 const targetMap = new WeakMap<Raw, ReactionForRaw>()
 const proxyToRaw = new WeakMap<Proxy, Raw>()
 const rawToProxy = new WeakMap<Raw, Proxy>()
-const ITERATE_KEY = Symbol('iterate key')
-const IS_REACTION = Symbol('is reaction')
 const isObj = (x: any): x is object => typeof x === 'object'
 const hasOwnProperty = Object.prototype.hasOwnProperty
-const reactionStack = []
-
-const enum Type {
+const reactionStack: Reaction[] = []
+const enum Const {
   ADD = 'add',
-  DELETE = 'delete'
+  DELETE = 'delete',
+  ITERATE_KEY = Symbol('iterate key'),
+  IS_REACTION = Symbol('is reaction')
 }
 
 export function watch(fn: Function, options: Options = {}): Reaction {
-  const reaction: Reaction = fn[IS_REACTION]
+  const reaction: Reaction = fn[Const.IS_REACTION]
     ? fn
     : function reaction() {
         return run(reaction, fn, this, arguments)
       }
-  reaction[IS_REACTION] = true
+  reaction[Const.IS_REACTION] = true
   reaction.scheduler = options.scheduler
   reaction()
   return reaction
@@ -120,9 +119,7 @@ function track(operation: Operation) {
   const reaction: Reaction = reactionStack[reactionStack.length - 1]
   if (reaction) {
     let { type, target, key } = operation
-    if (type === 'iterate') {
-      key = ITERATE_KEY
-    }
+    if (type === 'iterate') key = Const.ITERATE_KEY
     const depsMap = targetMap.get(target)
     let deps = depsMap.get(key)
     if (!deps) {
@@ -140,8 +137,8 @@ function trigger(operation: Operation) {
   let deps = targetMap.get(target)
   const effects = new Set()
   add(deps, key, effects)
-  if (type === Type.ADD || type === Type.DELETE) {
-    const iKey = Array.isArray(target) ? 'length' : ITERATE_KEY
+  if (type === Const.ADD || type === Const.DELETE) {
+    const iKey = Array.isArray(target) ? 'length' : Const.ITERATE_KEY
     add(deps, iKey, effects)
   }
   effects.forEach((e: Reaction) => (typeof e.scheduler === 'function' ? e.scheduler(e) : e()))
@@ -161,7 +158,7 @@ export function isReactive(proxy: Object) {
 }
 
 type Reaction = Function & {
-  IS_REACTION?: boolean
+  Const.IS_REACTION?: boolean
   unwatched?: boolean
   scheduler?: Function
   cleanup?: ReactionForKey[]
