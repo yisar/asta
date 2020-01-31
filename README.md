@@ -2,9 +2,7 @@
 
 # Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux)  [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
 
-_Simple, scalable state management_
-
-> 改名为 doux，重新开坑，在 react 中实现 composition API，弥补 hooks API 的缺陷
+> simple reactivity system with composition API.
 
 ### Use
 
