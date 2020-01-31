@@ -4,7 +4,7 @@
 
 > Simple reactivity system with composition API.
 
-### Mutation
+### Motivation
 
 Hooks API has mental burden and unsolvable defects, this library can solve the following problems:
 
