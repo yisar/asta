@@ -12,9 +12,9 @@ const enum Const {
   DELETE = 'delete'
 }
 
-export function watch(fn: Function, options: Options = {}): Effect {
+export function watch(cb: Function, options: Options = {}): Effect {
   const effect: Effect = function effect() {
-    return run(effect, fn, this, arguments)
+    return run(effect, cb, this, arguments)
   }
   effect.active = true
   effect.scheduler = options.scheduler
@@ -158,7 +158,6 @@ export function raw(proxy: Proxy) {
 }
 
 export function ref<T>(value?: T): Ref<T> {
-  if (isRef(value)) return value
   value = convert(value)
   const r = {
     isRef: true,
