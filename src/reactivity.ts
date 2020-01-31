@@ -2,6 +2,7 @@ const targetMap = new WeakMap<Raw, EffectForRaw>()
 const proxyToRaw = new WeakMap<Proxy, Raw>()
 const rawToProxy = new WeakMap<Raw, Proxy>()
 const isObj = (x: any): x is object => typeof x === 'object'
+const isFn = (x: any): x is Function => typeof x === 'function'
 const hasOwnProperty = Object.prototype.hasOwnProperty
 const effectStack: Effect[] = []
 let activeEffect = null
@@ -156,7 +157,7 @@ export function raw(proxy: Proxy) {
   return proxyToRaw.get(proxy) || proxy
 }
 
-export function ref(value?: any) {
+export function ref<T>(value?: T): Ref<T> {
   if (isRef(value)) return value
   value = convert(value)
   const r = {
@@ -173,9 +174,18 @@ export function ref(value?: any) {
   return r
 }
 
-export function computed<T>(getter) {
+export function computed<T>(options: Getter<T> | Accessor<T>): Ref<T> {
   let dirty = true
   let value: T
+  let getter: Getter<T>
+  let setter: Setter<T>
+
+  if (isFn(options)) {
+    getter = options
+  } else {
+    getter = options.get
+    setter = options.set
+  }
 
   const effect = watch(getter, {
     scheduler: () => (dirty = true)
@@ -190,6 +200,9 @@ export function computed<T>(getter) {
       }
       effect.deps.forEach(trackChild)
       return value
+    },
+    set value(newValue: T) {
+      setter && setter(newValue)
     }
   } as any
 }
@@ -229,6 +242,16 @@ interface Operation {
   value?: any
   oldValue?: any
 }
+interface Accessor<T> {
+  get: Getter<T>
+  set: Setter<T>
+}
+
+interface Ref<T> {
+  readonly value: T
+}
+type Getter<T> = () => T
+type Setter<T> = (v: T) => void
 type EffectForKey = Set<Effect>
 type EffectForRaw = Map<Key, EffectForKey>
 type Key = string | number | symbol
