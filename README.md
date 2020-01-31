@@ -1,19 +1,19 @@
 <img src="https://ws1.sinaimg.cn/large/0065Zy9ely1gbfzh2prx1j307q07udfq.jpg" alt="logo" height="120" align="right" />
 
-# Doux [![CircleCI](https://circleci.com/gh/yisar/qox.svg?style=svg)](https://circleci.com/gh/yisar/qox)  [![npm](https://img.shields.io/npm/v/qox.svg?label=)](https://npmjs.com/package/qox)
+# Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux)  [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
 
 _Simple, scalable state management_
 
-> 改名为 qox，重新开坑，在 react 中实现 composition API，弥补 hooks API 的缺陷
+> 改名为 doux，重新开坑，在 react 中实现 composition API，弥补 hooks API 的缺陷
 
 ### Use
 
 ```shell
-npm i qox -S
+npm i doux -S
 ```
 
 ```js
-import { setup, reactive } from 'qox'
+import { setup, reactive } from 'doux'
 import { render } from 'react-dom'
 
 const App = setup(() => {
@@ -50,13 +50,13 @@ This can solve the problem of repeated initialization rendering of hooks API.
 
 ### Composition API
 
-- [reactive](https://github.com/yisar/qox#reactive)
+- [reactive](https://github.com/yisar/doux#reactive)
 
-- [watch](https://github.com/yisar/qox#watch)
+- [watch](https://github.com/yisar/doux#watch)
 
-- [ref](https://github.com/yisar/qox#ref)
+- [ref](https://github.com/yisar/doux#ref)
 
-- [computed](https://github.com/yisar/qox#computed)
+- [computed](https://github.com/yisar/doux#computed)
 
 #### reactive
 
