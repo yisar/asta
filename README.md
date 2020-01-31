@@ -1,11 +1,32 @@
 <img src="https://ws1.sinaimg.cn/large/0065Zy9ely1gbfzh2prx1j307q07udfq.jpg" alt="logo" height="120" align="right" />
 
-# Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux)  [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
+# Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux) [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
 
 > Simple reactivity system with composition API.
 
 ### Mutation
 
+Hooks API has mental burden and unsolvable defects, this library can solve the following problems:
+
+1. Heavy state and repeate updates
+
+In hooks API, Hooks will be initialized repeatedly. If there is a complex state, rendering will be blocked.
+
+```js
+const [complexState] = useState(heavyData) // blocked
+```
+
+In Composition API, every component return a render function, this function is rerendered every time, and state is initialized only once.
+
+```js
+const data = reactive({ count: 0 }) // once
+return () => vdom // every time
+```
+2. Mental burden
+
+There is more mental burden from hooks API, When should I use `useMemo` and how to filter `deps`?
+
+Sometimes it produces unexpected results, but this library will not. It use Es6 proxies, the rendering is exact.
 
 
 ### Use
@@ -44,6 +65,7 @@ const App = setup(() => {
   )
 })
 ```
+
 the composition component is different from hooks component, it return a pure render function, `return () => vdom`
 
 Because closures, and from the second time on, the component will only reexecute this function.
@@ -92,7 +114,7 @@ console.log(ref.value) //0
 
 #### computed
 
-effect for reactive data, when deps changed, it will return a ref 
+effect for reactive data, when deps changed, it will return a ref
 
 ```js
 const data = reactive({ count: 0 })
