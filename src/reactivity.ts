@@ -159,18 +159,18 @@ export function raw(proxy: Proxy) {
 
 export function ref<T>(value?: T): Ref<T> {
   value = convert(value)
-  const r = {
+  const ref = {
     isRef: true,
     get value() {
-      track({ target: r, key: 'value', type: 'get' })
+      track({ target: ref, key: 'value', type: 'get' })
       return value
     },
     set value(newVal) {
       value = convert(newVal)
-      trigger({ target: r, key: 'value', value, type: 'set' })
+      trigger({ target: ref, key: 'value', value, type: 'set' })
     }
   }
-  return r
+  return ref
 }
 
 export function computed<T>(options: Getter<T> | Accessor<T>): Ref<T> {
