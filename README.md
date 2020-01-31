@@ -2,7 +2,11 @@
 
 # Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux)  [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
 
-> simple reactivity system with composition API.
+> Simple reactivity system with composition API.
+
+### Mutation
+
+
 
 ### Use
 
@@ -23,7 +27,7 @@ const App = setup(() => {
     </div>
   )
 })
-render(<App />, document.body)
+render(<App />, document.getElementById('root'))
 ```
 
 ### setup
