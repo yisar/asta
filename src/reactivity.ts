@@ -6,26 +6,23 @@ const hasOwnProperty = Object.prototype.hasOwnProperty
 const effectStack: Effect[] = []
 let activeEffect = null
 const ITERATE_KEY = Symbol('iterate key')
-const IS_EFFECT = Symbol('is effect')
 const enum Const {
   ADD = 'add',
   DELETE = 'delete'
 }
 
 export function watch(fn: Function, options: Options = {}): Effect {
-  const effect: Effect = fn[IS_EFFECT]
-    ? fn
-    : function effect() {
-        return run(effect, fn, this, arguments)
-      }
-  effect[IS_EFFECT] = true
+  const effect: Effect = function effect() {
+    return run(effect, fn, this, arguments)
+  }
+  effect.active = true
   effect.scheduler = options.scheduler
   effect()
   return effect
 }
 
 function run(effect, fn, ctx, args) {
-  if (effect.unwatch) {
+  if (!effect.active) {
     return Reflect.apply(fn, ctx, args)
   }
   if (effectStack.indexOf(effect) === -1) {
@@ -42,9 +39,9 @@ function run(effect, fn, ctx, args) {
 }
 
 export function unwatch(effect: Effect): void {
-  if (!effect.unwatched) {
-    effect.unwatched = true
+  if (effect.active) {
     cleanup(effect)
+    effect.active = false
   }
 }
 
@@ -123,7 +120,7 @@ function track(operation: Operation) {
   if (effect) {
     let { type, target, key } = operation
     if (type === 'iterate') key = ITERATE_KEY
-    const depsMap = targetMap.get(target)
+    let depsMap = targetMap.get(target)
     if (!depsMap) {
       targetMap.set(target, (depsMap = new Map()))
     }
@@ -215,7 +212,7 @@ export function isReactive(proxy: Object) {
 }
 
 type Effect = Function & {
-  IS_EFFECT?: boolean
+  active?: boolean
   unwatched?: boolean
   scheduler?: Function
   deps?: EffectForKey[]
