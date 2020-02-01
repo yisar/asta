@@ -1,4 +1,4 @@
-<img src="https://ws1.sinaimg.cn/large/0065Zy9ely1gbfzh2prx1j307q07udfq.jpg" alt="logo" height="120" align="right" />
+<img src="docs/logo.png" alt="logo" height="120" align="right" />
 
 # Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux) [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
 
