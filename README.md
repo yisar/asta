@@ -1,4 +1,4 @@
-<img src="docs/doux.png" alt="logo" height="120" align="right" />
+<img src="docs/doux.png" alt="logo" height="150" align="right" />
 
 # Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux) [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
 
