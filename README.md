@@ -72,6 +72,21 @@ Because closures, and from the second time on, the component will only reexecute
 
 This can solve the problem of repeated initialization rendering of hooks API.
 
+Also you can receive a pure funtion without any logics:
+
+```js
+const store = reactive({
+  count: 0
+})
+const App = setup(() => (
+  <div>
+    <div>{store.count}</div>
+    <button onClick={() => store.count++}>+</button>
+  </div>
+))
+```
+For the closures, the reactive must nn parent scope.
+
 ### Composition API
 
 - [reactive](https://github.com/yisar/doux#reactive)
