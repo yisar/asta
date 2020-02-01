@@ -7,9 +7,9 @@ function setup<T>(factory: T, render: unkown) {
     const r = React.useRef()
     const update = React.useReducer(s => s + 1, 0)[1]
     if (!r.current) r.current = factory(props)
-    let getter = typeof r.current === 'function' ? () => r.current(props) : () => factory(props)
+    let effect = typeof r.current === 'function' ? () => r.current(props) : () => factory(props)
     if (!w.current) {
-      w.current = watch(getter, {
+      w.current = watch(effect, {
         scheduler: () => Promise.resolve().then(update)
       })
     }
