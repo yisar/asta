@@ -1,5 +1,5 @@
 {
-  "name": "qox",
+  "name": "doux",
   "version": "0.0.1-alpha1",
   "description": "Simple reactivity system with composition API.",
   "main": "./dist/react.js",
