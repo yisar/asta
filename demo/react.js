@@ -1,15 +1,15 @@
 import React from 'react'
-import { watch, unwatch, reactive, computed, ref, raw, isReactive, isRef } from '../dist/reactivity'
+import { watch, unwatch, reactive, computed, ref, raw, isReactive, isRef } from '../dist/index'
 
-function setup(factory, FN) {
+function setup(factory, render) {
   return React.memo(props => {
-    if (!FN) FN = factory(props)
+    if (!render) render = factory(props)
     const update = React.useReducer(s => s + 1, 0)[1]
-    let vdom = null
-    watch(() => (vdom = FN(props)), {
-      scheduler: () => update()
+    const vdom = watch(() => render(props), {
+      scheduler: () => Promise.resolve().then(update)
     })
-    return vdom
+    React.useEffect(() => () => unwatch(vdom), [])
+    return vdom()
   })
 }
 

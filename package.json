@@ -1,7 +1,7 @@
 {
   "name": "qox",
   "version": "0.0.1-alpha1",
-  "description": "Fast 1kB state management that path-updating.",
+  "description": "Simple reactivity system with composition API.",
   "main": "./dist/react.js",
   "types": "./types/react.d.ts",
   "scripts": {
@@ -11,15 +11,13 @@
   "keywords": [],
   "author": "yisaer",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:132yse/qox.git"
+  "repository": "git@github.com:yisar/doux.git",
+  "peerDependencies": {
+    "@types/react": "^16.9.19",
+    "react": "^16.12.0"
   },
   "devDependencies": {
-    "@types/react": "^16.9.19",
     "jest": "^25.1.0",
-    "react": "^16.12.0",
     "typescript": "^3.7.5"
-  },
-  "dependencies": {}
+  }
 }
