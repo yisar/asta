@@ -13,7 +13,7 @@ function setup(factory) {
         scheduler: () => Promise.resolve().then(update)
       })
     }
-    React.useEffect(() => () => unwatch(vdom), [])
+    React.useEffect(() => () => unwatch(w.current), [])
     return w.current()
   })
 }
