@@ -10,8 +10,8 @@ function setup(factory) {
     current.unmounted = []
     current.updated = []
     current.beforeUpdated = []
-    // current.beforeMounted = []
-    // current.beforeUnmounted = []
+    current.beforeMounted = []
+    current.beforeUnmounted = []
     const update = React.useReducer(s => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
@@ -34,12 +34,12 @@ function setup(factory) {
         loop(current.beforeUpdated)
       }
     })
-    // React.useLayoutEffect(() => {
-    //   loop(current.beforeMounted)
-    //   return () => {
-    //     loop(current.BeforeNnmounted)
-    //   }
-    // }, [])
+    React.useLayoutEffect(() => {
+      loop(current.beforeMounted)
+      return () => {
+        loop(current.BeforeNnmounted)
+      }
+    }, [])
     return w.current()
   })
   return memo
@@ -86,13 +86,13 @@ function onBeforeUpdated(cb) {
   return lifeCycle(cb, 'beforeUpdated')
 }
 
-// function onBeforeMounted(cb) {
-//   return lifeCycle(cb, 'beforeMounted')
-// }
+function onBeforeMounted(cb) {
+  return lifeCycle(cb, 'beforeMounted')
+}
 
-// function onBeforeUnmounted(cb) {
-//   return lifeCycle(cb, 'beforeUnmounted')
-// }
+function onBeforeUnmounted(cb) {
+  return lifeCycle(cb, 'beforeUnmounted')
+}
 
 function lifeCycle(cb, key) {
   current[key].push(cb)
