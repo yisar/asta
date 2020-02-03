@@ -1,6 +1,8 @@
 import React from 'react'
 import { watch as effect, unwatch, reactive, computed, ref, raw, isReactive, isRef } from '../dist/index'
+
 let current = null
+
 function setup(factory) {
   let memo = React.memo(props => {
     current = memo
@@ -8,6 +10,8 @@ function setup(factory) {
     current.unmounted = []
     current.updated = []
     current.beforeUpdated = []
+    // current.beforeMounted = []
+    // current.beforeUnmounted = []
     const update = React.useReducer(s => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
@@ -30,6 +34,12 @@ function setup(factory) {
         loop(current.beforeUpdated)
       }
     })
+    // React.useLayoutEffect(() => {
+    //   loop(current.beforeMounted)
+    //   return () => {
+    //     loop(current.BeforeNnmounted)
+    //   }
+    // }, [])
     return w.current()
   })
   return memo
@@ -76,9 +86,33 @@ function onBeforeUpdated(cb) {
   return lifeCycle(cb, 'beforeUpdated')
 }
 
+// function onBeforeMounted(cb) {
+//   return lifeCycle(cb, 'beforeMounted')
+// }
+
+// function onBeforeUnmounted(cb) {
+//   return lifeCycle(cb, 'beforeUnmounted')
+// }
+
 function lifeCycle(cb, key) {
   current[key].push(cb)
 }
 const isChanged = (a, b) => a !== b
 const isFn = x => typeof x === 'function'
-export { setup, watch, unwatch, ref, computed, reactive, raw, isReactive, isRef, onMounted, onUnmounted, onUpdated, onBeforeUpdated }
+export {
+  setup,
+  watch,
+  unwatch,
+  ref,
+  computed,
+  reactive,
+  raw,
+  isReactive,
+  isRef,
+  onMounted,
+  onUnmounted,
+  onUpdated,
+  onBeforeUpdated,
+  onBeforeMounted,
+  onBeforeUnmounted
+}
