@@ -119,17 +119,24 @@ watch(() => console.log(data.count))
 data.count++ // console 1
 ```
 
-Like useEffect, watch also accepts a ref source:
+In some cases, we may also want to watch with sources
 
 ```js
-const ref = ref(0)
-watch(() => console.log(data.count), ref)
+// watching a getter
+const state = reactive({ count: 0 })
+watch(() => state.count, (count, prevCount) => do())
+
+// directly watching a ref
+const count = ref(0)
+watch(count, (count, prevCount) => do())
 ```
-```
-watch(f)                //  effect every time
-watch(f, 0)             //  effect only once
-watch(f, computed ref)  //  effect when computed ref changed
-```
+
+Finally you can cleanup watcher
+
+````js
+const cleanup = watch()
+onUnmounted(()=>cleanup())
+
 #### ref
 
 ref is another type of reactive, it just return an value
@@ -137,7 +144,7 @@ ref is another type of reactive, it just return an value
 ```js
 const ref = ref(0)
 console.log(ref.value) //0
-```
+````
 
 #### computed
 
@@ -147,6 +154,22 @@ effect for reactive data, when deps changed, it will return a ref
 const data = reactive({ count: 0 })
 const double = computed(() => data.count * 2)
 data.count++
+```
+
+### Lifecycles
+
+Naive implements of life cycles, and onBeforeXxx will run in `useLayoutEffect`, other will run in `useEffect`
+
+```js
+onMounted(() => {
+  console.log('mounted!')
+})
+onUpdated(() => {
+  console.log('updated!')
+})
+onUnmounted(() => {
+  console.log('unmounted!')
+})
 ```
 
 ### License
