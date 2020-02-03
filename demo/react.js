@@ -1,8 +1,9 @@
 import React from 'react'
 import { watch as effect, unwatch, reactive, computed, ref, raw, isReactive, isRef } from '../dist/index'
-
+let current = null
 function setup(factory) {
-  return React.memo(props => {
+  let memo = React.memo(props => {
+    current = memo
     const update = React.useReducer(s => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
@@ -11,9 +12,22 @@ function setup(factory) {
     if (!w.current) {
       w.current = effect(getter, () => update())
     }
-    React.useEffect(() => () => unwatch(w.current), [])
+    React.useEffect(() => {
+      current.mounted.forEach(c => c())
+      return () => {
+        current.unmounted.forEach(c => c())
+        unwatch(w.current)
+      }
+    }, [])
+    React.useEffect(() => {
+      current.updated.forEach(c => c())
+      return () => {
+        current.beforeUpdated.forEach(c => c())
+      }
+    })
     return w.current()
   })
+  return memo
 }
 
 function watch(src, cb) {
@@ -38,6 +52,25 @@ function watch(src, cb) {
 
   return () => unwatch(runner)
 }
+
+function onMounted(cb) {
+  return lifeCycle(cb, 'mounted')
+}
+function onUnmounted(cb) {
+  return lifeCycle(cb, 'unmounted')
+}
+function onUpdated(cb) {
+  return lifeCycle(cb, 'updated')
+}
+
+function onBeforeUpdated(cb) {
+  return lifeCycle(cb, 'beforeUpdated')
+}
+
+function lifeCycle(cb, key) {
+  current[key] = current[key] || []
+  current[key].push(cb)
+}
 const isChanged = (a, b) => a !== b
 const isFn = x => typeof x === 'function'
-export { setup, watch, unwatch, ref, computed, reactive, raw, isReactive, isRef }
+export { setup, watch, unwatch, ref, computed, reactive, raw, isReactive, isRef, onMounted, onUnmounted, onUpdated, onBeforeUpdated }
