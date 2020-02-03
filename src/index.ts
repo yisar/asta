@@ -2,8 +2,6 @@ const g = typeof window === 'object' ? window : Function('return this')()
 const targetMap = new WeakMap<Raw, EffectForRaw>()
 const proxyToRaw = new WeakMap<Proxy, Raw>()
 const rawToProxy = new WeakMap<Raw, Proxy>()
-const isObj = (x: any): x is object => typeof x === 'object'
-const isFn = (x: any): x is Function => typeof x === 'function'
 const hasOwnProperty = Object.prototype.hasOwnProperty
 const effectStack: Effect[] = []
 let activeEffect = null
@@ -221,15 +219,12 @@ function trackChild(dep) {
   }
 }
 
+export const isRef = (r: any): boolean => (r ? r.isRef === true : false)
+export const isReactive = (proxy: Object): boolean => proxyToRaw.has(proxy)
+
+const isObj = (x: any): x is object => typeof x === 'object'
+const isFn = (x: any): x is Function => typeof x === 'function'
 const convert = <T>(val: T): T => (isObj(val) ? reactive(val) : val)
-
-export function isRef(r: any): boolean {
-  return r ? r.isRef === true : false
-}
-
-export function isReactive(proxy: Object) {
-  return proxyToRaw.has(proxy)
-}
 
 type Effect = Function & {
   active?: boolean
