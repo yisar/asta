@@ -11,13 +11,13 @@ const enum Const {
   DELETE = 'delete'
 }
 
-export function watch<T>(fn: Function, options: Options = {}): Effect {
+export function watch<T>(fn: Function, scheduler: Function): Effect {
   const effect: Effect = function effect() {
     return run(effect, fn, this, arguments)
   }
   effect.active = true
-  effect.scheduler = options.scheduler
-  !options.lazy && effect()
+  effect.scheduler = scheduler
+  effect()
   return effect
 }
 
@@ -186,9 +186,7 @@ export function computed<T>(options: Getter<T> | Accessor<T>): Ref<T> {
     getter = options.get
     setter = options.set
   }
-  const effect = watch(getter, {
-    scheduler: () => (dirty = true)
-  })
+  const effect = watch(getter, () => (dirty = true))
   return {
     isRef: true,
     effect,
@@ -224,10 +222,6 @@ type Effect = Function & {
   active?: boolean
   scheduler?: Function
   deps?: EffectForKey[]
-}
-
-interface Options {
-  scheduler?: Function
 }
 
 interface Operation {

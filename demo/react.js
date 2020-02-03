@@ -9,9 +9,7 @@ function setup(factory) {
     if (!r.current) r.current = factory(props)
     let getter = isFn(r.current) ? () => r.current(props) : () => factory(props)
     if (!w.current) {
-      w.current = effect(getter, {
-        scheduler: () => update()
-      })
+      w.current = effect(getter, () => update())
     }
     React.useEffect(() => () => unwatch(w.current), [])
     return w.current()
