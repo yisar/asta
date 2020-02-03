@@ -22,12 +22,12 @@ In Composition API, every component return a render function, this function is r
 const data = reactive({ count: 0 }) // once
 return () => vdom // every time
 ```
+
 2. Mental burden
 
 There is more mental burden from hooks API, When should I use `useMemo` and how to filter `deps`?
 
 Sometimes it produces unexpected results, but this library will not. It use Es6 proxies, the rendering is exact.
-
 
 ### Use
 
@@ -85,6 +85,7 @@ const App = setup(() => (
   </div>
 ))
 ```
+
 For the closures, the reactive must nn parent scope.
 
 ### Composition API
@@ -118,7 +119,17 @@ watch(() => console.log(data.count))
 data.count++ // console 1
 ```
 
+Like useEffect, watch also accepts a ref source:
 
+```js
+const ref = ref(0)
+watch(() => console.log(data.count), ref)
+```
+```shell
+watch(f)       //  effect every time
+watch(f, 0)   //  effect only once
+watch(f, computed ref)  //  effect when computed ref changed
+```
 #### ref
 
 ref is another type of reactive, it just return an value
