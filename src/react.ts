@@ -9,8 +9,8 @@ function setup<T>(factory: T, render: unkown) {
     if (!r.current) r.current = factory(props)
     let effect = typeof r.current === 'function' ? () => r.current(props) : () => factory(props)
     if (!w.current) {
-      w.current = watch(effect, {
-        scheduler: () => Promise.resolve().then(update)
+      w.current = watch(effect, null,{
+        scheduler: () => update
       })
     }
     React.useEffect(() => () => unwatch(w.current), [])

@@ -12,12 +12,13 @@ const enum Const {
   DELETE = 'delete'
 }
 
-export function watch(cb: Function, options: Options = {}): Effect {
+export function watch<T>(fn: Function, src: Ref<T>, options: Options = {}): Effect {
   const effect: Effect = function effect() {
-    return run(effect, cb, this, arguments)
+    return run(effect, fn, this, arguments)
   }
   effect.active = true
   effect.scheduler = options.scheduler
+  effect.src = src
   effect()
   return effect
 }
@@ -145,7 +146,12 @@ function trigger(operation: Operation) {
     const iKey = Array.isArray(target) ? 'length' : ITERATE_KEY
     add(deps, iKey, effects)
   }
-  effects.forEach((e: Effect) => (typeof e.scheduler === 'function' ? e.scheduler(e) : e()))
+  effects.forEach((e: Effect) => {
+    if (e.oldSrc !== e.src) {
+      typeof e.scheduler === 'function' ? e.scheduler(e) : e()
+      e.oldSrc = e.src
+    }
+  })
 }
 
 function add(deps, key, effects) {
@@ -186,7 +192,7 @@ export function computed<T>(options: Getter<T> | Accessor<T>): Ref<T> {
     setter = options.set
   }
 
-  const effect = watch(getter, {
+  const effect = watch(getter, null, {
     scheduler: () => (dirty = true)
   })
   return {
@@ -225,8 +231,9 @@ export function isReactive(proxy: Object) {
 
 type Effect = Function & {
   active?: boolean
-  unwatched?: boolean
   scheduler?: Function
+  oldSrc?: unknown
+  src?: unknown
   deps?: EffectForKey[]
 }
 
