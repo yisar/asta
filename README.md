@@ -133,9 +133,10 @@ watch(count, (count, prevCount) => do())
 
 Finally you can cleanup watcher
 
-````js
+```js
 const cleanup = watch()
-onUnmounted(()=>cleanup())
+onUnmounted(() => cleanup())
+```
 
 #### ref
 
@@ -144,7 +145,7 @@ ref is another type of reactive, it just return an value
 ```js
 const ref = ref(0)
 console.log(ref.value) //0
-````
+```
 
 #### computed
 
