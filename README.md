@@ -125,9 +125,9 @@ Like useEffect, watch also accepts a ref source:
 const ref = ref(0)
 watch(() => console.log(data.count), ref)
 ```
-```shell
-watch(f)       //  effect every time
-watch(f, 0)   //  effect only once
+```
+watch(f)                //  effect every time
+watch(f, 0)             //  effect only once
 watch(f, computed ref)  //  effect when computed ref changed
 ```
 #### ref
