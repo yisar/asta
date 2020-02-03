@@ -110,13 +110,14 @@ console.log(data.count) //1
 
 #### watch
 
-It will reserved an effect function and run it when deps changed.
+It accepts an effect function and run it when deps changed.
 
 ```js
 const data = reactive({ count: 0 })
 watch(() => console.log(data.count))
 data.count++ // console 1
 ```
+
 
 #### ref
 

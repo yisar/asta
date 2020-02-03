@@ -148,7 +148,7 @@ function trigger(operation: Operation) {
   }
   effects.forEach((e: Effect) => {
     if (!e.src || e.oldSrc !== e.src) {
-      typeof e.scheduler === 'function' ? e.scheduler(e) : e()
+      typeof e.scheduler === 'function' ? e.scheduler(e.src, e.oldSrc, e) : e(e.src, e.oldSrc)
       e.oldSrc = e.src
     }
   })
