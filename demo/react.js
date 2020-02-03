@@ -4,6 +4,10 @@ let current = null
 function setup(factory) {
   let memo = React.memo(props => {
     current = memo
+    current.mounted = []
+    current.unmounted = []
+    current.updated = []
+    current.beforeUpdated = []
     const update = React.useReducer(s => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
@@ -13,16 +17,17 @@ function setup(factory) {
       w.current = effect(getter, () => update())
     }
     React.useEffect(() => {
-      current.mounted.forEach(c => c())
+      loop(current.mounted)
+      loop(current.beforeUpdated)
       return () => {
-        current.unmounted.forEach(c => c())
+        loop(current.unmounted)
         unwatch(w.current)
       }
     }, [])
     React.useEffect(() => {
-      current.updated.forEach(c => c())
+      loop(current.updated)
       return () => {
-        current.beforeUpdated.forEach(c => c())
+        loop(current.beforeUpdated)
       }
     })
     return w.current()
@@ -53,6 +58,10 @@ function watch(src, cb) {
   return () => unwatch(runner)
 }
 
+function loop(fn) {
+  fn.forEach(c => c())
+}
+
 function onMounted(cb) {
   return lifeCycle(cb, 'mounted')
 }
@@ -68,7 +77,6 @@ function onBeforeUpdated(cb) {
 }
 
 function lifeCycle(cb, key) {
-  current[key] = current[key] || []
   current[key].push(cb)
 }
 const isChanged = (a, b) => a !== b
