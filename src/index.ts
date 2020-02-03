@@ -1,3 +1,4 @@
+const g = typeof window === 'object' ? window : Function('return this')()
 const targetMap = new WeakMap<Raw, EffectForRaw>()
 const proxyToRaw = new WeakMap<Proxy, Raw>()
 const rawToProxy = new WeakMap<Raw, Proxy>()
@@ -18,7 +19,7 @@ export function watch<T>(fn: Function, src: Ref<T>, options: Options = {}): Effe
   }
   effect.active = true
   effect.scheduler = options.scheduler
-  effect.src = src
+  effect.value = src.value
   effect()
   return effect
 }
@@ -54,21 +55,22 @@ function cleanup(effect: Effect): void {
   effect.deps = []
 }
 
+function buildIn({ constructor }: Raw) {
+  return isFn(constructor) && constructor.name in g && g[constructor.name] === constructor
+}
+
 export function reactive<T extends Raw>(raw: T): T {
-  // todo shouldInstrument
-  if (proxyToRaw.has(raw)) return raw
+  if (proxyToRaw.has(raw) || buildIn(raw)) return raw
   const proxy = rawToProxy.get(raw)
   if (proxy) {
     return proxy as T
   }
-  return createReactive(raw)
-}
-
-function createReactive<T extends Raw>(raw: T): T {
   const reactive = new Proxy(raw, baseHandlers)
+
   rawToProxy.set(raw, reactive)
   proxyToRaw.set(reactive, raw)
   targetMap.set(raw, new Map() as EffectForRaw)
+
   return reactive as T
 }
 
@@ -147,9 +149,9 @@ function trigger(operation: Operation) {
     add(deps, iKey, effects)
   }
   effects.forEach((e: Effect) => {
-    if (!e.src || e.oldSrc !== e.src) {
-      typeof e.scheduler === 'function' ? e.scheduler(e.src, e.oldSrc, e) : e(e.src, e.oldSrc)
-      e.oldSrc = e.src
+    if (!e.value || e.oldValue !== e.value) {
+      isFn(e.scheduler) ? e.scheduler(e.value, e.oldValue, e) : e(e.value, e.oldValue)
+      e.oldValue = e.value
     }
   })
 }
@@ -232,8 +234,8 @@ export function isReactive(proxy: Object) {
 type Effect = Function & {
   active?: boolean
   scheduler?: Function
-  oldSrc?: unknown
-  src?: unknown
+  oldValue?: unknown
+  value?: unknown
   deps?: EffectForKey[]
 }
 
