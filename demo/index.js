@@ -8,8 +8,7 @@ const App = setup(() => {
   const num = ref(0)
   const double = computed(() => data.count * 2)
   watch(
-    () => console.log(num),
-    () => data.count
+    () => console.log(data.count)
   )
   return () => (
     <div>

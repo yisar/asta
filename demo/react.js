@@ -16,16 +16,28 @@ function setup(factory) {
   })
 }
 
-function watch(cb, src) {
+function watch(src, cb) {
   let oldValue = null
-  const applyCb = () => {
+  let update = () => {
     let newValue = runner()
-    oldValue !== newValue && cb(newValue, oldValue)
+    isChanged(oldValue, newValue) && cb(newValue, oldValue)
     oldValue = newValue
   }
-  const getter = isFn(src) ? src : isRef(src) ? () => src.value : () => src
-  const runner = effect(getter, applyCb)
-}
+  let getter = null
+  if (Array.isArray(src)) {
+    getter = () => src.map(s => (isRef(s) ? s.value : s()))
+  } else if (isRef(src)) {
+    getter = () => src.value
+  } else if (cb) {
+    getter = src
+  } else {
+    getter = src
+    update = null
+  }
+  const runner = effect(getter, update)
 
+  return () => unwatch(runner)
+}
+const isChanged = (a, b) => a !== b
 const isFn = x => typeof x === 'function'
 export { setup, watch, unwatch, ref, computed, reactive, raw, isReactive, isRef }
