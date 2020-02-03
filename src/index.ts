@@ -147,7 +147,7 @@ function trigger(operation: Operation) {
     add(deps, iKey, effects)
   }
   effects.forEach((e: Effect) => {
-    if (e.oldSrc !== e.src) {
+    if (!e.src || e.oldSrc !== e.src) {
       typeof e.scheduler === 'function' ? e.scheduler(e) : e()
       e.oldSrc = e.src
     }

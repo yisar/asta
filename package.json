@@ -6,7 +6,7 @@
   "types": "./types/react.d.ts",
   "scripts": {
     "test": "jest",
-    "start": "tsc"
+    "dev": "tsc"
   },
   "keywords": [],
   "author": "yisaer",

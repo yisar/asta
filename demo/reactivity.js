@@ -1,13 +1,13 @@
-import { reactive, watch } from '../dist/reactivity'
+import { reactive, watch, computed } from '../dist/index'
 
 const person = reactive({
   first: 'Bob',
-  last: 'Smith',
-  get full() {
-    return `${this.first} ${this.last}`
-  }
+  last: 'Smith'
 })
 
-watch(() => console.log(person.full))
-watch(() => console.log(person.first))
+
+
+watch(() => console.log(person.first), 1)
 person.first = 'Ann'
+person.first = 'Haha'
+person.first = 'lala'
