@@ -20,13 +20,11 @@ function watch(cb, src) {
   let oldValue = null
   const applyCb = () => {
     let newValue = runner()
-    oldValue !== newValue && cb()
+    oldValue !== newValue && cb(newValue, oldValue)
     oldValue = newValue
   }
   const getter = isFn(src) ? src : isRef(src) ? () => src.value : () => src
-  const runner = effect(getter, {
-    scheduler: applyCb
-  })
+  const runner = effect(getter, applyCb)
 }
 
 const isFn = x => typeof x === 'function'
