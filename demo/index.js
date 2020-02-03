@@ -7,8 +7,8 @@ const App = setup(() => {
   const data = reactive({ count: 0 })
   const num = ref(0)
   const double = computed(() => data.count * 2)
-  watch(() => console.log(data.count))
-  onMounted(() => console.log('mounted'))
+  watch(() => console.log(double.value))
+  // onMounted(() => console.log('mounted'))
   return () => (
     <div>
       <div>{data.count}</div>
