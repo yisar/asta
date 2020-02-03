@@ -11,14 +11,13 @@ const enum Const {
   DELETE = 'delete'
 }
 
-export function watch<T>(fn: Function, src: Ref<T>, options: Options = {}): Effect {
+export function watch<T>(fn: Function, options: Options = {}): Effect {
   const effect: Effect = function effect() {
     return run(effect, fn, this, arguments)
   }
   effect.active = true
   effect.scheduler = options.scheduler
-  effect.value = src.value
-  effect()
+  !options.lazy && effect()
   return effect
 }
 
@@ -58,7 +57,7 @@ function buildIn({ constructor }: Raw) {
 }
 
 export function reactive<T extends Raw>(raw: T): T {
-  if (proxyToRaw.has(raw) || buildIn(raw)) return raw
+  if (proxyToRaw.has(raw) || !buildIn(raw)) return raw
   const proxy = rawToProxy.get(raw)
   if (proxy) {
     return proxy as T
@@ -147,10 +146,7 @@ function trigger(operation: Operation) {
     add(deps, iKey, effects)
   }
   effects.forEach((e: Effect) => {
-    if (!e.value || e.oldValue !== e.value) {
-      isFn(e.scheduler) ? e.scheduler(e.value, e.oldValue, e) : e(e.value, e.oldValue)
-      e.oldValue = e.value
-    }
+    isFn(e.scheduler) ? e.scheduler(e) : e()
   })
 }
 
@@ -184,15 +180,13 @@ export function computed<T>(options: Getter<T> | Accessor<T>): Ref<T> {
   let value: T
   let getter: Getter<T>
   let setter: Setter<T>
-
   if (isFn(options)) {
     getter = options
   } else {
     getter = options.get
     setter = options.set
   }
-
-  const effect = watch(getter, null, {
+  const effect = watch(getter, {
     scheduler: () => (dirty = true)
   })
   return {
@@ -229,8 +223,6 @@ const convert = <T>(val: T): T => (isObj(val) ? reactive(val) : val)
 type Effect = Function & {
   active?: boolean
   scheduler?: Function
-  oldValue?: unknown
-  value?: unknown
   deps?: EffectForKey[]
 }
 

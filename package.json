@@ -1,6 +1,6 @@
 {
   "name": "doux",
-  "version": "0.0.1-alpha2",
+  "version": "0.0.1-alpha3",
   "description": "Simple reactivity system with composition API.",
   "main": "./demo/react.js",
   "types": "./types/react.d.ts",
