@@ -111,7 +111,7 @@ console.log(data.count) //1
 
 #### watch
 
-It accepts an effect function and run it when deps changed.
+It accepts an effect function and run it when data changed.
 
 ```js
 const data = reactive({ count: 0 })
@@ -119,24 +119,25 @@ watch(() => console.log(data.count))
 data.count++ // console 1
 ```
 
+You can cleanUp passed as 1st argument.
+
+```js
+watch(cleanup => cleanup(() => store.unsubscribe())
+```
+
 In some cases, we may also want to watch with sources
 
 ```js
-// watching a getter
+// getter
 const state = reactive({ count: 0 })
-watch(() => state.count, (count, prevCount) => do())
+watch(() => state.count, (cleanup, count, prevCount) => do())
 
-// directly watching a ref
+// ref
 const count = ref(0)
-watch(count, (count, prevCount) => do())
+watch(count, (cleanup, count, prevCount) => do())
 ```
 
 Finally you can cleanup watcher
-
-```js
-const cleanup = watch()
-onUnmounted(() => cleanup())
-```
 
 #### ref
 
@@ -159,19 +160,13 @@ data.count++
 
 ### Lifecycles
 
-Naive implements of life cycles, and onBeforeXxx will run in `useLayoutEffect`, other will run in `useEffect`
+Noneed lifecycles, use watch like useeffect:
 
-```js
-onMounted(() => {
-  console.log('mounted!')
-})
-onUpdated(() => {
-  console.log('updated!')
-})
-onUnmounted(() => {
-  console.log('unmounted!')
-})
-```
+| watch        | useEffect        |
+| ------------ | ---------------- |
+| watch(f)     | useEffect(f)     |
+| watch([],f)  | useEffect([],f)  |
+| watch([x],f) | useEffect([x],f) |
 
 ### License
 
