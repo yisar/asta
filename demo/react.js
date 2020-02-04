@@ -50,6 +50,9 @@ function watch(src, cb) {
     getter = src
   } else {
     getter = () => {
+      if (currentVdom.cleanup.has(cleanup)) {
+        currentVdom.cleanup.delete(cleanup)
+      }
       cleanup && cleanup()
       src()
     }
