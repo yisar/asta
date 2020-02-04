@@ -54,10 +54,10 @@ function watch(src, cb) {
     update = null
   }
   const runner = effect(getter, update)
+  currentVdom.cleanup.add(() => unwatch(runner))
   return cb => {
     cleanup = cb
     currentVdom.cleanup.add(cb)
-    currentVdom.cleanup.add(() => unwatch(runner))
   }
 }
 
