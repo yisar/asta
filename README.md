@@ -165,8 +165,8 @@ Noneed lifecycles, use watch like useeffect:
 | watch        | useEffect        |
 | ------------ | ---------------- |
 | watch(f)     | useEffect(f)     |
-| watch([],f)  | useEffect([],f)  |
-| watch([x],f) | useEffect([x],f) |
+| watch([],f)  | useEffect(f,[])  |
+| watch([x],f) | useEffect(f,[x]) |
 
 ### License
 
