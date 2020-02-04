@@ -1,5 +1,5 @@
 import React from 'react'
-import { watch as effect, unwatch, reactive, computed, ref, raw, isReactive, isRef } from '../dist/index'
+import { watch as effect, unwatch, reactive, computed, ref, toRefs, isReactive, isRef } from '../dist/index'
 
 let currentVdom = null
 
@@ -62,4 +62,4 @@ function watch(src, cb) {
 
 const isChanged = (a, b) => !a || (Array.isArray(b) ? b.some((arg, index) => arg !== a[index]) : a !== b)
 const isFn = x => typeof x === 'function'
-export { setup, watch, unwatch, ref, computed, reactive, raw, isReactive, isRef }
+export { setup, watch, unwatch, ref, computed, reactive, toRefs, isReactive, isRef }

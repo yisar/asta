@@ -155,8 +155,24 @@ function add(deps, key, effects) {
   dep && dep.forEach(e => effects.add(e))
 }
 
-export function raw(proxy: Proxy) {
-  return proxyToRaw.get(proxy) || proxy
+export function toRefs<T extends object>(proxy: T): { [K in keyof T]: Ref<T[K]> } {
+  const ret: any = {}
+  for (const key in proxy) {
+    ret[key] = toRef(proxy, key)
+  }
+  return ret
+}
+
+function toRef<T extends object, K extends keyof T>(proxy: T, key: K): Ref<T[K]> {
+  return {
+    isRef: true,
+    get value(): any {
+      return proxy[key]
+    },
+    set value(newVal) {
+      proxy[key] = newVal
+    }
+  } as any
 }
 
 export function ref<T>(value?: T): Ref<T> {
