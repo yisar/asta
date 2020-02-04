@@ -113,7 +113,7 @@ watch(() => console.log(data.count))
 data.count++ // console 1
 ```
 
-You can cleanUp passed as 1st argument.
+It will return a cleanup callback, you can use it to cleanup effects.
 
 ```js
 const cleanup = watch()
