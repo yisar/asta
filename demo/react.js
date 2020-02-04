@@ -6,7 +6,7 @@ let currentVdom = null
 function setup(factory) {
   let vdom = React.memo(props => {
     currentVdom = vdom
-    currentVdom.unmount = []
+    currentVdom.cleanup = []
     const update = React.useReducer(s => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
@@ -56,7 +56,7 @@ function watch(src, cb) {
   const runner = effect(getter, update)
   return cb => {
     cleanup = cb
-    currentVdom.unmount.push(cb)
+    currentVdom.cleanup.push(cb, () => unwatch(runner))
   }
 }
 

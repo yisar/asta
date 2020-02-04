@@ -122,7 +122,8 @@ data.count++ // console 1
 You can cleanUp passed as 1st argument.
 
 ```js
-watch(cleanup => cleanup(() => store.unsubscribe())
+const cleanup = watch()
+cleanup(()=> do()) // run both unmount and before update
 ```
 
 In some cases, we may also want to watch with sources
