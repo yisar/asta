@@ -125,11 +125,11 @@ In some cases, we may also want to watch with sources
 ```js
 // getter
 const state = reactive({ count: 0 })
-watch(() => state.count, (cleanup, count, prevCount) => do())
+watch(() => state.count, (count, prevCount) => do())
 
 // ref
 const count = ref(0)
-watch(count, (cleanup, count, prevCount) => do())
+watch(count, (count, prevCount) => do())
 ```
 
 Finally you can cleanup watcher
