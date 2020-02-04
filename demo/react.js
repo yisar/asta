@@ -13,13 +13,8 @@ function setup(factory) {
     if (!w.current) {
       w.current = effect(getter, () => update())
     }
-    React.useEffect(
-      () => () => {
-        unwatch(w.current)
-        vdom.cleanup.forEach(c => c())
-      },
-      []
-    )
+    currentVdom.cleanup.add(() => unwatch(w.current))
+    React.useEffect(() => () => currentVdom.cleanup.forEach(c => c()), [])
     return w.current()
   })
   currentVdom = vdom
