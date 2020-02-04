@@ -7,10 +7,14 @@ const App = setup(() => {
   const data = reactive({ count: 0, num: 10 })
   const num = ref(10)
   const double = computed(() => data.count * 2)
-  watch(double, (cleanup, count, oldCount) => {
-    cleanup(() => console.log('cleanup', count, oldCount))
-    console.log(data.count)
-  })
+  const cleanup = watch(
+    [],
+    (cleanup, count, oldCount) => {
+      cleanup(() => console.log('cleanup', count, oldCount))
+      console.log(data.count)
+    }
+  )
+  console.log(cleanup)
   return () => (
     <div>
       <div>{data.count}</div>

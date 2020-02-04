@@ -1,8 +1,12 @@
 import React from 'react'
 import { watch as effect, unwatch, reactive, computed, ref, raw, isReactive, isRef } from '../dist/index'
 
+let currentVdom = null
+
 function setup(factory) {
-  let memo = React.memo(props => {
+  let vdom = React.memo(props => {
+    currentVdom = vdom
+    currentVdom.cleanup = []
     const update = React.useReducer(s => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
@@ -11,10 +15,16 @@ function setup(factory) {
     if (!w.current) {
       w.current = effect(getter, () => update())
     }
-    React.useEffect(() => () => unwatch(w.current), [])
+    React.useEffect(
+      () => () => {
+        unwatch(w.current)
+        vdom.cleanup.forEach(c => c())
+      },
+      []
+    )
     return w.current()
   })
-  return memo
+  return vdom
 }
 
 function watch(src, cb) {
@@ -45,7 +55,10 @@ function watch(src, cb) {
   }
   const runner = effect(getter, update)
 
-  return () => unwatch(runner)
+  return cb => {
+    unwatch(runner)
+    currentVdom.cleanup.push(cb)
+  }
 }
 
 const isChanged = (a, b) => !a || (Array.isArray(b) ? b.some((arg, index) => arg !== a[index]) : a !== b)

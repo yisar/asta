@@ -162,11 +162,12 @@ data.count++
 
 Noneed lifecycles, use watch like useeffect:
 
-| watch        | useEffect        |
-| ------------ | ---------------- |
-| watch(f)     | useEffect(f)     |
-| watch([],f)  | useEffect(f,[])  |
-| watch([x],f) | useEffect(f,[x]) |
+| watch             | useEffect                   |
+| ----------------- | --------------------------- |
+| watch(f)          | useEffect(f)                |
+| watch([x],f)      | useEffect(f,[x])            |
+| setup             | useEffect(f,[])             |
+| cleanup = watch() | useEffect(() => cleanup,[]) |
 
 ### License
 
