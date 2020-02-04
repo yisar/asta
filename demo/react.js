@@ -6,7 +6,7 @@ let currentVdom = null
 function setup(factory) {
   let vdom = React.memo(props => {
     currentVdom = vdom
-    currentVdom.cleanup = []
+    currentVdom.unmount = []
     const update = React.useReducer(s => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
@@ -30,12 +30,12 @@ function setup(factory) {
 function watch(src, cb) {
   let oldValue = null
   let cleanup = null
-  let dispose = fn => (cleanup = fn)
+  let flag = false
   let update = () => {
     let newValue = runner()
     if (isChanged(oldValue, newValue)) {
       cleanup && cleanup()
-      cb(dispose, newValue, oldValue)
+      cb(newValue, oldValue)
     }
     oldValue = newValue
   }
@@ -49,15 +49,14 @@ function watch(src, cb) {
   } else {
     getter = () => {
       cleanup && cleanup()
-      src(dispose)
+      src()
     }
     update = null
   }
   const runner = effect(getter, update)
-
   return cb => {
-    unwatch(runner)
-    currentVdom.cleanup.push(cb)
+    cleanup = cb
+    currentVdom.unmount.push(cb)
   }
 }
 
