@@ -1,4 +1,5 @@
-import { watch, isFn, activeEffect,Ref } from './index'
+import { watch, isFn, activeEffect } from './reactive'
+import { Ref } from './ref'
 
 export function computed<T>(options: Getter<T> | Accessor<T>): Ref<T> {
   let dirty = true
