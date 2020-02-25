@@ -4,7 +4,7 @@ const proxyToRaw = new WeakMap<Proxy, Raw>()
 const rawToProxy = new WeakMap<Raw, Proxy>()
 const hasOwnProperty = Object.prototype.hasOwnProperty
 const effectStack: Effect[] = []
-let activeEffect = null
+export let activeEffect = null
 const ITERATE_KEY = Symbol('iterate key')
 const enum Const {
   ADD = 'add',
@@ -191,47 +191,11 @@ export function ref<T>(value?: T): Ref<T> {
   return ref
 }
 
-export function computed<T>(options: Getter<T> | Accessor<T>): Ref<T> {
-  let dirty = true
-  let value: T
-  let getter: Getter<T>
-  let setter: Setter<T>
-  if (isFn(options)) {
-    getter = options
-  } else {
-    getter = options.get
-    setter = options.set
-  }
-  const effect = watch(getter, () => (dirty = true))
-  return {
-    isRef: true,
-    effect,
-    get value() {
-      if (dirty) {
-        value = effect()
-        dirty = false
-      }
-      effect.deps.forEach(trackChild)
-      return value
-    },
-    set value(newValue: T) {
-      setter && setter(newValue)
-    }
-  } as any
-}
-
-function trackChild(dep) {
-  if (!dep.has(activeEffect)) {
-    dep.add(activeEffect)
-    activeEffect.deps.push(dep)
-  }
-}
-
 export const isRef = (r: any): boolean => (r ? r.isRef === true : false)
 export const isReactive = (proxy: Object): boolean => proxyToRaw.has(proxy)
 
 const isObj = (x: any): x is object => typeof x === 'object'
-const isFn = (x: any): x is Function => typeof x === 'function'
+export const isFn = (x: any): x is Function => typeof x === 'function'
 const convert = <T>(val: T): T => (isObj(val) ? reactive(val) : val)
 
 type Effect = Function & {
@@ -247,16 +211,10 @@ interface Operation {
   value?: any
   oldValue?: any
 }
-interface Accessor<T> {
-  get: Getter<T>
-  set: Setter<T>
-}
 
-interface Ref<T> {
+export interface Ref<T> {
   readonly value: T
 }
-type Getter<T> = () => T
-type Setter<T> = (v: T) => void
 type EffectForKey = Set<Effect>
 type EffectForRaw = Map<Key, EffectForKey>
 type Key = string | number | symbol

@@ -2,11 +2,11 @@
   "name": "doux",
   "version": "0.0.1-beta2",
   "description": "Simple reactivity system with composition API.",
-  "main": "./demo/react.js",
+  "main": "./dist/doux.js",
   "types": "./types/react.d.ts",
   "scripts": {
     "test": "jest",
-    "dev": "tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "yisaer",

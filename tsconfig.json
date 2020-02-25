@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "module": "ES2015",
+    "module": "amd",
     "lib": ["es6", "dom"],
     "declaration": true,
     "target": "es5",
     "jsx": "react",
-    "outDir": "./dist",
+    "outFile": "./dist/doux.js",
     "rootDir": "./src",
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
-    "moduleResolution": "node",
-    "watch": true
+    "moduleResolution": "node"
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]
