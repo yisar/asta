@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "module": "amd",
+    "module": "es2015",
     "lib": ["es6", "dom"],
     "declaration": true,
     "target": "es5",
     "jsx": "react",
-    "outFile": "./dist/doux.js",
     "rootDir": "./src",
     "allowSyntheticDefaultImports": true,
     "removeComments": true,

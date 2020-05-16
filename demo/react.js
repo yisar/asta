@@ -1,5 +1,5 @@
 import React from 'react'
-import { watch as effect, unwatch, reactive, computed, ref, toRefs, isReactive, isRef } from '../dist/index'
+import { watch as effect, unwatch, reactive, computed, ref, toRefs, isReactive, isRef } from '../dist/doux.esm'
 
 let currentVdom = null
 

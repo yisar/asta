@@ -1,5 +1,5 @@
 import React from 'react'
-import { setup, reactive, watch, computed, ref, onMounted } from './react'
+import { setup, reactive,  computed, ref } from './react'
 import { render } from 'react-dom'
 
 const App = setup(() => {
@@ -7,10 +7,6 @@ const App = setup(() => {
   const data = reactive({ count: 0, num: 10 })
   const num = ref(10)
   const double = computed(() => data.count * 2)
-  const cleanup = watch([], (count, oldCount) => {
-    console.log(data.count)
-  })
-  console.log(cleanup)
   return () => (
     <div>
       <div>{data.count}</div>
