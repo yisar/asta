@@ -9,7 +9,8 @@ function setup(factory) {
     const w = React.useRef()
     const r = React.useRef()
     if (!r.current) r.current = factory(props)
-    let getter = isFn(r.current) ? () => r.current(props) : () => factory(props)
+    let getter = isFn(r.current) ? () => r.current(props) : console.error('[Doux] must return a render function')
+    // console.log(getter)
     if (!w.current) {
       w.current = watch(getter, () => Promise.resolve().then(update))
     }

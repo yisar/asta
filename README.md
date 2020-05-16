@@ -23,6 +23,32 @@ const data = reactive({ count: 0 }) // once
 return () => vdom // every time
 ```
 
+- State management and Context proplems.
+
+Use doux, shared state is easiest, just move the reactive state to global namespace.
+
+```js
+const store = reactive({
+  count: 0,
+})
+const App = setup(() => {
+  return () => (
+    <div>
+      <A />
+      <B />
+      <button onClick={() => store.count++}>+</button>
+    </div>
+  )
+})
+
+const A = setup(() => {
+  return () => <div>{store.count}</div>
+})
+const B = setup(() => {
+  return () => <div>{store.count}</div>
+})
+```
+
 ### Use
 
 ```shell
@@ -66,21 +92,38 @@ Because closures, and from the second time on, the component will only reexecute
 
 This can solve the problem of repeated initialization rendering of hooks API.
 
-Also you can receive a pure funtion without any logics:
+For the closures, the reactive must from parent scope.
+
+### effect
+
+effect is a watch wrapper, like useEffect, it supported sources:
 
 ```js
-const store = reactive({
-  count: 0
+effect([], (oldSrc, newSrc) => {
+  console.log(oldSrc, newSrc)
 })
-const App = setup(() => (
-  <div>
-    <div>{store.count}</div>
-    <button onClick={() => store.count++}>+</button>
-  </div>
-))
 ```
 
-For the closures, the reactive must nn parent scope.
+It will return a cleanup callback, you can use it to cleanup effects.
+
+```js
+const cleanup = watch()
+cleanup(()=> do()) // run both unmount and before update
+```
+
+In some cases, we may also want to watch with sources
+
+```js
+// getter
+const state = reactive({ count: 0 })
+watch(() => state.count, (count, prevCount) => do())
+
+// ref
+const count = ref(0)
+watch(count, (count, prevCount) => do())
+```
+
+Finally you can cleanup watcher
 
 ### Composition API
 
@@ -113,27 +156,6 @@ watch(() => console.log(data.count))
 data.count++ // console 1
 ```
 
-It will return a cleanup callback, you can use it to cleanup effects.
-
-```js
-const cleanup = watch()
-cleanup(()=> do()) // run both unmount and before update
-```
-
-In some cases, we may also want to watch with sources
-
-```js
-// getter
-const state = reactive({ count: 0 })
-watch(() => state.count, (count, prevCount) => do())
-
-// ref
-const count = ref(0)
-watch(count, (count, prevCount) => do())
-```
-
-Finally you can cleanup watcher
-
 #### ref
 
 ref is another type of reactive, it just return an value
@@ -155,13 +177,13 @@ data.count++
 
 ### Lifecycles
 
-Noneed lifecycles, use watch like useeffect:
+Noneed lifecycles, use effect like useeffect:
 
 | watch             | useEffect                   |
 | ----------------- | --------------------------- |
-| watch(f)          | useEffect(f)                |
-| watch([x],f)      | useEffect(f,[x])            |
-| setup             | useEffect(f,[])             |
+| effect(f)         | useEffect(f)                |
+| effect([x],f)     | useEffect(f,[x])            |
+| effect([],f)      | useEffect(f,[])             |
 | cleanup = watch() | useEffect(() => cleanup,[]) |
 
 ### License
