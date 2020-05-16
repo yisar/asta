@@ -8,7 +8,7 @@
 
 Hooks API has mental burden and unsolvable defects, this library can solve the following problems:
 
-1. Heavy state and repeated initialization.
+- Heavy state and repeated initialization.
 
 In hooks API, Hooks will be initialized repeatedly. If there is a complex state, rendering will be blocked.
 
