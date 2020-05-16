@@ -11,12 +11,12 @@ const enum Const {
   DELETE = 'delete'
 }
 
-export function watch<T>(fn: Function, scheduler: Function): Effect {
+export function watch<T>(fn: Function, cb: Function): Effect {
   const effect: Effect = function effect() {
     return run(effect, fn, this, arguments)
   }
   effect.active = true
-  effect.scheduler = scheduler
+  effect.cb = cb
   effect()
   return effect
 }
@@ -146,7 +146,7 @@ export function trigger(operation: Operation) {
     add(deps, iKey, effects)
   }
   effects.forEach((e: Effect) => {
-    isFn(e.scheduler) ? e.scheduler(e) : e()
+    isFn(e.cb) ? e.cb(e) : e()
   })
 }
 
@@ -162,7 +162,7 @@ export const isFn = (x: any): x is Function => typeof x === 'function'
 
 type Effect = Function & {
   active?: boolean
-  scheduler?: Function
+  cb?: Function
   deps?: EffectForKey[]
 }
 

@@ -1,20 +1,20 @@
 import React from 'react'
-import { watch as effect, unwatch, reactive, computed, ref, toRefs, isReactive, isRef } from '../dist/doux.esm'
+import { watch, unwatch, reactive, computed, ref, toRefs, isReactive, isRef } from '../dist/doux.esm'
 
 let currentVdom = null
 
 function setup(factory) {
-  let vdom = React.memo(props => {
-    const update = React.useReducer(s => s + 1, 0)[1]
+  let vdom = React.memo((props) => {
+    const update = React.useReducer((s) => s + 1, 0)[1]
     const w = React.useRef()
     const r = React.useRef()
     if (!r.current) r.current = factory(props)
     let getter = isFn(r.current) ? () => r.current(props) : () => factory(props)
     if (!w.current) {
-      w.current = effect(getter, () => update())
+      w.current = watch(getter, () => Promise.resolve().then(update))
     }
     currentVdom.cleanup.add(() => unwatch(w.current))
-    React.useEffect(() => () => currentVdom.cleanup.forEach(c => c()), [])
+    React.useEffect(() => () => currentVdom.cleanup.forEach((c) => c()), [])
     return w.current()
   })
   currentVdom = vdom
@@ -22,7 +22,7 @@ function setup(factory) {
   return vdom
 }
 
-function watch(src, cb) {
+function effect(src, cb) {
   let oldValue = null
   let cleanup = null
   let update = () => {
@@ -38,7 +38,7 @@ function watch(src, cb) {
   }
   let getter = null
   if (Array.isArray(src)) {
-    getter = () => src.map(s => (isRef(s) ? s.value : s()))
+    getter = () => src.map((s) => (isRef(s) ? s.value : s()))
   } else if (isRef(src)) {
     getter = () => src.value
   } else if (cb) {
@@ -53,15 +53,15 @@ function watch(src, cb) {
     }
     update = null
   }
-  const runner = effect(getter, update)
+  const runner = watch(getter, requestAnimationFrame(update))
   currentVdom.cleanup.add(() => unwatch(runner))
-  return cb => {
+  return (cb) => {
     cleanup = cb
     currentVdom.cleanup.add(cb)
   }
 }
 
 const isChanged = (a, b) => !a || (Array.isArray(b) ? b.some((arg, index) => arg !== a[index]) : a !== b)
-const isFn = x => typeof x === 'function'
+const isFn = (x) => typeof x === 'function'
 
-export { setup, watch, unwatch, ref, computed, reactive, toRefs, isReactive, isRef }
+export { setup, effect, watch, unwatch, ref, computed, reactive, toRefs, isReactive, isRef }
