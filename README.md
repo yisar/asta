@@ -61,6 +61,10 @@ const App = observer(Component)
 
 Like `createContext`, It create a observable object
 
+```js
+const data = observable({ count: 0 })
+```
+
 #### Dependency collection
 
 An accurate update way, it collects dependency in the initialization phase, establishes the mapping relationship between components and data, and updates the corresponding components when the data changes.
