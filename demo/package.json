@@ -15,6 +15,7 @@
     "babel-preset-env": "^1.7.0"
   },
   "dependencies": {
+    "doux": "^0.0.1-beta3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

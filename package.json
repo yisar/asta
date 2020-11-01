@@ -3,11 +3,26 @@
   "version": "0.0.1-beta2",
   "description": "Simple reactivity system with composition API.",
   "main": "./dist/doux.js",
-  "types": "./types/react.d.ts",
+  "module": "dist/doux.esm.js",
+  "types": "./dist/doux.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/doux.js",
+      "require": "./dist/doux.js",
+      "browser": "./dist/doux.esm.js"
+    },
+    "./": "./",
+    "./react": {
+      "import": "./react/index.mjs",
+      "require": "./react/index.js",
+      "browser": "./react/index.esm.js",
+      "umd": "./react/index.umd.js"
+    }
+  },
   "scripts": {
     "test": "jest",
     "build": "rollup -c",
-    "dev": "rollup -c "
+    "dev": "rollup -c --watch"
   },
   "keywords": [],
   "author": "yisaer",
@@ -22,9 +37,5 @@
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.27.1",
     "typescript": "^3.7.5"
-  },
-  "dependencies": {
-    "@types/react": "^16.9.35",
-    "react": "^16.13.1"
   }
 }

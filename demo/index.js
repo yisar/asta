@@ -1,24 +1,59 @@
-import React from 'react'
-import { setup, reactive, effect, computed, ref } from './react'
+import React, { memo, useEffect, useRef, useReducer } from 'react'
+import { observable, observe, unobserve } from '../dist/doux.esm'
 import { render } from 'react-dom'
 
-const App = setup(() => {
-  console.log('once')
-  const data = reactive({ count: 0, num: 10 })
-  const num = ref(10)
-  const double = computed(() => data.count * 2)
-  const cleanup = effect([], (count, oldCount) => {
-    console.log(data.count)
-  })
-  console.log(cleanup)
-  return () => (
+const data = observable({ count: 0, num: 10 })
+
+const A = setup((props) => {
+  return (
     <div>
       <div>{data.count}</div>
-      <div>{num.value}</div>
-      <div>{double.value}</div>
       <button onClick={() => data.count++}>+</button>
-      <button onClick={() => num.value--}>-</button>
     </div>
   )
 })
-render(<App />, document.getElementById('root'))
+
+const B = setup((props) => {
+  return (
+    <div>
+      <div>{data.count}</div>
+      <button onClick={() => data.count--}>-</button>
+    </div>
+  )
+})
+
+const C = setup((props) => {
+  console.log('c')
+  return (
+    <div>
+      C
+    </div>
+  )
+})
+
+function App() {
+  return (
+    <div>
+      <A />
+      <B />
+      <C />
+    </div>
+  )
+}
+
+function setup(factory) {
+  return memo((props) => {
+    const w = useRef()
+    const update = useReducer((s) => s + 1, 0)[1]
+    if (!w.current) {
+      w.current = observe(
+        () => factory(props),
+        () => Promise.resolve().then(update)
+      )
+    }
+    useEffect(() => () => unobserve(w.current), [])
+    return w.current()
+  })
+}
+
+render(<App foo={1} />, document.getElementById('root'))
