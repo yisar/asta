@@ -21,6 +21,9 @@ const [complexState] = useState(heavyData) // blocked
 There is a performance problem with context. All children of Context need to be rerender.
 
 ```js
+<Provier>
+  {this.props.children} // all children will rerender.
+<Provider/>
 
 ```
 

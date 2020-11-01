@@ -1,6 +1,6 @@
 {
   "name": "doux",
-  "version": "0.0.1-beta2",
+  "version": "0.0.1",
   "description": "Simple reactivity system with composition API.",
   "main": "./dist/doux.js",
   "module": "dist/doux.esm.js",
