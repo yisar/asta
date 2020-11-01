@@ -73,4 +73,4 @@ The main idea comes from [immer.js](https://github.com/immerjs/immer) , when set
 
 ### License
 
-MIT ©yisar inspired by [vue-next](https://github.com/vuejs/vue-next)
+MIT ©yisar
