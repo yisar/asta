@@ -2,7 +2,7 @@ import React, { memo, useEffect, useRef, useReducer } from 'react'
 import { observable, observe, unobserve } from '../dist/doux.esm'
 import { render } from 'react-dom'
 
-const data = observable({ count: 0, num: 10 })
+const data = observable({ count: 0 })
 
 const A = setup((props) => {
   return (
@@ -14,6 +14,7 @@ const A = setup((props) => {
 })
 
 const B = setup((props) => {
+  console.log('b')
   return (
     <div>
       <div>{data.count}</div>
@@ -24,11 +25,7 @@ const B = setup((props) => {
 
 const C = setup((props) => {
   console.log('c')
-  return (
-    <div>
-      C
-    </div>
-  )
+  return <div>C</div>
 })
 
 function App() {
@@ -48,7 +45,7 @@ function setup(factory) {
     if (!w.current) {
       w.current = observe(
         () => factory(props),
-        () => Promise.resolve().then(update)
+        () => update()
       )
     }
     useEffect(() => () => unobserve(w.current), [])

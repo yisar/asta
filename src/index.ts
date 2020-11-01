@@ -8,7 +8,7 @@ export let activeEffect = null
 const ITERATE_KEY = Symbol('iterate key')
 const enum Const {
   ADD = 'add',
-  DELETE = 'delete'
+  DELETE = 'delete',
 }
 
 export function observe<T>(fn: Function, cb: Function): Effect {
@@ -17,7 +17,6 @@ export function observe<T>(fn: Function, cb: Function): Effect {
   }
   effect.active = true
   effect.cb = cb
-  effect()
   return effect
 }
 
@@ -56,12 +55,57 @@ function buildIn({ constructor }: Raw) {
   return isFn(constructor) && constructor.name in g && g[constructor.name] === constructor
 }
 
-export function  observable<T extends Raw>(raw: T): T {
+export function observable<T extends Raw>(raw: T): T {
   if (proxyToRaw.has(raw) || !buildIn(raw)) return raw
   const proxy = rawToProxy.get(raw)
-  if (proxy) {
-    return proxy as T
+  if (proxy) return proxy as T
+  const copy = isArr(raw) ? [] : getCleanCopy(raw as any)
+
+  const baseHandlers = {
+    get(target: Raw, key: Key) {
+      const result = Reflect.get(copy, key) || Reflect.get(target, key)
+      if (typeof key === 'symbol') return result
+      track({ target, key, type: 'get' })
+      const proxy = rawToProxy.get(result)
+      if (isObj(result)) {
+        if (proxy) return proxy
+        return observable(result)
+      }
+      return proxy || result
+    },
+    ownKeys(target: Raw) {
+      track({ target, type: 'iterate' })
+      return Reflect.ownKeys(target)
+    },
+    has(target: Raw, key: Key) {
+      const result = Reflect.has(target, key)
+      track({ target, key, type: 'has' })
+      return result
+    },
+    set(target: Raw, key: Key, value: any) {
+      if (isObj(value)) value = proxyToRaw.get(value) || value
+      const hadKey = hasOwnProperty.call(target, key)
+      const oldValue = target[key]
+      const result = Reflect.set(copy, key, value)
+
+      if (!hadKey) {
+        trigger({ target, key, value, type: 'add' })
+      } else if (value !== oldValue) {
+        trigger({ target, key, value, oldValue, type: 'set' })
+      }
+      return result
+    },
+    deleteProperty(target: Raw, key: Key) {
+      const hadKey = hasOwnProperty.call(target, key)
+      const oldValue = target[key]
+      const result = Reflect.deleteProperty(copy, key)
+      if (hadKey) {
+        trigger({ target, key, oldValue, type: 'delete' })
+      }
+      return result
+    },
   }
+
   const reactive = new Proxy(raw, baseHandlers)
 
   rawToProxy.set(raw, reactive)
@@ -69,51 +113,6 @@ export function  observable<T extends Raw>(raw: T): T {
   targetMap.set(raw, new Map() as EffectForRaw)
 
   return reactive as T
-}
-
-const baseHandlers = {
-  get(target: Raw, key: Key) {
-    const result = Reflect.get(target, key)
-    if (typeof key === 'symbol') return result
-    track({ target, key, type: 'get' })
-    const proxy = rawToProxy.get(result)
-    if (isObj(result)) {
-      if (proxy) return proxy
-      return observable(result)
-    }
-    return proxy || result
-  },
-  ownKeys(target: Raw) {
-    track({ target, type: 'iterate' })
-    return Reflect.ownKeys(target)
-  },
-  has(target: Raw, key: Key) {
-    const result = Reflect.has(target, key)
-    track({ target, key, type: 'has' })
-    return result
-  },
-  set(target: Raw, key: Key, value: any) {
-    if (isObj(value)) value = proxyToRaw.get(value) || value
-    const hadKey = hasOwnProperty.call(target, key)
-    const oldValue = target[key]
-    const result = Reflect.set(target, key, value)
-
-    if (!hadKey) {
-      trigger({ target, key, value, type: 'add' })
-    } else if (value !== oldValue) {
-      trigger({ target, key, value, oldValue, type: 'set' })
-    }
-    return result
-  },
-  deleteProperty(target: Raw, key: Key) {
-    const hadKey = hasOwnProperty.call(target, key)
-    const oldValue = target[key]
-    const result = Reflect.deleteProperty(target, key)
-    if (hadKey) {
-      trigger({ target, key, oldValue, type: 'delete' })
-    }
-    return result
-  }
 }
 
 export function track(operation: Operation) {
@@ -145,20 +144,24 @@ export function trigger(operation: Operation) {
     const iKey = Array.isArray(target) ? 'length' : ITERATE_KEY
     add(deps, iKey, effects)
   }
-  effects.forEach((e: Effect) => {
-    isFn(e.cb) ? e.cb(e) : e()
-  })
+  console.log(effects)
+  effects.forEach((e: Effect) => (isFn(e.cb) ? e.cb(e) : e()))
 }
 
 function add(deps, key, effects) {
   const dep = deps.get(key)
-  dep && dep.forEach(e => effects.add(e))
+  dep && dep.forEach((e) => effects.add(e))
+}
+
+function getCleanCopy(obj: Record<string, unknown>): any {
+  return Object.create(Object.getPrototypeOf(obj))
 }
 
 export const isReactive = (proxy: Object): boolean => proxyToRaw.has(proxy)
 
-export const isObj = (x: any): x is object => typeof x === 'object'
-export const isFn = (x: any): x is Function => typeof x === 'function'
+export const isObj = (x: unknown): x is object => typeof x === 'object'
+export const isFn = (x: unknown): x is Function => typeof x === 'function'
+export const isArr = (x: unknown): boolean => Array.isArray(x)
 
 type Effect = Function & {
   active?: boolean
@@ -179,4 +182,3 @@ type EffectForRaw = Map<Key, EffectForKey>
 type Key = string | number | symbol
 type Raw = object
 type Proxy = object
-

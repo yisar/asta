@@ -13,10 +13,9 @@
     },
     "./": "./",
     "./react": {
-      "import": "./react/index.mjs",
-      "require": "./react/index.js",
-      "browser": "./react/index.esm.js",
-      "umd": "./react/index.umd.js"
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js",
+      "browser": "./dist/react.esm.js"
     }
   },
   "scripts": {
