@@ -2,7 +2,7 @@
 
 # Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux) [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
 
-> Simple reactivity system with composition API.
+> Immutable reactivity system, made with ES6 Proxy.
 
 ### Motivation
 
@@ -16,37 +16,12 @@ In hooks API, Hooks will be initialized repeatedly. If there is a complex state,
 const [complexState] = useState(heavyData) // blocked
 ```
 
-In Composition API, every component return a render function, this function will be rerendered every time, and state is initialized only once.
-
-```js
-const data = reactive({ count: 0 }) // once
-return () => vdom // every time
-```
-
 - State management and Context proplems.
 
-Use doux, shared state is easiest, just move the reactive state to global namespace.
+There is a performance problem with context. All children of Context need to be rerender.
 
 ```js
-const store = reactive({
-  count: 0,
-})
-const App = setup(() => {
-  return () => (
-    <div>
-      <A />
-      <B />
-      <button onClick={() => store.count++}>+</button>
-    </div>
-  )
-})
 
-const A = setup(() => {
-  return () => <div>{store.count}</div>
-})
-const B = setup(() => {
-  return () => <div>{store.count}</div>
-})
 ```
 
 ### Use
@@ -56,135 +31,42 @@ npm i doux -S
 ```
 
 ```js
-import { setup, reactive } from 'doux'
+import { observer, observable } from 'doux'
 import { render } from 'react-dom'
 
-const App = setup(() => {
-  const data = reactive({ count: 0 })
-  return () => (
-    <div>
-      <div>{data.count}</div>
-      <button onClick={() => data.count++}>+</button>
-    </div>
-  )
-})
+const data = observable({ count: 0 })
+
+const App = observer(() => (
+  <div>
+    <div>{data.count}</div>
+    <button onClick={() => data.count++}>+</button>
+  </div>
+))
+
 render(<App />, document.getElementById('root'))
 ```
 
-### setup
+### observer
 
-Like memo or lazy, it receive a different composition compoent and return a new component
-
-```js
-const App = setup(() => {
-  return () => (
-    <div>
-      <div>{data.count}</div>
-      <button onClick={() => data.count++}>+</button>
-    </div>
-  )
-})
-```
-
-the composition component is different from hooks component, it return a pure render function, `return () => vdom`
-
-Because closures, and from the second time on, the component will only reexecute this function.
-
-This can solve the problem of repeated initialization rendering of hooks API.
-
-For the closures, the reactive must from parent scope.
-
-### effect
-
-effect is a watch wrapper, like useEffect, it supported sources:
+Like memo or lazy, it receive a component and return a new component
 
 ```js
-effect([], (oldSrc, newSrc) => {
-  console.log(oldSrc, newSrc)
-})
+const App = observer(Component)
 ```
 
-It will return a cleanup callback, you can use it to cleanup effects.
+### observable
 
-```js
-const cleanup = watch()
-cleanup(()=> do()) // run both unmount and before update
-```
+Like `createContext`, It create a observable object
 
-In some cases, we may also want to watch with sources
+#### Dependency collection
 
-```js
-// getter
-const state = reactive({ count: 0 })
-watch(() => state.count, (count, prevCount) => do())
+An accurate update way, it collects dependency in the initialization phase, establishes the mapping relationship between components and data, and updates the corresponding components when the data changes.
 
-// ref
-const count = ref(0)
-watch(count, (count, prevCount) => do())
-```
+More is [here](https://github.com/vuejs/docs-next/blob/master/src/guide/reactivity.md)
 
-Finally you can cleanup watcher
+#### write on copy
 
-### Composition API
-
-- [reactive](https://github.com/yisar/doux#reactive)
-
-- [watch](https://github.com/yisar/doux#watch)
-
-- [ref](https://github.com/yisar/doux#ref)
-
-- [computed](https://github.com/yisar/doux#computed)
-
-#### reactive
-
-It reversed a object and return a proxy object
-
-```js
-const data = reactive({ count: 0 })
-console.log(data.count) // 0
-data.count++
-console.log(data.count) //1
-```
-
-#### watch
-
-It accepts an effect function and run it when data changed.
-
-```js
-const data = reactive({ count: 0 })
-watch(() => console.log(data.count))
-data.count++ // console 1
-```
-
-#### ref
-
-ref is another type of reactive, it just return an value
-
-```js
-const ref = ref(0)
-console.log(ref.value) //0
-```
-
-#### computed
-
-effect for reactive data, when deps changed, it will return a ref
-
-```js
-const data = reactive({ count: 0 })
-const double = computed(() => data.count * 2)
-data.count++
-```
-
-### Lifecycles
-
-Noneed lifecycles, use effect like useeffect:
-
-| watch             | useEffect                   |
-| ----------------- | --------------------------- |
-| effect(f)         | useEffect(f)                |
-| effect([x],f)     | useEffect(f,[x])            |
-| effect([],f)      | useEffect(f,[])             |
-| cleanup = watch() | useEffect(() => cleanup,[]) |
+The main idea comes from [immer.js](https://github.com/immerjs/immer) , when setting, the mutation is applied to the copy, and the copy is taken first when getting, keeping the immutable characteristics, and applying mutations.
 
 ### License
 

@@ -1,7 +1,7 @@
 import { memo, useReducer, useRef, useEffect } from 'react'
 import { observable, observe, unobserve } from './index'
 
-function setup(factory) {
+function observer(factory) {
   return memo((props) => {
     const w = useRef(null)
     const update = useReducer((s) => s + 1, 0)[1]
@@ -16,4 +16,4 @@ function setup(factory) {
   })
 }
 
-export { setup, observable, observe, unobserve }
+export { observer, observable, observe, unobserve }
