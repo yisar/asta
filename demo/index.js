@@ -4,7 +4,7 @@ import { render } from 'react-dom'
 
 const data = observable({ count: 0 })
 
-const A = setup((props) => {
+const A = observer((props) => {
   return (
     <div>
       <div>{data.count}</div>
@@ -13,7 +13,7 @@ const A = setup((props) => {
   )
 })
 
-const B = setup((props) => {
+const B = observer((props) => {
   console.log('b')
   return (
     <div>
@@ -23,7 +23,7 @@ const B = setup((props) => {
   )
 })
 
-const C = setup((props) => {
+const C = observer((props) => {
   console.log('c')
   return <div>C</div>
 })
@@ -38,14 +38,14 @@ function App() {
   )
 }
 
-function setup(factory) {
+function observer(factory) {
   return memo((props) => {
-    const w = useRef()
+    const w = useRef(null)
     const update = useReducer((s) => s + 1, 0)[1]
     if (!w.current) {
       w.current = observe(
         () => factory(props),
-        () => update()
+        (e) => update() // update the state
       )
     }
     useEffect(() => () => unobserve(w.current), [])
