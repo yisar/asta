@@ -8,7 +8,7 @@ function observer(factory) {
     if (!w.current) {
       w.current = observe(
         () => factory(props),
-        () => Promise.resolve().then(update)
+        (e) => update() // update the state
       )
     }
     useEffect(() => () => unobserve(w.current), [])
