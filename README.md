@@ -1,6 +1,6 @@
 <img src="docs/doux.png" alt="logo" height="150" align="right" />
 
-# Doux [![CircleCI](https://circleci.com/gh/yisar/doux.svg?style=svg)](https://circleci.com/gh/yisar/doux) [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://npmjs.com/package/doux)
+# Doux [![Build Status](https://github.com/yisar/doux/workflows/ci/badge.svg?branch=master)](https://github.com/yisar/doux/actions) [![npm](https://img.shields.io/npm/v/doux.svg?label=)](https://github.com/yisar/doux) [![license](https://img.shields.io/github/license/yisar/doux.svg)](https://github.com/yisar/doux)
 
 > Immutable reactivity system, made with ES6 Proxy.
 
