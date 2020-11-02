@@ -22,9 +22,8 @@ There is a performance problem with context. All children of Context need to be 
 
 ```jsx
 <Provier>
-  {this.props.children} // all children will rerender.
+  {this.props.children} {/* All children will be rerendered. */}
 <Provider/>
-
 ```
 
 ### Usage
