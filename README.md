@@ -16,24 +16,24 @@ In hooks API, Hooks will be initialized repeatedly. If there is a complex state,
 const [complexState] = useState(heavyData) // blocked
 ```
 
-- State management and Context proplems.
+- State management and Context problems.
 
-There is a performance problem with context. All children of Context need to be rerender.
+There is a performance problem with context. All children of Context need to be rerendered.
 
-```js
+```jsx
 <Provier>
   {this.props.children} // all children will rerender.
 <Provider/>
 
 ```
 
-### Use
+### Usage
 
 ```shell
 npm i doux -S
 ```
 
-```js
+```jsx
 import { observer, observable } from 'doux'
 import { render } from 'react-dom'
 
@@ -49,17 +49,17 @@ const App = observer(() => (
 render(<App />, document.getElementById('root'))
 ```
 
-### observer
+### `observer`
 
-Like memo or lazy, it receive a component and return a new component
+Like memo or lazy, it receives a component and returns a new component.
 
 ```js
 const App = observer(Component)
 ```
 
-### observable
+### `observable`
 
-Like `createContext`, It create a observable object
+Like `createContext`, It creates a observable object.
 
 ```js
 const data = observable({ count: 0 })
@@ -69,9 +69,9 @@ const data = observable({ count: 0 })
 
 An accurate update way, it collects dependency in the initialization phase, establishes the mapping relationship between components and data, and updates the corresponding components when the data changes.
 
-More is [here](https://github.com/vuejs/docs-next/blob/master/src/guide/reactivity.md)
+More is [here](https://github.com/vuejs/docs-next/blob/master/src/guide/reactivity.md).
 
-#### write on copy
+#### Write on copy
 
 The main idea comes from [immer.js](https://github.com/immerjs/immer) , when setting, the mutation is applied to the copy, and the copy is taken first when getting, keeping the immutable characteristics, and applying mutations.
 
