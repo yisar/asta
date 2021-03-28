@@ -1,5 +1,5 @@
 {
-  "name": "doux",
+  "name": "asta",
   "version": "0.0.1",
   "description": "Simple reactivity system with composition API.",
   "main": "./dist/doux.js",
