@@ -2,21 +2,16 @@
   "name": "asta",
   "version": "0.0.1",
   "description": "Simple reactivity system with composition API.",
-  "main": "./dist/doux.js",
-  "module": "dist/doux.esm.js",
-  "types": "./dist/doux.d.ts",
+  "main": "./dist/asta.js",
+  "module": "dist/asta.esm.js",
+  "types": "./dist/asta.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/doux.js",
-      "require": "./dist/doux.js",
-      "browser": "./dist/doux.esm.js"
+      "import": "./dist/asta.js",
+      "require": "./dist/asta.js",
+      "browser": "./dist/asta.esm.js"
     },
-    "./": "./",
-    "./react": {
-      "import": "./dist/react.mjs",
-      "require": "./dist/react.js",
-      "browser": "./dist/react.esm.js"
-    }
+    "./": "./"
   },
   "scripts": {
     "test": "jest",
@@ -28,8 +23,7 @@
   "license": "MIT",
   "repository": "git@github.com:yisar/doux.git",
   "peerDependencies": {
-    "@types/react": "^16.9.19",
-    "react": "^16.12.0"
+
   },
   "devDependencies": {
     "jest": "^25.1.0",
