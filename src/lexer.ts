@@ -111,7 +111,7 @@ function lexType(state) {
   }
   state.tokens.push(token)
   state.current = current
-  return token
+  return token as any
 }
 
 function lexAttributes(token, state) {
