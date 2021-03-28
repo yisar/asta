@@ -1,44 +1,38 @@
-# Asta
+# Asta
 
-Next generation front end framework
+Next generation front end framework
 
-### Use
+### Use
 
-With SFC:
+With SFC:
 
 ```html
-<div click={add}>{count}</div>
+<div @click={add} style={position: fixed}>{count}</div>
 
 <script>
-    let count = 0
-    let add = () => count++
+    let count = 0
+    let add = () => count++
 </script>
 ```
 
-With Browser:
+Compile to:
 
 ```js
-let ctx = {
-  count: 0,
-  add: () => ctx.count++,
-  view: `<div click={add}>{count}</div>`
+const Counter = () => {
+  let count = 0
+  let add = () => count++
+
+  return () => {
+    open('div')
+      event('click', add)
+      attr('style', 'position: fixed')
+      text(count)
+    close('div')  
+  }
 }
 ```
 
-Compile to:
 
-```js
-let ctx = [0, () => ctx[0]++]
-let view = (ctx) => {
-  open('div')
-    attr('click', ctx[0])
-    text(ctx[1])
-  close('div')  
-}
-view(ctx)
-```
+### License
 
-
-### License
-
-MIT ©yisar
+MIT ©yisar
