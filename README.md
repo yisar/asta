@@ -21,7 +21,7 @@ Compile to:
 const Counter = () => {
   let count = 0
   let add = () => count++
-
+  
   return () => {
     open('div')
       event('click', add)
