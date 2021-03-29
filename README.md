@@ -20,9 +20,7 @@ With runtime:
 ```js
 Snel({
   count: 0,
-  add: () => {
-    this.count++
-  },
+  add: () => this.count++,
   node: '#app',
   view: `<div @click={add} style={position: 'fixed'}>{count}</div>`
 })
