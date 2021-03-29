@@ -1,4 +1,4 @@
-# Asta
+# Snel
 
 Next generation front end framework
 
@@ -15,21 +15,18 @@ With SFC:
 </script>
 ```
 
-Compile to:
+With runtime:
 
 ```js
-const Counter = () => {
-  let count = 0
-  let add = () => count++
-  
-  return () => {
-    open('div')
-      event('click', add)
-      attr('style', 'position: fixed')
-      text(count)
-    close('div')  
-  }
-}
+Snel({
+  count: 0,
+  add: () => {
+    this.count++
+    this.update()
+  },
+  node: '#app',
+  view: `<div @click={add} style={position: 'fixed'}>{count}</div>`
+})
 ```
 
 ### License
