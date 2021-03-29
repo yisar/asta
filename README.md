@@ -1,8 +1,8 @@
-# Asta
+# Asta
 
 Next generation front end framework
 
-### Use
+### Use
 
 With SFC:
 
@@ -32,7 +32,6 @@ const Counter = () => {
 }
 ```
 
-
-### License
+### License
 
 MIT ©yisar
