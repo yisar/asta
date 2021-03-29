@@ -22,7 +22,6 @@ Snel({
   count: 0,
   add: () => {
     this.count++
-    this.update()
   },
   node: '#app',
   view: `<div @click={add} style={position: 'fixed'}>{count}</div>`
