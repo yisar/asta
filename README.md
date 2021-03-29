@@ -7,7 +7,7 @@ Next generation front end framework
 With SFC:
 
 ```html
-<div @click={add} style={position: fixed}>{count}</div>
+<div @click={add} style={position: 'fixed'}>{count}</div>
 
 <script>
     let count = 0
