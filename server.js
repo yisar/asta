@@ -1,4 +1,3 @@
-// @ts-check
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
@@ -17,9 +16,6 @@ async function createServer(
 
   const app = express()
 
-  /**
-   * @type {import('vite').ViteDevServer}
-   */
   let vite
   if (!isProd) {
     vite = await require('vite').createServer({
