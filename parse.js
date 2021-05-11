@@ -17,7 +17,7 @@ const escapeMap = {
 export const parse = input => {
     const length = input.length
     let root = {
-        current: 0,
+        element: 0,
         next: 1,
         type: 'root',
         attributes: [],
@@ -254,7 +254,7 @@ const parseText = (index, input, length, stack) => {
         stack[stack.length - 1].children.push({
             type: 'text',
             attributes: [{
-                name: '',
+                name: 'nodeValue',
                 value: content.replace(escapeRE, match => escapeMap[match]),
                 expression: false,
                 dynamic: false

@@ -25,7 +25,7 @@ let attributeValue = function (attribute) {
 }
 
 let setAttribute = function (element, attribute) {
-	return 'm.sa(' + getElement(element) + ',"' + attribute.key + '",' + attributeValue(attribute) + ');'
+	return 'm.sa(' + getElement(element) + ',"' + attribute.name + '",' + attributeValue(attribute) + ');'
 }
 
 let addEventListener = function (element, type, handler) {
@@ -48,145 +48,15 @@ let insertBefore = function (element, reference, parent) {
 	return 'm.ib(' + getElement(element) + ',' + getElement(reference) + ',' + getElement(parent) + ');'
 }
 
-let directiveIf = function (ifState, ifConditions, ifPortions, ifParent) {
-	return 'm.di(' + getElement(ifState) + ',' + getElement(ifConditions) + ',' + getElement(ifPortions) + ',' + getElement(ifParent) + ');'
-}
-
-let directiveFor = function (forIdentifiers, forLocals, forValue, forPortion, forPortions, forParent) {
-	return (
-		'm.df(' +
-		forIdentifiers +
-		',' +
-		getElement(forLocals) +
-		',' +
-		forValue +
-		',' +
-		getElement(forPortion) +
-		',' +
-		getElement(forPortions) +
-		',' +
-		getElement(forParent) +
-		');'
-	)
-}
-
 let generateMount = function (element, parent, reference) {
-	return reference === null ? appendChild(element, parent) : insertBefore(element, reference, parent)
+	return reference == null ? appendChild(element, parent) : insertBefore(element, reference, parent)
 }
 
 let generateAll = function (element, parent, root, reference) {
 	switch (element.type) {
-		case 'If': {
-			let ifState = root.nextElement++
-			let ifReference = root.nextElement++
-			let ifConditions = root.nextElement++
-			let ifPortions = root.nextElement++
-			let ifConditionsCode = '['
-			let ifPortionsCode = '['
-			let separator = ''
-
-			let siblings = parent.children
-			for (let i = siblings.indexOf(element); i < siblings.length; i++) {
-				let sibling = siblings[i]
-				if (sibling.type === 'If' || sibling.type === 'ElseIf' || sibling.type === 'Else') {
-					ifConditionsCode += separator + (sibling.type === 'Else' ? 'true' : attributeValue(sibling.attributes[0]))
-
-					ifPortionsCode +=
-						separator +
-						'function(locals){' +
-						generate(
-							{
-								element: root.nextElement,
-								nextElement: root.nextElement + 1,
-								type: 'Root',
-								attributes: [],
-								children: sibling.children,
-							},
-							ifReference
-						) +
-						'}({})'
-
-					separator = ','
-				} else {
-					break
-				}
-			}
-
-			return [
-				setElement(ifReference, createComment()) +
-					generateMount(ifReference, parent.element, reference) +
-					setElement(ifPortions, ifPortionsCode + '];'),
-
-				setElement(ifConditions, ifConditionsCode + '];') +
-					setElement(ifState, directiveIf(ifState, ifConditions, ifPortions, parent.element)),
-
-				getElement(ifState) + '[2]();',
-			]
-		}
-		case 'ElseIf':
-		case 'Else': {
-			return ['', '', '']
-		}
-		case 'For': {
-			let forAttribute = attributeValue(element.attributes[0])
-			let forIdentifiers = '['
-			let forValue = ''
-
-			let forReference = root.nextElement++
-			let forPortion = root.nextElement++
-			let forPortions = root.nextElement++
-			let forLocals = root.nextElement++
-
-			let forIdentifier = '',
-				separator$1 = ''
-
-			for (let i$1 = 0; i$1 < forAttribute.length; i$1++) {
-				let char = forAttribute[i$1]
-
-				if (
-					char === ',' ||
-					(char === ' ' && forAttribute[i$1 + 1] === 'i' && forAttribute[i$1 + 2] === 'n' && forAttribute[i$1 + 3] === ' ' && (i$1 += 3))
-				) {
-					forIdentifiers += separator$1 + '"' + forIdentifier.substring(7) + '"'
-					forIdentifier = ''
-					separator$1 = ','
-				} else {
-					forIdentifier += char
-				}
-			}
-
-			forIdentifiers += ']'
-			forValue += forIdentifier
-
-			return [
-				setElement(forReference, createComment()) +
-					generateMount(forReference, parent.element, reference) +
-					setElement(
-						forPortion,
-						'function(locals){' +
-							generate(
-								{
-									element: root.nextElement,
-									nextElement: root.nextElement + 1,
-									type: 'Root',
-									attributes: [],
-									children: element.children,
-								},
-								forReference
-							) +
-							'};'
-					) +
-					setElement(forPortions, '[];') +
-					setElement(forLocals, '[];'),
-
-				directiveFor(forIdentifiers, forLocals, forValue, forPortion, forPortions, parent.element),
-
-				directiveFor(forIdentifiers, forLocals, '[]', forPortion, forPortions, parent.element),
-			]
-		}
 		case 'Text': {
 			let textAttribute = element.attributes[0]
-			let textElement = root.nextElement++
+			let textElement = root.next++
 
 			let textCode = setTextContent(textElement, attributeValue(textAttribute))
 			let createCode = setElement(textElement, createTextNode('""'))
@@ -205,7 +75,7 @@ let generateAll = function (element, parent, root, reference) {
 			let children = element.children
 
 			if (isComponent(element.type)) {
-				element.component = root.nextElement++
+				element.component = root.next++
 
 				let createCode$1 = setElement(element.component, 'new m.c.' + element.type + '();')
 				let updateCode$1 = ''
@@ -244,27 +114,27 @@ let generateAll = function (element, parent, root, reference) {
 
 				return [createCode$1, updateCode$1, getElement(element.component) + '.destroy();']
 			} else {
-				element.element = root.nextElement++
+				element.element = root.next++
 
 				let createCode$2 = setElement(element.element, createElement(element.type))
 				let updateCode$2 = ''
 
-				for (let i$3 = 0; i$3 < attributes.length; i$3++) {
-					let attribute$1 = attributes[i$3]
+				for (let k = 0; k < attributes.length; k++) {
+					let attribute$1 = attributes[k]
 					let attributeCode$1 = void 0
 
-					if (attribute$1.key[0] === '@') {
+					if (attribute$1.name[0] === '@') {
 						let eventType = void 0,
 							eventHandler = void 0
 
-						if (attribute$1.key === '@bind') {
+						if (attribute$1.name === '@bind') {
 							let bindletiable = attributeValue(attribute$1)
 							attributeCode$1 = getElement(element.element) + '.value=' + bindletiable + ';'
 							eventType = 'input'
 							eventHandler = bindletiable + '=$event.target.value;instance.update();'
 						} else {
 							attributeCode$1 = ''
-							eventType = attribute$1.key.substring(1)
+							eventType = attribute$1.name.substring(1)
 							eventHandler = 'locals.$event=$event;' + attributeValue(attribute$1) + ';'
 						}
 
@@ -310,7 +180,7 @@ export let generate = function (root, reference) {
 	}
 
 	let prelude = 'let ' + getElement(root.element)
-	for (let i$1 = root.element + 1; i$1 < root.nextElement; i$1++) {
+	for (let i$1 = root.element + 1; i$1 < root.next; i$1++) {
 		prelude += ',' + getElement(i$1)
 	}
 
