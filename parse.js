@@ -205,7 +205,6 @@ const parseTemplate = expression => {
         } else {
             dynamic = true
             if (name[0] === '$') {
-                console.log(name)
                 return `locals.${name}`
             } else {
                 return `instance.${name}`

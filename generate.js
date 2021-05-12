@@ -1,7 +1,7 @@
 import { isComponent } from './parse.js'
 
 let getElement = function (element) {
-	return 'm' + element
+	return 'a' + element
 }
 
 let setElement = function (element, code) {
@@ -9,11 +9,11 @@ let setElement = function (element, code) {
 }
 
 let createElement = function (type) {
-	return 'm.ce("' + type + '");'
+	return 'a.ce("' + type + '");'
 }
 
 let createTextNode = function (content) {
-	return 'm.ctn(' + content + ');'
+	return 'a.ctn(' + content + ');'
 }
 
 let attributeValue = function (attribute) {
@@ -21,27 +21,27 @@ let attributeValue = function (attribute) {
 }
 
 let setAttribute = function (element, attribute) {
-	return 'm.sa(' + getElement(element) + ',"' + attribute.name + '",' + attributeValue(attribute) + ');'
+	return 'a.sa(' + getElement(element) + ',"' + attribute.name + '",' + attributeValue(attribute) + ');'
 }
 
 let addEventListener = function (element, type, handler) {
-	return 'm.ael(' + getElement(element) + ',"' + type + '",' + handler + ');'
+	return 'a.ael(' + getElement(element) + ',"' + type + '",' + handler + ');'
 }
 
 let setTextContent = function (element, content) {
-	return 'm.stc(' + getElement(element) + ',' + content + ');'
+	return 'a.stc(' + getElement(element) + ',' + content + ');'
 }
 
 let appendChild = function (element, parent) {
-	return 'm.ac(' + getElement(element) + ',' + getElement(parent) + ');'
+	return 'a.ac(' + getElement(element) + ',' + getElement(parent) + ');'
 }
 
 let removeChild = function (element, parent) {
-	return 'm.rc(' + getElement(element) + ',' + getElement(parent) + ');'
+	return 'a.rc(' + getElement(element) + ',' + getElement(parent) + ');'
 }
 
 let insertBefore = function (element, reference, parent) {
-	return 'm.ib(' + getElement(element) + ',' + getElement(reference) + ',' + getElement(parent) + ');'
+	return 'a.ib(' + getElement(element) + ',' + getElement(reference) + ',' + getElement(parent) + ');'
 }
 
 let generateMount = function (element, parent, reference) {
@@ -120,7 +120,7 @@ let generateAll = function (element, parent, root, reference) {
 }
 
 let generateComponent = (element) => {
-	let createCode = setElement(element.component, 'new m.c.' + element.type + '();')
+	let createCode = setElement(element.component, 'new a.c.' + element.type + '();')
 	let updateCode = ''
 	let dynamic = false
 
@@ -178,8 +178,8 @@ export let generate = function (root, reference) {
 
 	return (
 		prelude +
-		';return [function(_0){' +
-		setElement(root.element, '_0;') +
+		';return [function($){' +
+		setElement(root.element, '$;') +
 		create +
 		'},function(){' +
 		update +

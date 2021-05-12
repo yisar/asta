@@ -21,7 +21,9 @@ function AstaComponent(name, options) {
     let data = options
     let that = this
 
-    this.view = new Function('m', 'instance', 'locals', generate(parse(options.view), null))(m, this, {})
+    this.view = new Function('a', 'instance', 'locals', generate(parse(options.view), null))(a, this, {})
+
+    console.log(generate(parse(options.view), null))
 
     delete data.view
 
@@ -47,6 +49,7 @@ function AstaComponent(name, options) {
     for (let key in data) {
         let value = data[key]
         if (typeof value === 'function') {
+            let me = that
             that[key] = function (...args) {
                 value.call(that, args)
                 this.update()
@@ -176,7 +179,7 @@ const insertBefore = function (element, reference, parent) {
     parent.insertBefore(element, reference);
 }
 
-const m = {
+const a = {
     c: {},
     ce: createElement,
     ctn: createTextNode,
