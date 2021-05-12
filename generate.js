@@ -87,16 +87,10 @@ let generateAll = function (element, parent, root, reference) {
 						let eventType = void 0,
 							eventHandler = void 0
 
-						if (attribute.name === '@bind') {
-							let bindletiable = attributeValue(attribute)
-							attributeCode = getElement(element.element) + '.value=' + bindletiable + ';'
-							eventType = 'input'
-							eventHandler = bindletiable + '=$event.target.value;instance.update();'
-						} else {
-							attributeCode = ''
-							eventType = attribute.name.substring(1)
-							eventHandler = 'locals.$event=$event;' + attributeValue(attribute) + ';'
-						}
+
+						attributeCode = ''
+						eventType = attribute.name.substring(1)
+						eventHandler = 'instance.' + attribute.value + '($event)'
 
 						createCode += addEventListener(element.element, eventType, 'function($event){' + eventHandler + '}')
 					} else {

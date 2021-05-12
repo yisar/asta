@@ -8,5 +8,5 @@ createApp({
         this.count++
         this.update()
     },
-    view: `<div @click="add">{count}</div>`
+    view: `<div>{count}</div><button @click="add">+</button>`
 })

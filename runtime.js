@@ -19,6 +19,9 @@ function AstaComponent(name, options) {
     let data = options
     let that = this
 
+    console.log(generate(parse(options.view), null))
+
+
     this.view = new Function('m', 'instance', 'locals', generate(parse(options.view), null))(m, this, {})
 
     delete data.view

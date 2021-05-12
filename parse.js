@@ -93,7 +93,6 @@ const parseOpenTag = (index, input, length, stack) => {
         if (char === '/' || char === '>') {
             let attributes = element.attributes
             let lastIndex = stack.length - 1
-            console.log(lastIndex)
             if (char === '/') {
                 index += 1
             } else {
@@ -206,6 +205,7 @@ const parseTemplate = expression => {
         } else {
             dynamic = true
             if (name[0] === '$') {
+                console.log(name)
                 return `locals.${name}`
             } else {
                 return `instance.${name}`
