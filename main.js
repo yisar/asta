@@ -1,7 +1,7 @@
 import { asta } from './runtime.js'
 
 asta({
-    node: document.body,
+    tag: 'my-counter',
     count: 0,
     add(){
         this.count++

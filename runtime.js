@@ -2,11 +2,13 @@ import { parse } from './parse.js'
 import { generate } from './generate.js'
 
 export function asta(options) {
-    let node = options.node
-    delete options.node
-    let instance = new AstaComponent('asta', options)
+    let tag = options.tag
+    delete options.tag
+    let instance = new AstaComponent(tag, options)
 
-    instance.create(node)
+    console.log(instance.view)
+
+    instance.create(tag)
     instance.update()
 
     return instance
@@ -18,9 +20,6 @@ function AstaComponent(name, options) {
 
     let data = options
     let that = this
-
-    console.log(generate(parse(options.view), null))
-
 
     this.view = new Function('m', 'instance', 'locals', generate(parse(options.view), null))(m, this, {})
 
@@ -62,8 +61,22 @@ function AstaComponent(name, options) {
     this.emit = emit
 }
 
-function create(root) {
-    this.view[0](root)
+function create(tag) {
+    let that = this
+    class Asta extends HTMLElement {
+        static get tag() {
+            return tag
+        }
+        constructor() {
+            super()
+            this.attachShadow({ mode: 'open' })
+        }
+        connectedCallback() {
+            that.view[0](this.shadowRoot)
+        }
+    }
+    const hasDef = window.customElements.get(tag)
+    if (!hasDef) customElements.define(tag, Asta)
     this.emit('create')
 }
 
