@@ -1,4 +1,4 @@
-import {isComponent} from './parse.js'
+import { isComponent } from './parse.js'
 
 let getElement = function (element) {
 	return 'm' + element
@@ -14,10 +14,6 @@ let createElement = function (type) {
 
 let createTextNode = function (content) {
 	return 'm.ctn(' + content + ');'
-}
-
-let createComment = function () {
-	return 'm.cc();'
 }
 
 let attributeValue = function (attribute) {
@@ -54,7 +50,7 @@ let generateMount = function (element, parent, reference) {
 
 let generateAll = function (element, parent, root, reference) {
 	switch (element.type) {
-		case 'Text': {
+		case 'text': {
 			let textAttribute = element.attributes[0]
 			let textElement = root.next++
 
@@ -76,94 +72,97 @@ let generateAll = function (element, parent, root, reference) {
 
 			if (isComponent(element.type)) {
 				element.component = root.next++
-
-				let createCode$1 = setElement(element.component, 'new m.c.' + element.type + '();')
-				let updateCode$1 = ''
-				let dynamic = false
-
-				for (let i$2 = 0; i$2 < attributes.length; i$2++) {
-					let attribute = attributes[i$2]
-
-					if (attribute.key[0] === '@') {
-						createCode$1 +=
-							getElement(element.component) +
-							'.on("' +
-							attribute.key.substring(1) +
-							'",function($event){locals.$event=$event;' +
-							attributeValue(attribute) +
-							';});'
-					} else {
-						let attributeCode = getElement(element.component) + '.' + attribute.key + '=' + attributeValue(attribute) + ';'
-
-						if (attribute.dynamic) {
-							dynamic = true
-							updateCode$1 += attributeCode
-						} else {
-							createCode$1 += attributeCode
-						}
-					}
-				}
-
-				createCode$1 += getElement(element.component) + '.create(' + getElement(parent.element) + ');'
-
-				if (dynamic) {
-					updateCode$1 += getElement(element.component) + '.update();'
-				} else {
-					createCode$1 += getElement(element.component) + '.update();'
-				}
-
-				return [createCode$1, updateCode$1, getElement(element.component) + '.destroy();']
+				return generateComponent(element)
 			} else {
 				element.element = root.next++
 
-				let createCode$2 = setElement(element.element, createElement(element.type))
-				let updateCode$2 = ''
+				let createCode = setElement(element.element, createElement(element.type))
+				let updateCode = ''
 
 				for (let k = 0; k < attributes.length; k++) {
-					let attribute$1 = attributes[k]
-					let attributeCode$1 = void 0
+					let attribute = attributes[k]
+					let attributeCode = void 0
 
-					if (attribute$1.name[0] === '@') {
+					if (attribute.name[0] === '@') {
 						let eventType = void 0,
 							eventHandler = void 0
 
-						if (attribute$1.name === '@bind') {
-							let bindletiable = attributeValue(attribute$1)
-							attributeCode$1 = getElement(element.element) + '.value=' + bindletiable + ';'
+						if (attribute.name === '@bind') {
+							let bindletiable = attributeValue(attribute)
+							attributeCode = getElement(element.element) + '.value=' + bindletiable + ';'
 							eventType = 'input'
 							eventHandler = bindletiable + '=$event.target.value;instance.update();'
 						} else {
-							attributeCode$1 = ''
-							eventType = attribute$1.name.substring(1)
-							eventHandler = 'locals.$event=$event;' + attributeValue(attribute$1) + ';'
+							attributeCode = ''
+							eventType = attribute.name.substring(1)
+							eventHandler = 'locals.$event=$event;' + attributeValue(attribute) + ';'
 						}
 
-						createCode$2 += addEventListener(element.element, eventType, 'function($event){' + eventHandler + '}')
+						createCode += addEventListener(element.element, eventType, 'function($event){' + eventHandler + '}')
 					} else {
-						attributeCode$1 = setAttribute(element.element, attribute$1)
+						attributeCode = setAttribute(element.element, attribute)
 					}
 
-					if (attribute$1.dynamic) {
-						updateCode$2 += attributeCode$1
+					if (attribute.dynamic) {
+						updateCode += attributeCode
 					} else {
-						createCode$2 += attributeCode$1
+						createCode += attributeCode
 					}
 				}
 
-				for (let i$4 = 0; i$4 < children.length; i$4++) {
-					let childCode = generateAll(children[i$4], element, root, null)
-					createCode$2 += childCode[0]
-					updateCode$2 += childCode[1]
+				for (let l = 0; l < children.length; l++) {
+					let childCode = generateAll(children[l], element, root, null)
+					createCode += childCode[0]
+					updateCode += childCode[1]
 				}
 
 				return [
-					createCode$2 + generateMount(element.element, parent.element, reference),
-					updateCode$2,
+					createCode + generateMount(element.element, parent.element, reference),
+					updateCode,
 					removeChild(element.element, parent.element),
 				]
 			}
 		}
 	}
+}
+
+let generateComponent = (element) => {
+	let createCode = setElement(element.component, 'new m.c.' + element.type + '();')
+	let updateCode = ''
+	let dynamic = false
+
+	for (let i = 0; i < attributes.length; i++) {
+		let attribute = attributes[i]
+
+		if (attribute.key[0] === '@') {
+			createCode +=
+				getElement(element.component) +
+				'.on("' +
+				attribute.key.substring(1) +
+				'",function($event){locals.$event=$event;' +
+				attributeValue(attribute) +
+				';});'
+		} else {
+			let attributeCode = getElement(element.component) + '.' + attribute.key + '=' + attributeValue(attribute) + ';'
+
+			if (attribute.dynamic) {
+				dynamic = true
+				updateCode += attributeCode
+			} else {
+				createCode += attributeCode
+			}
+		}
+	}
+
+	createCode += getElement(element.component) + '.create(' + getElement(parent.element) + ');'
+
+	if (dynamic) {
+		updateCode += getElement(element.component) + '.update();'
+	} else {
+		createCode += getElement(element.component) + '.update();'
+	}
+
+	return [createCode, updateCode, getElement(element.component) + '.destroy();']
 }
 
 export let generate = function (root, reference) {
