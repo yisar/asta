@@ -1,11 +1,19 @@
-# ESM module
+# Asta
 
-No need for build anymore, using Fre, HTM, Twind.
+Simple compiler for web component
 
-## Local dev
+### Use
 
-Use any simple HTTP server you want. I use `serve`
+```js
+import { asta } from 'asta'
 
-```bash
-$ serve .
+asta({
+    node: document.body,
+    count: 0,
+    add(){
+        this.count++
+        this.update()
+    },
+    view: `<div>{count}</div><button @click="add">+</button>`
+})
 ```

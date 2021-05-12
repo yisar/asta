@@ -1,7 +1,7 @@
 import { parse } from './parse.js'
 import { generate } from './generate.js'
 
-export function createApp(options) {
+export function asta(options) {
     let node = options.node
     delete options.node
     let instance = new AstaComponent('asta', options)

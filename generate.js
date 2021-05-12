@@ -87,7 +87,6 @@ let generateAll = function (element, parent, root, reference) {
 						let eventType = void 0,
 							eventHandler = void 0
 
-
 						attributeCode = ''
 						eventType = attribute.name.substring(1)
 						eventHandler = 'instance.' + attribute.value + '($event)'
