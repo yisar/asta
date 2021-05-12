@@ -47,7 +47,10 @@ function AstaComponent(name, options) {
     for (let key in data) {
         let value = data[key]
         if (typeof value === 'function') {
-            that[key] = value.bind(that)
+            that[key] = function (...args) {
+                value.call(that, args)
+                this.update()
+            }
         } else {
             that[key] = value
         }
