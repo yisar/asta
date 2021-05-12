@@ -1,10 +1,12 @@
-import {parse} from './parse.js'
-import {generate} from './generate.js'
+import { createApp } from './runtime.js'
 
-const ast = parse('<div>hello world</div>')
-
-console.log(ast)
-
-const code = generate(ast)
-
-console.log(code)
+createApp({
+    node: document.body,
+    count: 0,
+    add(){
+        console.log(123)
+        this.count++
+        this.update()
+    },
+    view: `<div @click="add">{count}</div>`
+})

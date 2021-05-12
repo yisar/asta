@@ -1,3 +1,6 @@
+import { parse } from './parse.js'
+import { generate } from './generate.js'
+
 export function createApp(options) {
     let node = options.node
     delete options.node
@@ -16,7 +19,8 @@ function AstaComponent(name, options) {
     let data = options
     let that = this
 
-    this.view = new Function('m', 'instance', 'locals', generate(parse(options.view), null))
+    this.view = new Function('m', 'instance', 'locals', generate(parse(options.view), null))(m, this, {})
+
     delete data.view
 
     let events = {}
@@ -110,7 +114,7 @@ function off(type, handler) {
 }
 
 function emit(type, data) {
-    var handlers = this.events[type]
+    const handlers = this.events[type]
 
     if (handlers !== undefined) {
         if (typeof handlers === 'function') {
@@ -121,4 +125,47 @@ function emit(type, data) {
             }
         }
     }
+}
+
+const createElement = function (type) { return document.createElement(type); };
+
+const createTextNode = function (content) { return document.createTextNode(content); };
+
+const createComment = function () { return document.createComment(""); };
+
+const setAttribute = function (element, key, value) {
+    element.setAttribute(key, value);
+};
+
+const addEventListener = function (element, type, handler) {
+    element.addEventListener(type, handler);
+};
+
+const setTextContent = function (element, content) {
+    element.textContent = content;
+};
+
+const appendChild = function (element, parent) {
+    parent.appendChild(element);
+};
+
+const removeChild = function (element, parent) {
+    parent.removeChild(element);
+};
+
+const insertBefore = function (element, reference, parent) {
+    parent.insertBefore(element, reference);
+}
+
+const m = {
+    c: {},
+    ce: createElement,
+    ctn: createTextNode,
+    cc: createComment,
+    sa: setAttribute,
+    ael: addEventListener,
+    stc: setTextContent,
+    ac: appendChild,
+    rc: removeChild,
+    ib: insertBefore,
 }

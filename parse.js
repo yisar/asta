@@ -208,7 +208,7 @@ const parseTemplate = expression => {
             if (name[0] === '$') {
                 return `locals.${name}`
             } else {
-                return `ctx.${name}`
+                return `instance.${name}`
             }
         }
     })
