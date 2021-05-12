@@ -8,7 +8,7 @@ Simple compiler for web component
 import { asta } from 'asta'
 
 asta({
-    tag: document.body,
+    tag: 'my-counter',
     count: 0,
     add(){
         this.count++
