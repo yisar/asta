@@ -26,18 +26,21 @@ asta(() => ({
   {
     tag: 'my-counter',
     props: ['btn-text', 'step'],
-    view: `<div>step={props.step},count={ core.count }</div> 
-          <button @click="core.add"> { props['btn-text']}</button>`,
-    onCreate: console.log,
-    onUpdate: console.log,
-    onDestory: console.log,
+    emits: ["create", "update", "destory"],  // 和vue一样， 只是指示性的作用。
+    view: `<div part="info" >step={props.step},count={ core.count } --内部变量也暴露--  {name}</div> 
+          <button part="btn" @click="core.add"> { props['btn-text']}</button>`,
+    style: `
+          div{font-size:20px;}
+        `
   })
 let el = document.createElement('my-counter')
 el.setAttribute('btn-text', '增加计数5')
-el.setAttribute('step', 5) 
+el.setAttribute('step', 5)
 document.body.append(el)
-
-let e2 = document.createElement('my-counter')
- e2.setAttribute('btn-text', '增加计数10') 
- e2.setAttribute('step', 10) 
- document.body.append(e2)
+el.addEventListener("update", function (ev) {
+  console.log("组件更新", ev)
+})
+// 由于这个原因，事件是否冒泡需要仔细斟酌！
+document.body.addEventListener("update", function (ev) {
+  console.log("还冒泡到根节点，组件更新", ev)
+})
