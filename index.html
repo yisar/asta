@@ -4,6 +4,15 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Fre Demo</title>
+		<style>
+			my-counter::part(btn){
+				color:red;
+			}
+			my-counter::part(info){
+				color:rgb(44, 11, 235);
+				font-weight: bold;
+			}
+		</style>
 	</head>
 	<body>
 		<my-counter btn-text="增加计数(from html)" step=1></my-counter>

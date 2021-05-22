@@ -3,13 +3,13 @@ export class AstaBase extends HTMLElement {
         super()
         this.name = ''
         this.queued = false
-        this.events = {}
         // 定义时即编译为指令 
         this.view = []
         // 数据和事件上下文存于core属性 
         this.core = {}
         this.props = {}
-        this.attachShadow({ mode: 'open' })
+        this.root = this.attachShadow({ mode: 'open' })
+
     }
     /**  触发更新视图. 当传入key时，先更新值，后更新视图 
      *  @param {} key 可选 
@@ -30,45 +30,26 @@ export class AstaBase extends HTMLElement {
             setTimeout(() => {
                 this.view[1]()
                 this.queued = false
-                this.emit('onUpdate', "组件  up")
+                this.emit('update', "组件update")
             }, 0)
         }
     }
-
-    on(type, handler) {
-        let handlers = this.events[type]
-        // 不存在则添加
-        if (!handlers) {
-            this.events[type] = [handler] //? 是否 .bind(this)
-        } else {
-            handlers.push(handler)
-        }
-    }
-    off(type, handler) {
-        if (!type) {
-            // eg.  this.off()
-            this.events = {}
-        } else if (!handler) {
-            // eg.  this.off("onCreate")
-            this.events[type] = []
-        } else {
-            this.events[type] = this.events[type].filter((h) => h != handler)
-        }
-    }
     emit(type, data) {
-        const handlers = this.events[type]
-        if (handlers instanceof Array) {
-            handlers.forEach((h) => h(data))
-        }
+        var event = new CustomEvent(type, {
+            detail: data,
+            bubbles: false,  // 设置为true,冒泡！  false,则只触发到自定义元素，更合理。
+            composed: true  // 设置为可穿透组件
+        });
+        this.root.dispatchEvent(event);
     }
 
     connectedCallback() {
         this.view[0](this.shadowRoot)
-        this.emit('onCreate', "组件  cm")
+        this.emit('create', "组件已create and mounted")
     }
     disconnectedCallback() {
         this.view[2]()
-        this.emit('onDestroy', "组件  destory")
+        this.emit('destroy', "组件  destory")
     }
     attributeChangedCallback(name, oldValue, newValue) {
         console.log(`变化的属性:${name},值 ${oldValue}=>${newValue}`)

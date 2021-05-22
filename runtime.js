@@ -19,10 +19,7 @@ export function asta(coreFn, options) {
             let viewBody = generate(parse(options.view), null)
             this.view = new Function('a', 'instance', 'locals', viewBody)(a, this, {})
             console.log(viewBody)
-            if (options.onCreate) { this.events.onCreate = [options.onCreate.bind(this)] }
-            if (options.onUpdate) { this.events.onUpdate = [options.onUpdate.bind(this)] }
-            if (options.onDestory) { this.events.onDestory = [options.onDestory.bind(this)] }
-            let that = this;
+             let that = this;
             this.core = coreFn()
             for (let key in coreFn()) {
                 let fn = this.core[key]
@@ -35,6 +32,12 @@ export function asta(coreFn, options) {
             }
             for (let key in options.props) {
                 this.props[key] = ""
+            }
+            
+            if(options.style){
+                let style=document.createElement("style")
+                style.appendChild(document.createTextNode(options.style));
+                this.root.appendChild(style);
             }
         }
     }
