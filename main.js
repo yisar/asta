@@ -26,16 +26,18 @@ asta(() => ({
   {
     tag: 'my-counter',
     props: ['btn-text', 'step'],
-    view: `<div>step={props.step},count={ core.count }</div> <button @click="core.add" > { props['btn-text']}</button >`,
+    view: `<div>step={props.step},count={ core.count }</div> 
+          <button @click="core.add"> { props['btn-text']}</button>`,
     onCreate: console.log,
     onUpdate: console.log,
     onDestory: console.log,
   })
-// let el = document.createElement('my-counter')
-// el.setAttribute('btn-text', '增加计数5')
-// el.setAttribute('step', 5) // document.body.append(el)
+let el = document.createElement('my-counter')
+el.setAttribute('btn-text', '增加计数5')
+el.setAttribute('step', 5) 
+document.body.append(el)
 
-// let e2 = document.createElement('my-counter')
- // e2.setAttribute('btn-text', '增加计数10') 
- // e2.setAttribute('step', 10) 
- // document.body.append(e2)
+let e2 = document.createElement('my-counter')
+ e2.setAttribute('btn-text', '增加计数10') 
+ e2.setAttribute('step', 10) 
+ document.body.append(e2)
