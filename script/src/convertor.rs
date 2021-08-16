@@ -1,12 +1,19 @@
-use super::visitors::common::{closing_title_upper, opening_title_upper};
+use std::collections::HashSet;
 use std::{boxed::Box, rc::Rc};
 use swc_common::{sync::Lrc, FileName, SourceMap, DUMMY_SP};
 use swc_ecmascript::{
     ast,
     codegen::{text_writer::JsWriter, Config, Emitter},
     parser::{lexer::Lexer, JscTarget, Parser, StringInput, Syntax, TsConfig},
-    visit::{Fold, FoldWith},
+    visit::{VisitMut, VisitMutWith},
 };
+
+type THashSet = HashSet<String>;
+
+#[derive(Debug)]
+pub struct Resolver {
+    deps: THashSet,
+}
 
 pub struct Convertor {
     pub source_map: Rc<SourceMap>,
@@ -38,9 +45,10 @@ impl Convertor {
         Ok(Convertor { source_map, module })
     }
     pub fn transform(&mut self) -> (String, String) {
-        let mut u = Deps {};
-        let program = ast::Program::Module(self.module.clone());
-        program.fold_with(&mut u);
+        let mut d = Resolver {
+            deps: HashSet::new(),
+        };
+        self.module.visit_mut_with(&mut d);
         let (code, map) = self.print();
         (code, map)
     }
@@ -76,9 +84,8 @@ impl Convertor {
     }
 }
 
-#[derive(Debug)]
-pub struct Deps {}
-
-impl Fold for Deps {
-    
+impl VisitMut for Resolver {
+    fn visit_mut_ident(&mut self, expr: &mut ast::Ident) {
+        println!("{:#?}", expr)
+    }
 }
