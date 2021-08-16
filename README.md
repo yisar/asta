@@ -20,3 +20,6 @@ More and more front-end frameworks use compilation technologies, such as svelte 
 
 At the same time, I will use dual-thread technology, which is common for RN, flutter, and miniapp, but not for web.
 
+### License
+
+MIT @yisar
