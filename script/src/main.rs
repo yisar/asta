@@ -6,7 +6,10 @@ use convertor::Convertor;
 
 fn main() {
     let str = "
-    <import wx:key=\"aaa\" src=\"1.wxml\"></import>
+    let count = 0
+    function add(){
+        count++
+    }
     ";
     let mut module = Convertor::parse(str).unwrap();
     let (code, _map) = module.transform();

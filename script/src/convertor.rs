@@ -38,7 +38,7 @@ impl Convertor {
         Ok(Convertor { source_map, module })
     }
     pub fn transform(&mut self) -> (String, String) {
-        let mut u = Upper {};
+        let mut u = Deps {};
         let program = ast::Program::Module(self.module.clone());
         program.fold_with(&mut u);
         let (code, map) = self.print();
@@ -77,29 +77,8 @@ impl Convertor {
 }
 
 #[derive(Debug)]
-pub struct Upper {}
+pub struct Deps {}
 
-impl Fold for Upper {
-    // fn fold_jsx_opening_element(&mut self, node: JSXOpeningElement) -> JSXOpeningElement {
-    //     if let JSXElementName::Ident(id) = &mut node.name {
-    //         opening_title_upper(id.sym.to_string(), node);
-    //     }
-
-    // }
-    // fn fold_jsx_closing_element(&mut self, node: JSXClosingElement) -> JSXClosingElement {
-    //     if let JSXElementName::Ident(id) = &mut node.name {
-    //         closing_title_upper(id.sym.to_string(), node);
-    //     }
-    // }
-    fn fold_jsx_namespaced_name(&mut self, node: ast::JSXNamespacedName) -> ast::Ident {
-        if *node.name.sym == *"key" {
-            return ast::Ident {
-                span: DUMMY_SP,
-                optional: false,
-                sym: format!("{}", "key").into(),
-            };
-        } else {
-            return node;
-        }
-    }
+impl Fold for Deps {
+    
 }
