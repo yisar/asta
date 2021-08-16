@@ -5,7 +5,7 @@ use swc_ecmascript::{
     ast,
     codegen::{text_writer::JsWriter, Config, Emitter},
     parser::{lexer::Lexer, JscTarget, Parser, StringInput, Syntax, TsConfig},
-    visit::{VisitMut, VisitMutWith},
+    visit::{Node, Visit, VisitWith},
 };
 
 type THashSet = HashSet<String>;
@@ -48,7 +48,10 @@ impl Convertor {
         let mut d = Resolver {
             deps: HashSet::new(),
         };
-        self.module.visit_mut_with(&mut d);
+
+        self.module
+            .visit_with(&ast::Invalid { span: DUMMY_SP } as _, &mut d);
+
         let (code, map) = self.print();
         (code, map)
     }
@@ -84,8 +87,9 @@ impl Convertor {
     }
 }
 
-impl VisitMut for Resolver {
-    fn visit_mut_ident(&mut self, expr: &mut ast::Ident) {
-        println!("{:#?}", expr)
+impl Visit for Resolver {
+    fn visit_ident(&mut self, ident: &ast::Ident, _parent: &dyn Node) {
+        self.deps.insert(ident.sym.to_string());
+        println!("{:#?}",self.deps);
     }
 }
