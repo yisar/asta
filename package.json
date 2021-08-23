@@ -1,0 +1,42 @@
+{
+  "name": "petite-vue",
+  "version": "0.2.3",
+  "description": "5kb subset of Vue optimized for progressive enhancement",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/petite-vue.umd.js",
+  "unpkg": "dist/petite-vue.iife.js",
+  "jsdelivr": "dist/petite-vue.iife.js",
+  "module": "./dist/petite-vue.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/petite-vue.es.js",
+      "require": "./dist/petite-vue.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "prepublishOnly": "tsc --noEmit && yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuejs/petite-vue.git"
+  },
+  "keywords": [
+    "vue"
+  ],
+  "author": "Evan You",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vuejs/petite-vue/discussions"
+  },
+  "homepage": "https://github.com/vuejs/petite-vue#readme",
+  "devDependencies": {
+    "@vue/reactivity": "^3.1.4",
+    "@vue/shared": "^3.1.4",
+    "typescript": "^4.3.4",
+    "vite": "^2.3.8"
+  }
+}
