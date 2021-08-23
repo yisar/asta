@@ -1,6 +1,12 @@
 import { Context, createContext } from './context'
 import { walk } from './walk'
-import { remove } from '@vue/shared'
+
+const remove = (arr, el) => {
+  const i = arr.indexOf(el);
+  if (i > -1) {
+      arr.splice(i, 1);
+  }
+};
 
 export class Block {
   template: Element | DocumentFragment
