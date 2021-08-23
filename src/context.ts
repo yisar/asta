@@ -27,7 +27,7 @@ export const createContext = (parent?: Context): Context => {
         queueJob(fn)
         return fn as any
       }
-      const e = observe(fn, () => queueJob(e))
+      const e = observe(fn, () => queueJob(fn))
       ctx.effects.push(e)
       return e
     }
