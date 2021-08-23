@@ -1,3 +1,5 @@
+import { isFn, isObj } from "./utils"
+
 const g = typeof window === "object" ? window : Function("return this")();
 const targetMap = new WeakMap<Raw, EffectForRaw>();
 const proxyToRaw = new WeakMap<Proxy, Raw>();
@@ -162,9 +164,6 @@ function add(deps, key, effects) {
 }
 
 export const isReactive = (proxy: Object): boolean => proxyToRaw.has(proxy);
-
-export const isObj = (x: any): x is object => typeof x === "object";
-export const isFn = (x: any): x is Function => typeof x === "function";
 
 type Effect = Function & {
   active?: boolean;

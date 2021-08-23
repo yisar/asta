@@ -1,4 +1,4 @@
-import { isArray, isObject } from '@vue/shared'
+import { isArr, isObj } from '../utils'
 import { Block } from '../block'
 import { evaluate } from '../eval'
 import { Context, createScopedContext } from '../context'
@@ -27,7 +27,7 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
   const sourceExp = inMatch[2].trim()
   let valueExp = inMatch[1].trim().replace(stripParensRE, '').trim()
   let destructureBindings: string[] | undefined
-  let isArrayDestructure = false
+  let isArrDestructure = false
   let indexExp: string | undefined
   let objIndexExp: string | undefined
 
@@ -52,7 +52,7 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
 
   if ((match = valueExp.match(destructureRE))) {
     destructureBindings = match[1].split(',').map((s) => s.trim())
-    isArrayDestructure = valueExp[0] === '['
+    isArrDestructure = valueExp[0] === '['
   }
 
   let mounted = false
@@ -64,7 +64,7 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
     const map: KeyToIndexMap = new Map()
     const ctxs: Context[] = []
 
-    if (isArray(source)) {
+    if (isArr(source)) {
       for (let i = 0; i < source.length; i++) {
         ctxs.push(createChildContext(map, source[i], i))
       }
@@ -72,7 +72,7 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
       for (let i = 0; i < source; i++) {
         ctxs.push(createChildContext(map, i + 1, i))
       }
-    } else if (isObject(source)) {
+    } else if (isObj(source)) {
       let i = 0
       for (const key in source) {
         ctxs.push(createChildContext(map, source[key], i++, key))
@@ -91,7 +91,7 @@ export const _for = (el: Element, exp: string, ctx: Context) => {
     const data: any = {}
     if (destructureBindings) {
       destructureBindings.forEach(
-        (b, i) => (data[b] = value[isArrayDestructure ? i : b])
+        (b, i) => (data[b] = value[isArrDestructure ? i : b])
       )
     } else {
       data[valueExp] = value

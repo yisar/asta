@@ -12,3 +12,7 @@ export const listen = (
 ) => {
   el.addEventListener(event, handler, options)
 }
+
+export const isObj = (x: any): x is object => typeof x === "object";
+export const isFn = (x: any): x is Function => typeof x === "function";
+export const isArr = Array.isArray;

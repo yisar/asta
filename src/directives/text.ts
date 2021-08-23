@@ -1,4 +1,4 @@
-import { isObject } from '@vue/shared'
+import { isObj } from "../utils"
 import { Directive } from '.'
 
 export const text: Directive<Text | Element> = ({ el, get, effect }) => {
@@ -10,6 +10,6 @@ export const text: Directive<Text | Element> = ({ el, get, effect }) => {
 export const toDisplayString = (value: any) =>
   value == null
     ? ''
-    : isObject(value)
+    : isObj(value)
     ? JSON.stringify(value, null, 2)
     : String(value)
