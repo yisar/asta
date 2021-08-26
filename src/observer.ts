@@ -1,4 +1,4 @@
-import { isFn, isObj } from "./utils"
+import { isFn, isObj } from "./util"
 
 const g = typeof window === "object" ? window : Function("return this")();
 const targetMap = new WeakMap<Raw, EffectForRaw>();
@@ -6,7 +6,7 @@ const proxyToRaw = new WeakMap<Proxy, Raw>();
 const rawToProxy = new WeakMap<Raw, Proxy>();
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 const effectStack: Effect[] = [];
-export let activeEffect = null;
+export let activeEffect:any = null;
 const ITERATE_KEY = Symbol("iterate key");
 const enum Const {
   ADD = "add",
@@ -15,6 +15,7 @@ const enum Const {
 
 export function observe<T>(fn: Function, cb: Function): Effect {
   const effect: Effect = function effect() {
+    // @ts-ignore
     return run(effect, fn, this, arguments);
   };
   effect.active = true;
@@ -23,7 +24,7 @@ export function observe<T>(fn: Function, cb: Function): Effect {
   return effect;
 }
 
-function run(effect, fn, ctx, args) {
+function run(effect:any, fn:any, ctx:Object, args:any) {
   if (!effect.active) {
     return Reflect.apply(fn, ctx, args);
   }
@@ -103,7 +104,7 @@ const baseHandlers = {
   set(target: Raw, key: Key, value: any) {
     if (isObj(value)) value = proxyToRaw.get(value) || value;
     const hadKey = hasOwnProperty.call(target, key);
-    const oldValue = target[key];
+    const oldValue = (target as any)[key];
     const result = Reflect.set(target, key, value);
 
     if (!hadKey) {
@@ -115,7 +116,7 @@ const baseHandlers = {
   },
   deleteProperty(target: Raw, key: Key) {
     const hadKey = hasOwnProperty.call(target, key);
-    const oldValue = target[key];
+    const oldValue = (target as any)[key];
     const result = Reflect.deleteProperty(target, key);
     if (hadKey) {
       trigger({ target, key, oldValue, type: "delete" });
@@ -133,13 +134,13 @@ export function track(operation: Operation) {
     if (!depsMap) {
       targetMap.set(target, (depsMap = new Map()));
     }
-    let deps = depsMap.get(key);
+    let deps = depsMap.get(key as any);
     if (!deps) {
-      depsMap.set(key, (deps = new Set()));
+      depsMap.set(key as any, (deps = new Set()));
     }
     if (!deps.has(effect)) {
       deps.add(effect);
-      effect.deps.push(deps);
+      effect.deps?.push(deps);
     }
   }
 }
@@ -148,19 +149,19 @@ export function trigger(operation: Operation) {
   let { type, target, key } = operation;
   let deps = targetMap.get(target);
   const effects = new Set();
-  add(deps, key, effects);
+  add(deps, key as Key, effects);
   if (type === Const.ADD || type === Const.DELETE) {
     const iKey = Array.isArray(target) ? "length" : ITERATE_KEY;
     add(deps, iKey, effects);
   }
-  effects.forEach((e: Effect) => {
+  effects.forEach((e: any) => {
     isFn(e.cb) ? e.cb(e) : e();
   });
 }
 
-function add(deps, key, effects) {
+function add(deps:any, key:Key, effects:any) {
   const dep = deps.get(key);
-  dep && dep.forEach((e) => effects.add(e));
+  dep && dep.forEach((e:any) => effects.add(e));
 }
 
 export const isReactive = (proxy: Object): boolean => proxyToRaw.has(proxy);
