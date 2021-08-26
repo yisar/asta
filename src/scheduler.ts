@@ -1,8 +1,7 @@
 let queued = false
 const queue: Function[] = []
-const p = Promise.resolve()
 
-export const nextTick = (fn: () => void) => p.then(fn)
+export const nextTick = (fn: () => void) => Promise.resolve().then(fn)
 
 export const queueJob = (job: Function) => {
   if (!queue.includes(job)) queue.push(job)
@@ -13,9 +12,5 @@ export const queueJob = (job: Function) => {
 }
 
 const flushJobs = () => {
-  for (let i = 0; i < queue.length; i++) {
-    queue[i]()
-  }
-  queue.length = 0
-  queued = false
+  queue.splice(0, queue.length).forEach(v => v())
 }
