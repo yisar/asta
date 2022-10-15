@@ -13,10 +13,13 @@ yarn start
 
 input:
 ```jsx
-// view
-export default ({ count }) =>
-    <main><button $onclick={add}>{count}</button></main>
-    
+// state
+export const state = async  () => {
+  return {
+	count: 0
+  }
+}
+
 // action
 export const AddCount = (state, event) => {
     return {
@@ -25,10 +28,10 @@ export const AddCount = (state, event) => {
     }
 }
 
-// state
-export default {
-	count: 0
-}
+// view
+export default ({ count }) =>
+    <main><button $onclick={add}>{count}</button></main>
+
 ```
 output:
 
