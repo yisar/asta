@@ -12,8 +12,12 @@
     "url": "git+https://github.com/yisar/asta.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "email": "1533540012@qq.com",
+    "name": "yisar",
+    "url": "https://www.zhihu.com/people/132yse"
+  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/yisar/asta/issues"
   },
