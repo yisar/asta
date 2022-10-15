@@ -14,7 +14,7 @@ yarn start
 input:
 ```jsx
 // state
-export const state = async  () => {
+export const state = async () => {
   return {
 	count: 0
   }
