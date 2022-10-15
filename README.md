@@ -13,14 +13,14 @@ yarn start
 
 input:
 ```jsx
-// state
+// state: will run in server and inject to client
 export const state = async () => {
   return {
     count: 0
   }
 }
 
-// action
+// action: will run in client only
 export const addCount = (state, event) => {
   return {
     ...state,
@@ -28,7 +28,7 @@ export const addCount = (state, event) => {
   }
 }
 
-// view
+// view: will run in both client and server, but s() in server h() in client 
 export default ({ count }) => {
   return (
     <main>
