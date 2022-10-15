@@ -171,15 +171,15 @@ const grammar = {
         parser.many(parser.or(parser.and(parser.character("\\"), parser.any), parser.not(["#"]))),
         parser.character("#")
     ])),
-    separator: (input, index) => parser.many(parser.or(
+    separator: parser.many(parser.or(
         parser.alternates([
             parser.character(" "),
             parser.character("\t"),
             parser.character("\n")
         ]),
         grammar.comment
-    ))(input, index),
-    value: (input, index) => parser.alternates([
+    )),
+    value: parser.alternates([
         parser.many1(parser.regex(identifierRE)),
         parser.sequence([
             parser.character("\""),
@@ -211,38 +211,38 @@ const grammar = {
             grammar.expression,
             parser.character("}")
         ])
-    ])(input, index),
-    attributes: (input, index) => parser.type("attributes", parser.many(parser.sequence([
+    ]),
+    attributes: parser.type("attributes", parser.many(parser.sequence([
         grammar.value,
         parser.character("="),
         grammar.value,
         grammar.separator
-    ])))(input, index),
+    ]))),
     text: parser.type("text", parser.many1(parser.or(
         parser.and(parser.character("\\"), parser.any),
         parser.not(["{", "<"])
     ))),
-    interpolation: (input, index) => parser.type("interpolation", parser.sequence([
+    interpolation: parser.type("interpolation", parser.sequence([
         parser.character("{"),
         grammar.expression,
         parser.character("}")
-    ]))(input, index),
-    node: (input, index) => parser.type("node", parser.sequence([
+    ])),
+    node: parser.type("node", parser.sequence([
         parser.character("<"),
         grammar.separator,
         grammar.value,
         grammar.separator,
         parser.string("*>")
-    ]))(input, index),
-    nodeData: (input, index) => parser.type("nodeData", parser.sequence([
+    ])),
+    nodeData: parser.type("nodeData", parser.sequence([
         parser.character("<"),
         grammar.separator,
         grammar.value,
         grammar.separator,
         parser.or(parser.try(grammar.attributes), grammar.value),
         parser.string("/>")
-    ]))(input, index),
-    nodeDataChildren: (input, index) => parser.type("nodeDataChildren", parser.sequence([
+    ])),
+    nodeDataChildren: parser.type("nodeDataChildren", parser.sequence([
         parser.character("<"),
         grammar.separator,
         grammar.value,
@@ -259,8 +259,8 @@ const grammar = {
         parser.string("</"),
         parser.many(parser.not([">"])),
         parser.character(">")
-    ]))(input, index),
-    expression: (input, index) => parser.many(parser.alternates([
+    ])),
+    expression: parser.many(parser.alternates([
         // Single line comment
         parser.sequence([
             parser.string("//"),
@@ -292,8 +292,8 @@ const grammar = {
         parser.character("/"),
         parser.character("<"),
         parser.many1(parser.not(["/", "#", "\"", "'", "`", "(", ")", "[", "]", "{", "}", "<"]))
-    ]))(input, index),
-    main: (input, index) => parser.and(grammar.expression, parser.EOF)(input, index)
+    ])),
+    main: parser.and(grammar.expression, parser.EOF)
 };
 
 function parse(input) {
