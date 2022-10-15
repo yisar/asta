@@ -8,7 +8,7 @@ input:
 ```jsx
 // view
 export default ({ count }) =>
-    <main><button on:click={add}>{count}</button></main>
+    <main><button $onclick={add}>{count}</button></main>
     
 // action
 export const AddCount = (state, event) => {
@@ -26,7 +26,7 @@ export default {
 output:
 
 ```html
-<main><button on:click="./action.js?fn=AddCount" class="uuid">0</button></main>
+<main><button $onclick="./action.js?fn=AddCount" class="uuid">0</button></main>
 ```
 
 ### 核心优化
