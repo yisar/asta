@@ -1,7 +1,7 @@
 import polka from 'polka'
 import chalk from 'chalk'
 import sirv from 'sirv'
-import { renderToString } from '../src/renderToString.mjs'
+import { renderToString } from '../compiler/gen-html.mjs'
 
 function serve(options) {
     const app = polka()
