@@ -16,21 +16,26 @@ input:
 // state
 export const state = async () => {
   return {
-	count: 0
+    count: 0
   }
 }
 
 // action
 export const AddCount = (state, event) => {
-    return {
-        ...state,
-        count: state.count+1,
-    }
+  return {
+    ...state,
+    count: state.count+1,
+  }
 }
 
 // view
-export default ({ count }) =>
-    <main><button $onclick={add}>{count}</button></main>
+export default ({ count }) => {
+  return (
+    <main>
+      <button $onclick={add}>{count}</button>
+    </main>
+  )
+}
 
 ```
 output:
