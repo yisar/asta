@@ -6,11 +6,11 @@ SSR resumable framework
 
 input:
 ```jsx
-// view.js
+// view
 export default ({ count }) =>
     <main><button on:click={add}>{count}</button></main>
     
-// action.js
+// action
 export const AddCount = (state, event) => {
     return {
         ...state,
@@ -18,8 +18,8 @@ export const AddCount = (state, event) => {
     }
 }
 
-// state.js
-export default = {
+// state
+export default {
 	count: 0
 }
 ```
