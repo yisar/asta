@@ -9,6 +9,7 @@ input:
 // view.js
 export default ({ count }) =>
     <main><button on:click={add}>{count}</button></main>
+    
 // action.js
 export const AddCount = (state, event) => {
     return {
@@ -16,6 +17,7 @@ export const AddCount = (state, event) => {
         count: state.count+1,
     }
 }
+
 // state.js
 export default = {
 	count: 0
