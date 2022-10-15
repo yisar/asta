@@ -21,7 +21,7 @@ export const state = async () => {
 }
 
 // action
-export const AddCount = (state, event) => {
+export const addCount = (state, event) => {
   return {
     ...state,
     count: state.count+1,
@@ -32,7 +32,7 @@ export const AddCount = (state, event) => {
 export default ({ count }) => {
   return (
     <main>
-      <button $onclick={AddCount}>{count}</button>
+      <button $onclick={addCount}>{count}</button>
     </main>
   )
 }
