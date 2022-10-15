@@ -2,6 +2,13 @@
 
 SSR resumable framework
 
+# Run demo
+
+```shell
+yarn compile
+yarn start
+```
+
 ### Use
 
 input:
