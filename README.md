@@ -32,7 +32,7 @@ export const AddCount = (state, event) => {
 export default ({ count }) => {
   return (
     <main>
-      <button $onclick={add}>{count}</button>
+      <button $onclick={AddCount}>{count}</button>
     </main>
   )
 }
