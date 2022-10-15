@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node demo/server.mjs",
-    "c":"node compiler/index.js"
+    "compile":"node compiler/index.js"
   },
   "repository": {
     "type": "git",
