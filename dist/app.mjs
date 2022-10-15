@@ -1,11 +1,6 @@
-import { h } from "./h.mjs";
-
-
+import {h} from './h.mjs';
 const state = { count: 0 }
 
 const view = ({ count }) =>
-    h("main", {}, [
-        h("button", { 'on:click': './todo.js?fn=AddCount', class: 'a' }, [count]),
-    ])
-
+    h('main',{children:[h('button', {"$onclick":"./todo.js?fn=AddCount" ,"class":"a",children:[count]})]})
 export { view, state }

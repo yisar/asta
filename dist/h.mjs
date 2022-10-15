@@ -4,21 +4,20 @@ const EMPTY_ARR = []
 const isArray = Array.isArray
 
 export const h = function (tag, props) {
-  for (var vnode, rest = [], children = [], i = arguments.length; i-- > 2;) {
-    rest.push(arguments[i])
-  }
+  let children = []
+  let key = props.key
 
-  while (rest.length > 0) {
-    if (isArray((vnode = rest.pop()))) {
-      for (var i = vnode.length; i-- > 0;) {
-        rest.push(vnode[i])
-      }
-    } else if (vnode === false || vnode === true || vnode == null) {
+  for (let i = 0; i < props.children.length; i++) {
+    let vnode = props.children[i]
+    if (vnode === false || vnode === true || vnode == null) {
     } else {
       children.push(typeof vnode === "object" ? vnode : createTextVNode(vnode))
     }
   }
 
+  props.children = undefined;
+  props.key = undefined;
+  
   props = props || EMPTY_OBJ
 
   return typeof tag === "function"

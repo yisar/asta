@@ -1,0 +1,26 @@
+{
+  "name": "asta",
+  "version": "1.0.0",
+  "description": "SSR resumable framework",
+  "main": "index.js",
+  "scripts": {
+    "start": "node demo/server.mjs",
+    "c":"node compiler/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yisar/asta.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yisar/asta/issues"
+  },
+  "homepage": "https://github.com/yisar/asta#readme",
+  "dependencies": {
+    "chalk": "^5.1.2",
+    "polka": "^0.5.2",
+    "sirv": "^2.0.2"
+  }
+}

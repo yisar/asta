@@ -1,268 +1,303 @@
-const whitespaceRE = /^\s+$/
-const valueEndRE = /[\s/>]/
-const expressionRE = /"[^"]*"|'[^']*'|\d+[a-zA-Z$_]\w*|\.[a-zA-Z$_]\w*|[a-zA-Z$_]\w*:|([a-zA-Z$_]\w*)/g;
-const globals = "NaN false in null this true typeof undefined"
-const escapeRE = /(?:(?:&(?:amp|gt|lt|nbsp|quot);)|"|\\|\n)/g
-const escapeMap = {
-    "&amp;": "&",
-    "&gt;": ">",
-    "&lt;": "<",
-    "&nbsp;": " ",
-    "&quot;": '\\"',
-    "\\": "\\\\",
-    '"': '\\"',
-    "\n": "\\n",
+const identifierRE = /[$\w.]/;
+
+function ParseError(expected, index) {
+    this.expected = expected;
+    this.index = index;
 }
 
-export const parse = input => {
-    const length = input.length
-    let root = {
-        element: 0,
-        next: 1,
-        type: 'root',
-        attributes: [],
-        children: []
-    }
-    let stack = [root]
+const parser = {
+    type: (type, parse) => (input, index) => {
+        const output = parse(input, index);
 
-    for (let i = 0; i < length;) {
-        let char = input[i]
-        if (char === '<') {
-            if (input[i + 1] === '!' && input[i + 2] === '-' && input[i + 3] === '-') {
-                i = parseComment(i + 4, input, length)
-            } else if (input[i + 1] === '/') {
-                i = parseCloseTag(i + 2, input, length, stack)
+        return output instanceof ParseError ?
+            output :
+            [{ type, value: output[0] }, output[1]];
+    },
+    EOF: (input, index) => {
+        return index === input.length ?
+            ["EOF", index] :
+            new ParseError("EOF", index);
+    },
+    any: (input, index) => {
+        return index < input.length ?
+            [input[index], index + 1] :
+            new ParseError("any", index);
+    },
+    character: character => (input, index) => {
+        const head = input[index];
+
+        return head === character ?
+            [head, index + 1] :
+            new ParseError(`"${character}"`, index);
+    },
+    regex: regex => (input, index) => {
+        const head = input[index];
+
+        return head !== undefined && regex.test(head) ?
+            [head, index + 1] :
+            new ParseError(regex.toString(), index);
+    },
+    string: string => (input, index) => {
+        const indexNew = index + string.length;
+
+        return input.slice(index, indexNew) === string ?
+            [string, indexNew] :
+            new ParseError(`"${string}"`, index);
+    },
+    not: strings => (input, index) => {
+        if (index < input.length) {
+            for (let i = 0; i < strings.length; i++) {
+                const string = strings[i];
+
+                if (input.slice(index, index + string.length) === string) {
+                    return new ParseError(`not "${string}"`, index);
+                }
+            }
+
+            return [input[index], index + 1];
+        } else {
+            return new ParseError(`not ${strings.map(JSON.stringify).join(", ")}`, index);
+        }
+    },
+    or: (parse1, parse2) => (input, index) => {
+        const output1 = parse1(input, index);
+
+        if (output1 instanceof ParseError && output1.index === index) {
+            // If the first parser has an error and consumes no input, then try
+            // the second parser.
+            return parse2(input, index);
+        } else {
+            return output1;
+        }
+    },
+    and: (parse1, parse2) => (input, index) => {
+        const output1 = parse1(input, index);
+
+        if (output1 instanceof ParseError) {
+            return output1;
+        } else {
+            const output2 = parse2(input, output1[1]);
+
+            return output2 instanceof ParseError ?
+                output2 :
+                [[output1[0], output2[0]], output2[1]];
+        }
+    },
+    sequence: parses => (input, index) => {
+        const values = [];
+
+        for (let i = 0; i < parses.length; i++) {
+            const output = parses[i](input, index);
+
+            if (output instanceof ParseError) {
+                return output;
             } else {
-                i = parseOpenTag(i + 1, input, length, stack)
+                values.push(output[0]);
+                index = output[1];
             }
-        } else if (char === '{') {
-            i = parseExpression(i + 1, input, length, stack)
-        } else {
-            i = parseText(i, input, length, stack)
         }
-    }
-    return root
-}
 
-const parseComment = (index, input, length) => {
-    while (index < length) {
-        let char0 = input[index]
-        let char1 = input[index + 1]
-        let char2 = input[index + 2]
-        let char3 = input[index + 3]
+        return [values, index];
+    },
+    alternates: parses => (input, index) => {
+        let alternatesError = new ParseError("alternates", -1);
 
-        if (char0 === '<' && char1 === '!' && char2 === '-' && char3 === '-') {
-            index = parseComment(index + 4, input, length)
-        } else if (char0 === '-' && char1 === '-' && char2 === '>') {
-            index += 3
-            break
-        } else {
-            index += 1
-        }
-    }
-    return index
-}
+        for (let i = 0; i < parses.length; i++) {
+            const output = parses[i](input, index);
 
-const parseCloseTag = (index, input, length, stack) => {
-    let type = ''
-    for (; index < length; index++) {
-        let char = input[index]
-        if (char === '>') {
-            index += 1
-            break
-        } else {
-            type += char
-        }
-    }
-    let lastElement = stack.pop()
-    if (type !== lastElement.type) {
-        throw new Error(`unclosed tag: ${lastElement.type}`)
-    }
-    return index
-}
-
-const parseOpenTag = (index, input, length, stack) => {
-    let element = {
-        type: '',
-        attributes: [],
-        children: []
-    }
-
-    while (index < length) {
-        let char = input[index]
-        if (char === '/' || char === '>') {
-            let attributes = element.attributes
-            let lastIndex = stack.length - 1
-            if (char === '/') {
-                index += 1
+            if (output instanceof ParseError && output.index === index) {
+                if (output.index > alternatesError.index) {
+                    alternatesError = output;
+                }
             } else {
-                stack.push(element)
-            }
-
-            for (let i = 0; i < attributes.length;) {
-                let attribute = attributes[i]
-                if (isComponent(attribute.name)) {
-                    element = {
-                        type: attribute.name,
-                        attributes: [{
-                            name: '',
-                            value: attribute.value,
-                            expression: attribute.expression,
-                            dynamic: attribute.dynamic
-                        }],
-                        children: [element]
-                    }
-                    attributes.slice(i, 1)
-                } else {
-                    i += 1
-                }
-            }
-            stack[lastIndex].children.push(element)
-            index += 1
-            break
-        } else if ((whitespaceRE.test(char) && (index += 1)) || char === '=') {
-            index = parseAttributes(index, input, length, element.attributes)
-        } else {
-            element.type += char
-            index += 1
-        }
-    }
-    return index
-}
-
-const parseAttributes = (index, input, length, attributes) => {
-    while (index < length) {
-        let char = input[index]
-        if (char === '/' || char === '>') {
-            break
-        } else if (whitespaceRE.test(char)) {
-            index += 1
-            continue
-        } else {
-            let name = ''
-            let value = void 0
-            let expression = false
-
-            while (index < length) {
-                char = input[index]
-                if (char === '/' || char === '>' || whitespaceRE.test(char)) {
-                    value = ''
-                    break
-                } else if (char === '=') {
-                    index += 1
-                    break
-                } else {
-                    name += char
-                    index += 1
-                }
-            }
-
-            if (value === undefined) {
-                let quote = void 0
-                value = ''
-                char = input[index]
-
-                if (char === '"' || char === "'") {
-                    quote = char
-                    index += 1
-                } else if (char === '{') {
-                    quote = '}'
-                    expression = true
-                    quote = valueEndRE
-                }
-
-                while (index < length) {
-                    char = input[index]
-                    if ((typeof quote === 'object' && quote.test(char)) || char === quote) {
-                        index += 1
-                        break
-                    } else {
-                        value += char
-                        index += 1
-                    }
-                }
-            }
-            let dynamic = false
-            if (expression) {
-                let template = parseTemplate(value)
-                value = template.expression
-                dynamic = template.dynamic
-            }
-
-            attributes.push({
-                name, value, expression, dynamic
-            })
-        }
-    }
-    return index
-}
-
-const parseTemplate = expression => {
-    let dynamic = false
-    expression = expression.replace(expressionRE, (match, name) => {
-        if (name === undefined || globals.indexOf(name) > -1) {
-            return match
-        } else {
-            dynamic = true
-            if (name[0] === '$') {
-                return `locals.${name}`
-            } else {
-                return `instance.${name}`
+                return output;
             }
         }
-    })
-    return { expression, dynamic }
-}
 
-const parseExpression = (index, input, length, stack) => {
-    let expression = ''
-    for (; index < length; index++) {
-        let char = input[index]
-        if (char === '}') {
-            index += 1
-            break
-        } else {
-            expression += char
+        return alternatesError;
+    },
+    many: parse => (input, index) => {
+        const values = [];
+        let output;
+
+        while (!((output = parse(input, index)) instanceof ParseError)) {
+            values.push(output[0]);
+            index = output[1];
         }
-    }
-    let template = parseTemplate(expression)
-    stack[stack.length - 1].children.push({
-        type: 'text',
-        attributes: [{
-            name: '',
-            value: template.expression,
-            expression: true,
-            dynamic: template.dynamic
-        }],
-        children: []
-    })
-    return index
-}
 
-const parseText = (index, input, length, stack) => {
-    let content = ''
-    for (; index < length; index++) {
-        let char = input[index]
-        if (char === '<' || char === '{') {
-            break
+        if (output.index === index) {
+            return [values, index];
         } else {
-            content += char
+            return output;
         }
-    }
-    if (!whitespaceRE.test(content)) {
-        stack[stack.length - 1].children.push({
-            type: 'text',
-            attributes: [{
-                name: 'nodeValue',
-                value: content.replace(escapeRE, match => escapeMap[match]),
-                expression: false,
-                dynamic: false
-            }],
-            children: []
+    },
+    many1: parse => (input, index) => {
+        const values = [];
+        let output = parse(input, index);
 
-        })
+        if (output instanceof ParseError) {
+            return output;
+        }
+
+        values.push(output[0]);
+        index = output[1];
+
+        while (!((output = parse(input, index)) instanceof ParseError)) {
+            values.push(output[0]);
+            index = output[1];
+        }
+
+        if (output.index === index) {
+            return [values, index];
+        } else {
+            return output;
+        }
+    },
+    try: parse => (input, index) => {
+        const output = parse(input, index);
+
+        if (output instanceof ParseError) {
+            output.index = index;
+        }
+
+        return output;
     }
-    return index
+};
+
+
+const grammar = {
+    comment: parser.type("comment", parser.sequence([
+        parser.character("#"),
+        parser.many(parser.or(parser.and(parser.character("\\"), parser.any), parser.not(["#"]))),
+        parser.character("#")
+    ])),
+    separator: (input, index) => parser.many(parser.or(
+        parser.alternates([
+            parser.character(" "),
+            parser.character("\t"),
+            parser.character("\n")
+        ]),
+        grammar.comment
+    ))(input, index),
+    value: (input, index) => parser.alternates([
+        parser.many1(parser.regex(identifierRE)),
+        parser.sequence([
+            parser.character("\""),
+            parser.many(parser.or(parser.and(parser.character("\\"), parser.any), parser.not(["\""]))),
+            parser.character("\"")
+        ]),
+        parser.sequence([
+            parser.character("'"),
+            parser.many(parser.or(parser.and(parser.character("\\"), parser.any), parser.not(["'"]))),
+            parser.character("'")
+        ]),
+        parser.sequence([
+            parser.character("`"),
+            parser.many(parser.or(parser.and(parser.character("\\"), parser.any), parser.not(["`"]))),
+            parser.character("`")
+        ]),
+        parser.sequence([
+            parser.character("("),
+            grammar.expression,
+            parser.character(")")
+        ]),
+        parser.sequence([
+            parser.character("["),
+            grammar.expression,
+            parser.character("]")
+        ]),
+        parser.sequence([
+            parser.character("{"),
+            grammar.expression,
+            parser.character("}")
+        ])
+    ])(input, index),
+    attributes: (input, index) => parser.type("attributes", parser.many(parser.sequence([
+        grammar.value,
+        parser.character("="),
+        grammar.value,
+        grammar.separator
+    ])))(input, index),
+    text: parser.type("text", parser.many1(parser.or(
+        parser.and(parser.character("\\"), parser.any),
+        parser.not(["{", "<"])
+    ))),
+    interpolation: (input, index) => parser.type("interpolation", parser.sequence([
+        parser.character("{"),
+        grammar.expression,
+        parser.character("}")
+    ]))(input, index),
+    node: (input, index) => parser.type("node", parser.sequence([
+        parser.character("<"),
+        grammar.separator,
+        grammar.value,
+        grammar.separator,
+        parser.string("*>")
+    ]))(input, index),
+    nodeData: (input, index) => parser.type("nodeData", parser.sequence([
+        parser.character("<"),
+        grammar.separator,
+        grammar.value,
+        grammar.separator,
+        parser.or(parser.try(grammar.attributes), grammar.value),
+        parser.string("/>")
+    ]))(input, index),
+    nodeDataChildren: (input, index) => parser.type("nodeDataChildren", parser.sequence([
+        parser.character("<"),
+        grammar.separator,
+        grammar.value,
+        grammar.separator,
+        grammar.attributes,
+        parser.character(">"),
+        parser.many(parser.alternates([
+            parser.try(grammar.node),
+            parser.try(grammar.nodeData),
+            parser.try(grammar.nodeDataChildren),
+            grammar.text,
+            grammar.interpolation
+        ])),
+        parser.string("</"),
+        parser.many(parser.not([">"])),
+        parser.character(">")
+    ]))(input, index),
+    expression: (input, index) => parser.many(parser.alternates([
+        // Single line comment
+        parser.sequence([
+            parser.string("//"),
+            parser.many(parser.not(["\n"]))
+        ]),
+
+        // Multi-line comment
+        parser.sequence([
+            parser.string("/*"),
+            parser.many(parser.not(["*/"])),
+            parser.string("*/")
+        ]),
+
+        // Regular expression
+        parser.try(parser.sequence([
+            parser.character("/"),
+            parser.many1(parser.or(
+                parser.and(parser.character("\\"), parser.not(["\n"])),
+                parser.not(["/", "\n"])
+            )),
+            parser.character("/")
+        ])),
+        grammar.comment,
+        grammar.value,
+        parser.try(grammar.node),
+        parser.try(grammar.nodeData),
+        parser.try(grammar.nodeDataChildren),
+
+        parser.character("/"),
+        parser.character("<"),
+        parser.many1(parser.not(["/", "#", "\"", "'", "`", "(", ")", "[", "]", "{", "}", "<"]))
+    ]))(input, index),
+    main: (input, index) => parser.and(grammar.expression, parser.EOF)(input, index)
+};
+
+function parse(input) {
+    return grammar.main(input, 0);
 }
 
-export const isComponent = type => type[0] === type[0].toUpperCase() && type[0] !== type[0].toLowerCase()
+module.exports = { parse };

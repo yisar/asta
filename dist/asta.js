@@ -19,7 +19,7 @@ for (const event of events) {
     document.addEventListener(event, e => {
         const target = e.target.closest('.a');
         if (target) {
-            $import(target.getAttribute('on:' + event), e)
+            $import(target.getAttribute('$on' + event), e)
 
         }
     })
@@ -76,9 +76,9 @@ function patch(parent, node, oldNode, index) {
 function updateElement(oldNode, data) {
     for (const name in data) {
         if (oldNode[name] && oldNode[name] !== data[name]) {
-            oldNode[name] = data[name]
+            // oldNode[name] = data[name]
         } else if (oldNode.getAttribute(name) && oldNode.getAttribute(name) !== data[name]) {
-            oldNode.setAttribute(name, data[name])
+            // oldNode.setAttribute(name, data[name])
         } else {
             // oldNode.removeAttribute(name)
         }
