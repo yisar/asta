@@ -4,7 +4,7 @@ export const AddTodo = (state) => ({
     todos: state.todos.concat(state.value),
 })
 
-export const AddCount = (state, event) => {
+export const addCount = (state, event) => {
     return {
         ...state,
         count: state.count+1,

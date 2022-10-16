@@ -307,4 +307,4 @@ function parse(input) {
     return {ast, amount}
 }
 
-module.exports = { parse };
+export { parse };

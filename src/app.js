@@ -1,16 +1,17 @@
 import {h} from './h.mjs';
-const state = async (req)=>{
+import {addCount} from './action.js'
+
+export const loader = async (req) => {
 	const count = req.query.count || 0
 	return {
-		count
+		count,
 	}
 }
 
-const view = ({ count }) => {
-	return h('main',{children:[
-		h('button', {"$onclick":"./todo.js?fn=AddCount",children:[
-			count
+export default ({ count }) => {
+	return (
+		h('main',{children:[
+			h('button', {"$onclick":{addCount},children:[count]})
 		]})
-	]})
+	)
 }
-export { view, state }

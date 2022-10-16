@@ -1,3 +1,5 @@
+import {addCount} from './action.js'
+
 export const loader = async (req) => {
 	const count = req.query.count || 0
 	return {
@@ -8,7 +10,7 @@ export const loader = async (req) => {
 export default ({ count }) => {
 	return (
 		<main>
-			<button $onclick="./todo.js?fn=AddCount">{count}</button>
+			<button $onclick={addCount}>{count}</button>
 		</main>
 	)
 }
