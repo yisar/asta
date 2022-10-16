@@ -1,10 +1,4 @@
 const state = { count: 0 }
 
-const view = ({ count }) => {
-	return <main>
-		<button $onclick="./todo.js?fn=AddCount">
-			{count}
-		</button>
-	</main>
-}
+const view = ({list}) => <div>{list.map(i=><i>{i}</i>)}</div>
 export { view, state }

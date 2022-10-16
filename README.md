@@ -12,36 +12,50 @@ yarn start
 ### Use
 
 input:
+
 ```jsx
 // state: will run in server and inject to client
 export const state = async () => {
-  return {
-    count: 0
-  }
+	return {
+		count: 0,
+	}
 }
 
 // action: will run in client only
 export const addCount = (state, event) => {
-  return {
-    ...state,
-    count: state.count+1,
-  }
+	return {
+		...state,
+		count: state.count + 1,
+	}
 }
 
-// view: will run in both client and server, but s() in server h() in client 
+// view: will run in both client and server, but s() in server h() in client
 export default ({ count }) => {
-  return (
-    <main>
-      <button $onclick={addCount}>{count}</button>
-    </main>
-  )
+	return (
+		<main>
+			<button $onclick={addCount}>{count}</button>
+		</main>
+	)
 }
-
 ```
+
 output:
 
 ```html
 <main><button $onclick="./action.js?fn=AddCount" data-id="1">0</button></main>
+```
+
+### Compiler
+
+Sdom in server, Vdom in client
+
+```js
+// jsx input
+const view = ({list}) => <div>{list.map(i=><i>{i}</i>)}</div>
+// server output
+const view = ({list}) => s.openTag('div',{"data-id": 2})+s.text(list.map(i=>s.openTag('i')+s.text(i)+s.closeTag('i')))+s.closeTag('div')
+// client output
+const view = ({list}) => h('div',{children:[list.map(i=>h('i',{children:[i]}))]})
 ```
 
 ### 核心优化
