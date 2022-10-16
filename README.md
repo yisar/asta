@@ -2,10 +2,10 @@
 
 SSR resumable framework
 
-# Run demo
+### Run demo
 
 ```shell
-yarn compile
+yarn build
 yarn start
 ```
 
@@ -41,7 +41,7 @@ export default ({ count }) => {
 output:
 
 ```html
-<main><button $onclick="./action.js?fn=AddCount" class="uuid">0</button></main>
+<main><button $onclick="./action.js?fn=AddCount" data-id="1">0</button></main>
 ```
 
 ### 核心优化
