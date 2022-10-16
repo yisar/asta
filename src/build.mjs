@@ -64,7 +64,7 @@ export function pathPlugin() {
 
 async function main() {
     const res = await esbuild.build({
-        entryPoints: [path.join(dirname, './app.jsx')],
+        entryPoints: [path.join(dirname, '../demo/app.jsx')],
         bundle: true,
         platform: 'node',
         format: 'esm',
@@ -84,9 +84,11 @@ async function main() {
 
     // build client, todo esbuild
 
-    const input = await fs.readFile(path.join(dirname, './app.jsx'))
+    const input = await fs.readFile(path.join(dirname, '../demo/app.jsx'))
     const clientOutput = generateVdom(input.toString())
     await fs.writeFile(path.join(dirname, './app.js'), `import {h} from './h.mjs';\n` + clientOutput)
+
+    await fs.copyFile(path.join(dirname, "../demo/action.js"), path.join(dirname, "./action.js"))
 }
 
 main()
