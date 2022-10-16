@@ -2,6 +2,10 @@ const cache = new Map();
 const uppercasePattern = /([A-Z])/g;
 const msPattern = /^ms-/;
 
+function upper(all, letter) {
+    return letter.toUpperCase();
+}
+
 // https://www.w3.org/TR/html/syntax.html#void-elements
 const voidElements = new Set([
     'area',
@@ -39,7 +43,11 @@ function stringifyStyles(styles) {
     let delimiter = '';
     const styleNames = Object.keys(styles);
     for (let i = 0, len = styleNames.length; i < len; i++) {
-        const styleName = styleNames[i];
+
+        let styleName = styleNames[i];
+        if (styleName.indexOf("-") > -1) {
+            styleName = styleName.replace(/-(\w)/g, upper)
+        }
         const styleValue = styles[styleName];
 
         // keep in sync with https://github.com/hyperapp/hyperapp/blob/1.0.2/src/index.js#L134
