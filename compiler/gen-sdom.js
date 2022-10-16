@@ -9,11 +9,8 @@ function generateName(nameTree, close) {
     return `${tag}('${name}'`
 }
 
-let jsxAmount = 0
-
 function generate(tree) {
     const type = tree.type;
-
     if (typeof tree === "string") {
         return tree;
     } else if (Array.isArray(tree)) {
@@ -56,7 +53,7 @@ function generate(tree) {
             isWhitespace: textGeneratedIsWhitespace
         };
     } else if (type === "interpolation") {
-        return `s.text(${generate(tree.value[1])})+`;
+        return `s.text(${generate(tree.value[1])})`;
     } else if (type === "node") {
         const value = tree.value;
         return generate(value[1]) + generateName(value[2]) + generate(value[3]);
@@ -91,7 +88,7 @@ function generate(tree) {
                         separator = ",";
                     }
                 } else {
-                    childrenGenerated += separator + childGenerated;
+                    childrenGenerated += separator + childGenerated + '+';
                     separator = ",";
                 }
             }
@@ -99,9 +96,8 @@ function generate(tree) {
             childrenGenerated;
         }
 
-        let idom = `${generate(value[1])}${generateName(value[2], false)}${generate(value[3])},{${data.output}"data-id": ${tree.id}})+${childrenGenerated}${generateName(value[2], true)})+`
-        let output = tree.id === jsxAmount ? `${idom.slice(0, idom.length - 1)}` : idom
-        return output;
+        let sdom = `${generate(value[1])}${generateName(value[2], false)}${generate(value[3])},{${data.output}"data-id": ${tree.id}})+${childrenGenerated}${generateName(value[2], true)})`
+        return sdom;
     }
 }
 
