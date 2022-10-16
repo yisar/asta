@@ -8,7 +8,7 @@ function serve(options) {
         .get("/", async (req, res) => {
             const module = await import('../src/app.mjs')
             const state = await module.state(req)
-            const html = module.view(state)
+            const html = module.default(state)
             const str = `
             <style>
             button{
