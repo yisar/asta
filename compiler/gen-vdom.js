@@ -3,13 +3,12 @@ const whitespaceRE = /^\s+$/;
 
 const textSpecialRE = /(^|[^\\])("|\n)/g;
 
-function generateName(nameTree, close) {
-    const name = generate(nameTree);
-    let tag = close ? 's.closeTag' : 's.openTag'
-    return `${tag}('${name}'`
-}
+let functionType = 'h';
 
-let jsxAmount = 0
+function generateName(nameTree) {
+    const name = generate(nameTree);
+    return `${functionType}('${name}',`
+}
 
 function generate(tree) {
     const type = tree.type;
@@ -18,9 +17,11 @@ function generate(tree) {
         return tree;
     } else if (Array.isArray(tree)) {
         let output = "";
+
         for (let i = 0; i < tree.length; i++) {
             output += generate(tree[i]);
         }
+
         return output;
     } else if (type === "comment") {
         return `/*${generate(tree.value[1])}*/`;
@@ -33,10 +34,6 @@ function generate(tree) {
             const pair = value[i];
             output += `${separator}"${generate(pair[0])}":${generate(pair[2])}${generate(pair[3])}`;
             separator = ",";
-        }
-
-        if (output.length > 0) {
-            output += ","
         }
 
         return {
@@ -56,7 +53,7 @@ function generate(tree) {
             isWhitespace: textGeneratedIsWhitespace
         };
     } else if (type === "interpolation") {
-        return `s.text(${generate(tree.value[1])})+`;
+        return `${generate(tree.value[1])}`;
     } else if (type === "node") {
         const value = tree.value;
         return generate(value[1]) + generateName(value[2]) + generate(value[3]);
@@ -64,6 +61,7 @@ function generate(tree) {
         const value = tree.value;
         const data = value[4];
         const dataGenerated = generate(data);
+
         return `${generate(value[1])}${generateName(value[2])}${generate(value[3])}(${data.type === "attributes" ? `{${dataGenerated.output}}` : dataGenerated
             })`;
     } else if (type === "nodeDataChildren") {
@@ -77,7 +75,7 @@ function generate(tree) {
             childrenGenerated = "";
         } else {
             let separator = "";
-            childrenGenerated = "";
+            childrenGenerated = data.separator + "children:[";
 
             for (let i = 0; i < childrenLength; i++) {
                 const child = children[i];
@@ -96,19 +94,14 @@ function generate(tree) {
                 }
             }
 
-            childrenGenerated;
+            childrenGenerated += "]";
         }
-
-        let idom = `${generate(value[1])}${generateName(value[2], false)}${generate(value[3])},{${data.output}"data-id": ${tree.id}})+${childrenGenerated}${generateName(value[2], true)})+`
-        let output = tree.id === jsxAmount ? `${idom.slice(0, idom.length - 1)}` : idom
-        return output;
+        return `${generate(value[1])}${generateName(value[2])}${generate(value[3])}{${data.output}${childrenGenerated}})`;
     }
 }
 
 function compile(input) {
-    const { ast, amount } = parse(input);
-    jsxAmount = amount
-
+    const { ast } = parse(input);
     if (process.env.MOON_ENV === "development" && ast.constructor.name === "ParseError") {
         error(`Invalid input to parser.
 Attempted to parse input.

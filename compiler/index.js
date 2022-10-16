@@ -1,8 +1,8 @@
 // const { compile, generate } = require('./gen-h')
 const fs = require('fs/promises')
 const path = require('path')
-const {compile: generateVdom} = require('./gen-sdom')
-const {compile: generateIdom} = require('./gen-Idom')
+const {compile: generateVdom} = require('./gen-vdom')
+const {compile: generateIdom} = require('./gen-sdom')
 async function main(){
     const input = await fs.readFile(path.join(__dirname, '../src/app.jsx'))
     const clientOutput = generateVdom(input.toString())
