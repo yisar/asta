@@ -8,9 +8,9 @@ function parseURLParams(url) {
     return queryParams
 }
 function $import(url, e) {
-    const { fn } = parseURLParams(url)
-    import(url).then(mod => {
-        const newState = mod[fn](window.__state, e)
+    const { mod } = parseURLParams(url)
+    import(url).then(mods => {
+        const newState = mods[mod](window.__state, e)
         window.dispatch(newState)
     })
 }
@@ -29,7 +29,7 @@ function resume(root) {
     window.dispatch = (newState) => {
         window.__state = { ...window.__state, ...newState }
         import('./app.js').then(mod=>{
-            patch(root, mod.view(window.__state), root.firstChild, 0)
+            patch(root, mod.default(window.__state), root.firstChild, 0)
         }) 
     }
 

@@ -4,8 +4,12 @@ export const s = {
     openTag(tag, attrs) {
         let code = ''
         code += `<${tag}`
-        for (const attr in attrs) {
-            code += ` ${attr}="${attrs[attr]}"`
+        for (const name in attrs) {
+            let value = attrs[name]
+            if(name[0] === '$'){
+                value = Object.values(attrs[name])[0]
+            }
+            code += ` ${name}="${value}"`
         }
         code += '>'
         return code

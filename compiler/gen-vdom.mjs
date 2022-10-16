@@ -1,4 +1,4 @@
-const { parse } = require('./parse.mjs')
+import { parse } from './parse.mjs'
 const whitespaceRE = /^\s+$/;
 
 const textSpecialRE = /(^|[^\\])("|\n)/g;
