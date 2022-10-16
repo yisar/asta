@@ -72,15 +72,10 @@ function patch(parent, node, oldNode, index) {
     }
 }
 
-function updateElement(oldNode, data) {
-    for (const name in data) {
-        if (oldNode[name] && oldNode[name] !== data[name]) {
-            // oldNode[name] = data[name]
-        } else if (oldNode.getAttribute(name) && oldNode.getAttribute(name) !== data[name]) {
-            // oldNode.setAttribute(name, data[name])
-        } else {
-            // oldNode.removeAttribute(name)
-        }
+function updateElement(node, data) {
+    for (const name in data) { // need diff
+        if(name[0] === '$') continue
+        node.setAttribute(name, data[name])
     }
 }
 

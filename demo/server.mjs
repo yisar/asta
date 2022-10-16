@@ -7,7 +7,8 @@ function serve(options) {
         .use(sirv(options.o))
         .get("/", async (req, res) => {
             const module = await import('../src/app.mjs')
-            const html = module.view(module.state)
+            const state = await module.state(req)
+            const html = module.view(state)
             const str = `
             <style>
             button{
@@ -20,7 +21,7 @@ function serve(options) {
             }
             </style>
             <script>
-            window.__state = ${JSON.stringify(module.state)}
+            window.__state = ${JSON.stringify(state)}
             </script>
           <script type="module" src="./asta.js"></script></script><body>${html}</body>`
             res.end(str)
