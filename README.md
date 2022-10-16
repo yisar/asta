@@ -14,18 +14,12 @@ yarn start
 input:
 
 ```jsx
+import { addCount } from './action.js' // esbuild loader return path in server
+
 // state: will run in server and inject to client
 export const loader = async (req) => {
 	return {
 		count: req.query.count,
-	}
-}
-
-// action: will run in client only
-export const addCount = (state, event) => {
-	return {
-		...state,
-		count: state.count + 1,
 	}
 }
 
@@ -42,7 +36,7 @@ export default ({ count }) => {
 output:
 
 ```html
-<main><button $onclick="./action.js?fn=AddCount" data-id="1">0</button></main>
+<main><button $onclick="./action.js?mod=addCount" data-id="1">0</button></main>
 ```
 
 ### Compiler
