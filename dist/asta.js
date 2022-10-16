@@ -17,7 +17,8 @@ function $import(url, e) {
 
 for (const event of events) {
     document.addEventListener(event, e => {
-        const target = e.target.closest('.a');
+        console.log(123)
+        const target = e.target.closest('[data-id=2]');
         if (target) {
             $import(target.getAttribute('$on' + event), e)
 

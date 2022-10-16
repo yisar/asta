@@ -1,14 +1,13 @@
 import polka from 'polka'
 import chalk from 'chalk'
 import sirv from 'sirv'
-import { renderToString } from '../compiler/gen-html.mjs'
 
 function serve(options) {
     const app = polka()
         .use(sirv(options.o))
         .get("/", async (req, res) => {
             const module = await import('../dist/app.mjs')
-            const html = renderToString(module.view(module.state))
+            const html = module.view(module.state)
             const str = `
             <style>
             button{

@@ -5,13 +5,17 @@ function ParseError(expected, index) {
     this.index = index;
 }
 
+let jsxid = 0
+
 const parser = {
     type: (type, parse) => (input, index) => {
         const output = parse(input, index);
-
+        if(type === 'nodeDataChildren' && !(output instanceof ParseError)) {
+            jsxid++ // 特殊处理
+        }
         return output instanceof ParseError ?
             output :
-            [{ type, value: output[0] }, output[1]];
+            [{ type, value: output[0], id: jsxid }, output[1]];
     },
     EOF: (input, index) => {
         return index === input.length ?
@@ -297,7 +301,10 @@ const grammar = {
 };
 
 function parse(input) {
-    return grammar.main(input, 0);
+    let ast = grammar.main(input, 0);
+    let amount = jsxid
+    jsxid = 0
+    return {ast, amount}
 }
 
 module.exports = { parse };
