@@ -17,8 +17,7 @@ function $import(url, e) {
 
 for (const event of events) {
     document.addEventListener(event, e => {
-        console.log(123)
-        const target = e.target.closest('[data-id=2]');
+        const target = e.target;
         if (target) {
             $import(target.getAttribute('$on' + event), e)
 
@@ -29,8 +28,7 @@ for (const event of events) {
 function resume(root) {
     window.dispatch = (newState) => {
         window.__state = { ...window.__state, ...newState }
-        import('./app.mjs').then(mod=>{
-            console.log(mod)
+        import('./app.js').then(mod=>{
             patch(root, mod.view(window.__state), root.firstChild, 0)
         }) 
     }

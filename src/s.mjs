@@ -5,7 +5,7 @@ export const s = {
         let code = ''
         code += `<${tag}`
         for (const attr in attrs) {
-            code += ` ${attr}=${attrs[attr]}`
+            code += ` ${attr}="${attrs[attr]}"`
         }
         code += '>'
         return code

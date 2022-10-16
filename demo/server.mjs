@@ -6,7 +6,7 @@ function serve(options) {
     const app = polka()
         .use(sirv(options.o))
         .get("/", async (req, res) => {
-            const module = await import('../dist/app.mjs')
+            const module = await import('../src/app.mjs')
             const html = module.view(module.state)
             const str = `
             <style>
@@ -31,4 +31,4 @@ function serve(options) {
         })
     return app.server
 }
-serve({ o: './dist' })
+serve({ o: './src' })
