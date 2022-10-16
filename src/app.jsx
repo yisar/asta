@@ -1,4 +1,4 @@
-export const state = async (req) => {
+export const loader = async (req) => {
 	const count = req.query.count || 0
 	return {
 		count,

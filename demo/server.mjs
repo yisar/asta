@@ -7,7 +7,7 @@ function serve(options) {
         .use(sirv(options.o))
         .get("/", async (req, res) => {
             const module = await import('../src/app.mjs')
-            const state = await module.state(req)
+            const state = await module.loader(req)
             const html = module.default(state)
             const str = `
             <style>

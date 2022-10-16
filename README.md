@@ -15,9 +15,9 @@ input:
 
 ```jsx
 // state: will run in server and inject to client
-export const state = async () => {
+export const loader = async (req) => {
 	return {
-		count: 0,
+		count: req.query.count,
 	}
 }
 
