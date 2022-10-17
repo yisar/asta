@@ -1,6 +1,6 @@
 import {s} from './s.mjs';
-// asta-path:asta:path
-var addCount = "./action.js?mod=addCount";
+// asta-path:~action/count.js
+var addCount = "./action/count.js?mod=addCount";
 
 // demo/app.jsx
 var loader = async (req) => {

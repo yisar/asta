@@ -1,4 +1,4 @@
-import {addCount} from './action.js'
+import {addCount} from '~action/count.js'
 
 export const loader = async (req) => {
 	const count = req.query.count || 0
