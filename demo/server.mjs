@@ -21,6 +21,7 @@ function serve(options) {
     <title>Asta</title>
     <link rel="icon" href="data:" />
     <link rel="stylesheet" href="/public/style.css">
+    <meta name="referrer" content="no-referrer" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
