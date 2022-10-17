@@ -36,7 +36,7 @@ export default ({ count }) => {
 output:
 
 ```html
-<main><button $onclick="./action.js?mod=addCount" data-id="1">0</button></main>
+<main><button $onclick="./action/count.js?mod=addCount" data-id="1">0</button></main>
 ```
 
 ### Compiler
