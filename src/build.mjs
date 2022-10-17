@@ -10,7 +10,7 @@ const dirname = new URL('.', import.meta.url).pathname
 let actionMap = {}
 
 
-function astaPlugin() {
+function astaPlugin(type) {
     return {
         name: 'plugin',
         setup: (build) => {
@@ -21,11 +21,15 @@ function astaPlugin() {
                     const content = await fs.readFile(args.path)
                     const code = content.toString()
 
-                    const a = compile(code)
+                    if (type === 'server') {
+                        var a = compile(code)
 
-                    const { actions } = ScriptParser.parse(a);
+                        const { actions } = ScriptParser.parse(a);
 
-                    actionMap = actions
+                        actionMap = actions
+                    } else {
+                        var a = generateVdom(code)
+                    }
 
                     return {
                         contents: a,
@@ -37,7 +41,7 @@ function astaPlugin() {
     };
 }
 
-export function pathPlugin() {
+export function pathPlugin(type) {
     return {
         name: 'path-plugin',
         setup(build) {
@@ -49,10 +53,16 @@ export function pathPlugin() {
             build.onLoad({ filter: /.*/, namespace: 'asta-path' }, async (args) => {
                 let code = ''
 
-                const map = actionMap[args.path]
-                console.log(map)
+                if (type === 'server') {
+                    const map = actionMap[args.path]
+                    code += `export const ${map.name} = '${map.value}';`
+                } else {
+                    const p = args.path.replace(/~action/g, './action')
+                    const file = await fs.readFile(path.join(dirname, '../demo', p))
 
-                code += `export const ${map.name} = '${map.value}';`
+                    code = file.toString()
+                    console.log(code)
+                }
 
                 return {
                     contents: code,
@@ -74,8 +84,8 @@ async function main() {
         treeShaking: false,
         outfile: 'src/app.mjs',
         plugins: [
-            pathPlugin(),
-            astaPlugin(),
+            pathPlugin('server'),
+            astaPlugin('server'),
         ],
         watch: process.env.WATCH === 'true',
     })
@@ -88,23 +98,23 @@ async function main() {
         write: false,
         treeShaking: false,
         outfile: 'src/app.js',
+        jsxFactory: 'h',
         plugins: [
-            pathPlugin(),
-            astaPlugin(),
+            pathPlugin('client'),
+            astaPlugin('client')
         ],
         watch: process.env.WATCH === 'true',
     })
 
     const buf = res.outputFiles[0].contents
+    const buf2 = res2.outputFiles[0].contents
     const str = String.fromCharCode.apply(null, new Uint8Array(buf))
+    const str2 = String.fromCharCode.apply(null, new Uint8Array(buf2))
 
     await fs.writeFile(path.join(dirname, './app.mjs'), `import {s} from './s.mjs';\n` + str)
 
-    // build client, todo esbuild
+    await fs.writeFile(path.join(dirname, './app.js'), `import {h} from './h.mjs';\n` + str2)
 
-    const input = await fs.readFile(path.join(dirname, '../demo/app.jsx'))
-    const clientOutput = generateVdom(input.toString())
-    await fs.writeFile(path.join(dirname, './app.js'), `import {h} from './h.mjs';\n` + clientOutput)
     await fs.mkdir('./src/action', { recursive: true })
 
     await fs.copyFile(path.join(dirname, "../demo/action/count.js"), path.join(dirname, "./action/count.js"))
