@@ -7,6 +7,10 @@
 	--theme-color: #12a7b4;
 }
 
+li {
+	list-style: none;
+}
+
 button {
 	background-color: var(--theme-color);
 	color: aliceblue;
@@ -29,7 +33,7 @@ header img {
 }
 
 header h1 {
-	width: 205px;
+	width: 220px;
 	font-size: 18px;
 	padding: 10px;
 }
@@ -54,6 +58,13 @@ main {
 	overflow: scroll;
 	border-top: 1px solid #eee;
 	padding: 15px;
+	box-sizing: border-box;
+}
+
+.comments {
+	width: 100%;
+	overflow: scroll;
+	border-top: 10px solid #eee;
 }
 
 .screenshot ul li {
@@ -68,11 +79,41 @@ main {
 	height: 170px;
 	padding: 5px;
 }
-.screenshot h3{
-    padding: 5px;
+.screenshot h3 {
+	padding: 5px;
 }
 
-.screenshot p{
-    color: #666;
-    padding: 10px 5px;
+.screenshot p {
+	color: #666;
+	padding: 10px 5px;
+    height: 75px;
+    font-size: 14px;
+    overflow: hidden;
+
+}
+
+.comments li .bio {
+	display: flex;
+	align-items: center;
+}
+
+.comments li {
+	padding: 5px 15px;
+	border-bottom: 10px solid #eee;
+}
+
+.comments h3 {
+	padding: 15px;
+}
+
+.bio .avatar {
+	height: 40px;
+	width: 40px;
+	border-radius: 20px;
+}
+.bio .avatar{
+    margin: 10px 10px 0 0;
+}
+.comments li p{
+    padding: 15px 0;
 }

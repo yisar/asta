@@ -1,6 +1,7 @@
 import polka from 'polka'
 import chalk from 'chalk'
 import sirv from 'sirv'
+import fs from 'fs/promises'
 
 function serve(options) {
     const app = polka()
@@ -29,6 +30,9 @@ function serve(options) {
           <script type="module" src="./asta.js"></script></script><body>${html}</body>
 </html>`
             res.end(str)
+        }).get('/data', async (req, res) => {
+            const json = await fs.readFile('./src/public/data.json')
+            res.end(json)
         })
         .listen(1234, (err) => {
             if (err) throw err

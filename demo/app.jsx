@@ -1,7 +1,6 @@
 import { addCount } from '~action/count.js'
 
 export const loader = async (req) => {
-	const count = req.query.count || 0
 	const comments = [
 		{
 			name: '阿呆',
@@ -16,27 +15,26 @@ export const loader = async (req) => {
 			content: 'Vbjjnnn😂',
 		},
 	]
+	const data = await fetch('https://www.taptap.com/webapiv2/app/v2/detail-by-id/37782?X-UA=V%3D1%26PN%3DWebApp%26LANG%3Dzh_CN%26VN_CODE%3D92%26VN%3D0.1.0%26LOC%3DCN%26PLT%3DPC%26DS%3DAndroid%26UID%3D9368eaa1-0aaf-4db2-9779-19ca3cbf9125%26DT%3DPC%26OS%3DmacOS%26OSV%3D12.6.0').then(res=>res.json()).then(data=>{
+		return data.data
+	})
 
-	const imgs = [
-		'https://img.tapimg.com/market/images/de62537f7b8aad4f6b8b53cb968901f0.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1',
-		'https://img.tapimg.com/market/images/123ec01bb9b5c42de4fa214303cf1383.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1',
-		'https://img.tapimg.com/market/images/286c9889acad05a6e3ae2f07b5035760.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1',
-		'https://img.tapimg.com/market/images/ea16c10e162a5b9b2e2fe6746a1de6f3.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1',
-	]
+	const imgs = data.screenshots.map(i=>i.url)
+	const title = data.title+data.title_labels[0]
 	return {
+		title,
 		rate: '8.4',
-		count,
 		comments,
 		imgs,
 	}
 }
 
-export default ({ count, comments, rate, imgs }) => {
+export default ({ title, comments, rate, imgs }) => {
 	return (
 		<div>
 			<header>
 				<img src="https://img.tapimg.com/market/icons/9e99c190fdb4f28136921fcc74a7467f_360.png?imageMogr2/auto-orient/strip" alt=""></img>
-				<h1>Can You Escape VintageBungalow 封测国际服</h1>
+				<h1>{title}</h1>
 				<div class="rate">{rate}</div>
 			</header>
 			<main>
