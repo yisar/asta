@@ -1,6 +1,7 @@
 import { addCount } from '~action/count.js'
 
 export const loader = async (req) => {
+	// await new Promise(r=> setTimeout(()=>r(null), 100))
 	const data = await fetch('http://localhost:1234/data')
 		.then((res) => res.json())
 		.then((data) => data)

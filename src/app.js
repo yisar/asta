@@ -12,10 +12,10 @@ var loader = async (req) => {
   const data = await fetch("http://localhost:1234/data").then((res) => res.json()).then((data2) => data2);
   return data;
 };
-var app_default = ({ title, comments, rate, imgs, info }) => {
+var app_default = ({ title, comments, rate, imgs, info, cover }) => {
   return h("div", { children: [
     h("header", { children: [
-      h("img", { "src": "https://img.tapimg.com/market/icons/9e99c190fdb4f28136921fcc74a7467f_360.png?imageMogr2/auto-orient/strip", "alt": "" }),
+      h("img", { "src": { cover }, "alt": "" }),
       h("h1", { children: [title] }),
       h("div", { "class": "rate", children: [rate] })
     ] }),
@@ -25,11 +25,9 @@ var app_default = ({ title, comments, rate, imgs, info }) => {
     h("div", { "class": "screenshot", children: [
       h("h3", { children: ["\u622A\u56FE"] }),
       h("ul", { children: [
-        imgs.map((i) => {
-          return h("li", { children: [
-            h("img", { "src": { i } })
-          ] });
-        })
+        imgs.map((i) => h("li", { children: [
+          h("img", { "src": { i } })
+        ] }))
       ] })
     ] }),
     h("div", { "class": "screenshot", children: [
@@ -39,15 +37,13 @@ var app_default = ({ title, comments, rate, imgs, info }) => {
     h("div", { "class": "comments", children: [
       h("h3", { children: ["\u8BC4\u4EF7"] }),
       h("ul", { children: [
-        comments.map(({ avatar, name, content }) => {
-          return h("li", { children: [
-            h("div", { "class": "bio", children: [
-              h("img", { "class": "avatar", "src": { avatar } }),
-              h("b", { "class": "name", children: [name] })
-            ] }),
-            h("p", { children: [content] })
-          ] });
-        })
+        comments.map(({ avatar, name, content }) => h("li", { children: [
+          h("div", { "class": "bio", children: [
+            h("img", { "class": "avatar", "src": { avatar } }),
+            h("b", { "class": "name", children: [name] })
+          ] }),
+          h("p", { children: [content] })
+        ] }))
       ] })
     ] })
   ] });
