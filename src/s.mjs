@@ -6,7 +6,7 @@ export const s = {
         code += `<${tag}`
         for (const name in attrs) {
             let value = attrs[name]
-            if (name[0] === '$') {
+            if (typeof attrs[name] === 'object') {
                 value = Object.values(attrs[name])[0].toString().replace(/[\s]/g, '')
             }
             code += ` ${name}="${value}"`

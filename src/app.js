@@ -10,14 +10,32 @@ var addCount = (state, event) => {
 // demo/app.jsx
 var loader = async (req) => {
   const count = req.query.count || 0;
-  const list = [1, 2, 3];
+  const comments = [
+    {
+      name: "\u963F\u5446",
+      avatar: "https://img3.tapimg.com/default_avatars/755e9ca449be08245191a743a128a8df.jpg?imageMogr2/auto-orient/strip/thumbnail/!300x300r/gravity/Center/crop/300x300/format/jpg/interlace/1/quality/80",
+      content: "bdbnxjcjcjj"
+    },
+    {
+      name: "\u8FEA\u5362\u514B",
+      avatar: "https://img3.tapimg.com/default_avatars/7d713c00e515de52a63c0f51c8697c84.jpg?imageMogr2/auto-orient/strip/thumbnail/!300x300r/gravity/Center/crop/300x300/format/jpg/interlace/1/quality/80",
+      content: "Vbjjnnn\u{1F602}"
+    }
+  ];
+  const imgs = [
+    "https://img.tapimg.com/market/images/de62537f7b8aad4f6b8b53cb968901f0.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1",
+    "https://img.tapimg.com/market/images/123ec01bb9b5c42de4fa214303cf1383.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1",
+    "https://img.tapimg.com/market/images/286c9889acad05a6e3ae2f07b5035760.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1",
+    "https://img.tapimg.com/market/images/ea16c10e162a5b9b2e2fe6746a1de6f3.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1"
+  ];
   return {
     rate: "8.4",
     count,
-    list
+    comments,
+    imgs
   };
 };
-var app_default = ({ count, list, rate }) => {
+var app_default = ({ count, list, rate, imgs }) => {
   return h("div", { children: [
     h("header", { children: [
       h("img", { "src": "https://img.tapimg.com/market/icons/9e99c190fdb4f28136921fcc74a7467f_360.png?imageMogr2/auto-orient/strip", "alt": "" }),
@@ -30,18 +48,12 @@ var app_default = ({ count, list, rate }) => {
     h("div", { "class": "screenshot", children: [
       h("h3", { children: ["\u622A\u56FE"] }),
       h("ul", { children: [
-        h("li", { children: [
-          h("img", { "src": "https://img.tapimg.com/market/images/de62537f7b8aad4f6b8b53cb968901f0.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1" })
-        ] }),
-        h("li", { children: [
-          h("img", { "src": "https://img.tapimg.com/market/images/123ec01bb9b5c42de4fa214303cf1383.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1" })
-        ] }),
-        h("li", { children: [
-          h("img", { "src": "https://img.tapimg.com/market/images/286c9889acad05a6e3ae2f07b5035760.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1" })
-        ] }),
-        h("li", { children: [
-          h("img", { "src": "https://img.tapimg.com/market/images/ea16c10e162a5b9b2e2fe6746a1de6f3.png?imageView2/2/h/560/w/9999/q/80/format/jpg/interlace/1/ignore-error/1" })
-        ] })
+        imgs.map((i) => {
+          console.log(i);
+          return h("li", { children: [
+            h("img", { "src": { i } })
+          ] });
+        })
       ] })
     ] }),
     h("div", { "class": "screenshot", children: [
