@@ -115,8 +115,10 @@ async function main() {
     await fs.writeFile(path.join(dirname, './app.js'), `import {h} from './h.mjs';\n` + str2)
 
     await fs.mkdir('./src/action', { recursive: true })
+    await fs.mkdir('./src/public', { recursive: true })
 
     await fs.copyFile(path.join(dirname, "../demo/action/count.js"), path.join(dirname, "./action/count.js"))
+    await fs.copyFile(path.join(dirname, "../demo/public/style.css"), path.join(dirname, "./public/style.css"))
 }
 
 main()

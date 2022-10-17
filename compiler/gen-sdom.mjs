@@ -47,9 +47,8 @@ function generate(tree) {
             output: textGeneratedIsWhitespace ?
                 textGenerated :
                 `"${textGenerated.replace(textSpecialRE, (match, character, characterSpecial) =>
-                    character + (characterSpecial === "\"" ? "\\\"" : "\\n\\\n")
-                )
-                }"`,
+                    character + (characterSpecial === "\"" ? "\\\"" : "\\n\\\n"))
+                }"+`,
             isWhitespace: textGeneratedIsWhitespace
         };
     } else if (type === "interpolation") {

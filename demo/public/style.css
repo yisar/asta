@@ -1,0 +1,13 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+button {
+	background-color: blueviolet;
+	color: aliceblue;
+	padding: 20px;
+	margin: 20px;
+	border: 0;
+	border-radius: 10px;
+}
