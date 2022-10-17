@@ -7,11 +7,11 @@ export const loader = async (req) => {
 	return data
 }
 
-export default ({ title, comments, rate, imgs, info }) => {
+export default ({ title, comments, rate, imgs, info, cover }) => {
 	return (
 		<div>
 			<header>
-				<img src="https://img.tapimg.com/market/icons/9e99c190fdb4f28136921fcc74a7467f_360.png?imageMogr2/auto-orient/strip" alt=""></img>
+				<img src={cover} alt=""></img>
 				<h1>{title}</h1>
 				<div class="rate">{rate}</div>
 			</header>
@@ -21,13 +21,11 @@ export default ({ title, comments, rate, imgs, info }) => {
 			<div class="screenshot">
 				<h3>截图</h3>
 				<ul>
-					{imgs.map((i) => {
-						return (
-							<li>
-								<img src={i}></img>
-							</li>
-						)
-					})}
+					{imgs.map((i) => (
+						<li>
+							<img src={i}></img>
+						</li>
+					))}
 				</ul>
 			</div>
 
@@ -39,17 +37,15 @@ export default ({ title, comments, rate, imgs, info }) => {
 			<div class="comments">
 				<h3>评价</h3>
 				<ul>
-					{comments.map(({ avatar, name, content }) => {
-						return (
-							<li>
-								<div class="bio">
-									<img class="avatar" src={avatar}></img>
-									<b class="name">{name}</b>
-								</div>
-								<p>{content}</p>
-							</li>
-						)
-					})}
+					{comments.map(({ avatar, name, content }) => (
+						<li>
+							<div class="bio">
+								<img class="avatar" src={avatar}></img>
+								<b class="name">{name}</b>
+							</div>
+							<p>{content}</p>
+						</li>
+					))}
 				</ul>
 			</div>
 		</div>
