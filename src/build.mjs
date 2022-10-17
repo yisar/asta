@@ -15,9 +15,7 @@ function astaPlugin(type) {
         name: 'plugin',
         setup: (build) => {
             build.onLoad(
-                {
-                    filter: /.*/,
-                }, async (args) => {
+                { filter: /.*/, }, async (args) => {
                     const content = await fs.readFile(args.path)
                     const code = content.toString()
 
