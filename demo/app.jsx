@@ -31,7 +31,7 @@ export const loader = async (req) => {
 	}
 }
 
-export default ({ count, list, rate, imgs }) => {
+export default ({ count, comments, rate, imgs }) => {
 	return (
 		<div>
 			<header>
@@ -63,6 +63,23 @@ export default ({ count, list, rate, imgs }) => {
 					house and solve some interesting puzzles to find the hidden key. Good Luck and have fun playing Knf escape games and free online
 					point and click escape games.
 				</p>
+			</div>
+
+			<div class="comments">
+				<h3>评价</h3>
+				<ul>
+					{comments.map(({avatar, name, content}) => {
+						return (
+							<li>
+								<div class="bio">
+									<img class="avatar" src={avatar}></img>
+									<b class="name">{name}</b>
+								</div>
+								<p>{content}</p>
+							</li>
+						)
+					})}
+				</ul>
 			</div>
 		</div>
 	)

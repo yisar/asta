@@ -35,7 +35,7 @@ var loader = async (req) => {
     imgs
   };
 };
-var app_default = ({ count, list, rate, imgs }) => {
+var app_default = ({ count, comments, rate, imgs }) => {
   return h("div", { children: [
     h("header", { children: [
       h("img", { "src": "https://img.tapimg.com/market/icons/9e99c190fdb4f28136921fcc74a7467f_360.png?imageMogr2/auto-orient/strip", "alt": "" }),
@@ -49,7 +49,6 @@ var app_default = ({ count, list, rate, imgs }) => {
       h("h3", { children: ["\u622A\u56FE"] }),
       h("ul", { children: [
         imgs.map((i) => {
-          console.log(i);
           return h("li", { children: [
             h("img", { "src": { i } })
           ] });
@@ -59,6 +58,20 @@ var app_default = ({ count, list, rate, imgs }) => {
     h("div", { "class": "screenshot", children: [
       h("h3", { children: ["\u7B80\u4ECB"] }),
       h("p", { children: ["\n					Can You Escape VintageBungalow is new android escape game developed by KnfGame.In this game your locked inside a Vintage Bungalow\n					House, the only way to escape from bungalow is to find the hidden key. For that you have click on the useful objects around the\n					house and solve some interesting puzzles to find the hidden key. Good Luck and have fun playing Knf escape games and free online\n					point and click escape games.\n				"] })
+    ] }),
+    h("div", { "class": "comments", children: [
+      h("h3", { children: ["\u8BC4\u4EF7"] }),
+      h("ul", { children: [
+        comments.map(({ avatar, name, content }) => {
+          return h("li", { children: [
+            h("div", { "class": "bio", children: [
+              h("img", { "class": "avatar", "src": { avatar } }),
+              h("b", { "class": "name", children: [name] })
+            ] }),
+            h("p", { children: [content] })
+          ] });
+        })
+      ] })
     ] })
   ] });
 };

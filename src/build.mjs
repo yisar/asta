@@ -58,7 +58,7 @@ export function pathPlugin(type) {
                     const file = await fs.readFile(path.join(dirname, '../demo', p))
 
                     code = file.toString()
-                    // console.log(code)
+                    console.log(code)
                 }
 
                 return {
