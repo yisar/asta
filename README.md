@@ -58,13 +58,13 @@ asta 是一个 ssr 特化的框架，它核心的两个优化
 
 1. client 端 0 js
 
-asta 第一个优化，首屏幕 html 是有事件的，js 根据交互懒加载，这种概念也被称之为 `Resumable`，不需要 `hydrate`， inspird by qwik
+asta 第一个优化，首屏幕 html 是有事件的，js 根据交互懒加载，这种概念也被称之为 `Resumable`，不需要 `hydrate`， inspird by qwik.js
 
 优化成果是不管业务多么复杂，都可以谷歌评分 100 分
 
 2. server 端只有 html
 
-asta 第二个优化，就是在 server 端只拼接 html，没有 vdom 的遍历，后续直接将 html 当作结构来使用，inspired by marko
+asta 第二个优化，就是在 server 端只拼接 html，没有 vdom 的遍历，后续直接将 html 当作结构来使用，inspired by marko.js
 
 两个优化，分别解决了 ssr 世界里的两个瓶颈
 
