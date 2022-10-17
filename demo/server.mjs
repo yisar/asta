@@ -19,6 +19,7 @@ function serve(options) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Asta</title>
     <link rel="icon" href="data:" />
+    <link rel="stylesheet" href="/public/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 

@@ -21,8 +21,6 @@ function astaPlugin(type) {
 
                     if (type === 'server') {
                         var a = compile(code)
-                        console.log(a)
-
                         const { actions } = ScriptParser.parse(a);
 
                         actionMap = actions
@@ -60,7 +58,7 @@ export function pathPlugin(type) {
                     const file = await fs.readFile(path.join(dirname, '../demo', p))
 
                     code = file.toString()
-                    console.log(code)
+                    // console.log(code)
                 }
 
                 return {
