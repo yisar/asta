@@ -6,7 +6,7 @@ export const s = {
         code += `<${tag}`
         for (const name in attrs) {
             let value = attrs[name]
-            if(name[0] === '$'){
+            if (name[0] === '$') {
                 value = Object.values(attrs[name])[0].toString().replace(/[\s]/g, '')
             }
             code += ` ${name}="${value}"`
@@ -17,8 +17,14 @@ export const s = {
     closeTag(tag) {
         return `</${tag}>`
     },
-    text(str) {
-        return str.toString()
+    expression(content) {
+        if (typeof content === 'string' || typeof content === 'number') {
+            return content.toString()
+        } else if (Array.isArray(content)) {
+            return content.join('')
+        } else {
+            return ''
+        }
     }
 }
 

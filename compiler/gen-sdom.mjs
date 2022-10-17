@@ -53,7 +53,7 @@ function generate(tree) {
             isWhitespace: textGeneratedIsWhitespace
         };
     } else if (type === "interpolation") {
-        return `s.text(${generate(tree.value[1])})`;
+        return `s.expression(${generate(tree.value[1])})`;
     } else if (type === "node") {
         const value = tree.value;
         return generate(value[1]) + generateName(value[2]) + generate(value[3]);
@@ -73,7 +73,6 @@ function generate(tree) {
         if (childrenLength === 0) {
             childrenGenerated = "";
         } else {
-            let separator = "";
             childrenGenerated = "";
 
             for (let i = 0; i < childrenLength; i++) {
@@ -84,12 +83,10 @@ function generate(tree) {
                     if (childGenerated.isWhitespace) {
                         childrenGenerated += childGenerated.output;
                     } else {
-                        childrenGenerated += separator + childGenerated.output;
-                        separator = ",";
+                        childrenGenerated +=  childGenerated.output;
                     }
                 } else {
-                    childrenGenerated += separator + childGenerated + '+';
-                    separator = ",";
+                    childrenGenerated += childGenerated + '+';
                 }
             }
 
