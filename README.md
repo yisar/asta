@@ -14,7 +14,7 @@ yarn start
 input:
 
 ```jsx
-import { addCount } from './action.js' // esbuild loader return path in server
+import { addCount } from '~action/count.js' // esbuild loader return path in server
 
 // state: will run in server and inject to client
 export const loader = async (req) => {
