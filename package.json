@@ -25,8 +25,8 @@
   "dependencies": {
     "acorn": "^8.8.0",
     "chalk": "^5.1.2",
-    "es-module-lexer": "^1.0.5",
-    "esbuild": "^0.15.11",
+    "es-module-lexer": "^1.0.3",
+    "esbuild": "^0.15.10",
     "polka": "^0.5.2",
     "sirv": "^2.0.2"
   }
