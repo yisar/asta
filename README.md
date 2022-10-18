@@ -47,7 +47,7 @@ Sdom in server, Vdom in client
 // jsx input
 const view = ({list}) => <div>{list.map(i=><i>{i}</i>)}</div>
 // server output
-const view = ({list}) => s.openTag('div')+expression(list.map(i=>s.openTag('i')+s.text(i)+s.closeTag('i')))+s.closeTag('div')
+const view = ({list}) => s.openTag('div')+s.expression(list.map(i=>s.openTag('i')+s.text(i)+s.closeTag('i')))+s.closeTag('div')
 // client output
 const view = ({list}) => h('div',{children:[list.map(i=>h('i',{children:[i]}))]})
 ```
