@@ -10,7 +10,7 @@ const parser = {
         const output = parse(input, index);
         return output instanceof ParseError ?
             output :
-            [{ type, value: output[0], id: index }, output[1]];
+            [{ type, value: output[0] }, output[1]];
     },
     EOF: (input, index) => {
         return index === input.length ?
@@ -297,7 +297,7 @@ const grammar = {
 
 function parse(input) {
     let ast = grammar.main(input, 0);
-    return {ast, amount}
+    return {ast}
 }
 
 export { parse };
