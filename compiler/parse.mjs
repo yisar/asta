@@ -10,7 +10,7 @@ const parser = {
         const output = parse(input, index);
         return output instanceof ParseError ?
             output :
-            [{ type, value: output[0], id: jsxid }, output[1]];
+            [{ type, value: output[0], id: index }, output[1]];
     },
     EOF: (input, index) => {
         return index === input.length ?
