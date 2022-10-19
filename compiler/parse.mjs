@@ -297,7 +297,7 @@ const grammar = {
 
 function parse(input) {
     let ast = grammar.main(input, 0);
-    return {ast, amount}
+    return {ast}
 }
 
 export { parse };
