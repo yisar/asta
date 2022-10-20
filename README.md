@@ -1,6 +1,16 @@
-# Asta
+<p align="center"><img width="300" alt="image" src="https://user-images.githubusercontent.com/12951461/196841960-7e297a6d-0a83-4343-b4a2-8b4caa0f858b.png"></p>
 
-SSR resumable framework
+
+# Asta [![NPM version](https://img.shields.io/npm/v/asta.svg)](https://npmjs.com/package/asta) [![NPM downloads](https://img.shields.io/npm/dt/eplayer.svg)](https://npmjs.com/package/asta)
+
+:dart: Asta is a highly specialized full stack framework for SSR. It has no vdom on the server side and 0 js on the client side. Finally, it gets best QPS and Google scores.
+
+> Note this is early Development! It is not recommended to use this for anything serious yet.
+
+- no VDOM on server, 0 javascript on client.
+- write JSX and react-like syntax.
+
+
 
 ### Run demo
 
@@ -9,7 +19,8 @@ yarn build
 yarn start
 ```
 
-### Use
+
+### Syntax
 
 input:
 
@@ -53,20 +64,52 @@ const view = ({list}) => s.openTag('div')+s.expression(list.map(i=>s.openTag('i'
 const view = ({list}) => h('div',{children:[list.map(i=>h('i',{children:[i]}))]})
 ```
 
-### 核心优化
+# How and why
 
-asta 是一个 ssr 特化的框架，它核心的两个优化
+### How is This Different from Next.js, Remix.js, Fresh.js or Other SSR Solutions?
 
-1. client 端 0 js
+There are two biggest differences. 
 
-asta 第一个优化，首屏幕 html 是有事件的，js 根据交互懒加载，这种概念也被称之为 `Resumable`，不需要 `hydrate`， inspird by qwik.js
+First, the server side. Asta does not run any VDOM-based framework runtime. It generates the `s function` through the compiler, which is only used for string splicing. At this point, it is a little like Marko.js.
 
-优化成果是不管业务多么复杂，都可以谷歌评分 100 分
+Second, on the client side, Asta is 0 javascript, and it does not require any hydration. This is a new concept, called Resumable, a little like qwik.js.
 
-2. server 端只有 html
+So, `Asta ≈ Marko + Qwik`.
 
-asta 第二个优化，就是在 server 端只拼接 html，没有 vdom 的遍历，后续直接将 html 当作结构来使用，inspired by marko.js
+Because there is no Vdom overhead on the server side, Asta can get super high QPS and throughput.
 
-两个优化，分别解决了 ssr 世界里的两个瓶颈
+Then because the client side is 0 js, it can continuously get a high Google score, and the score will not decrease with the increase of components.
 
-asta 是无敌的，毫不夸张
+### How is This Different from Qwik.js or Marko.js?
+
+In principle, asta is the sum of them, Asta is a double optimization, but the implementation details are quite different.
+
+At the same time, Asta attempts to migrate Elm's mental model to SSR. 
+
+There is only a single state tree, and components are pure functions without states or any overhead. 
+
+These helps to completely solve performance problems.
+
+### Why not Fre SSR or and other Vdom-based frameworks?
+
+Although JSX of fre can also be optimized at compile time, and the client side can also be selective hydrated, it is important that Fre or other Vdom-based framework components are not completely cost free.
+
+### 说人话？
+
+Asta 的核心是根治性能问题，已知的 SSR 框架有几个性能瓶颈：
+
+1. server 端的 vdom 开销，组件开销
+
+- server 端生成和遍历 vdom 成本是巨大的，Asta 在 server 端没有 vdom，它通过一个特殊的编译器将 jsx 编译成 s 函数，只用来拼接字符串
+
+- server 端组件的初始化，状态更新，生命周期的开销，也是巨大的，Asta 也有组件，但它的组件是纯函数，也只用来拼接字符串，没有任何私有状态和生命周期，这得益于 Elm 的心智模型，单 state tree，组件是纯函数
+
+2. client 0 js
+
+- 一个新兴的概念，叫做 Resumable，client 不再水合，而是将必要的信息序列化到 html 里，然后直接从 html 进行恢复，所有的 js 都根据交互懒加载，这样就可以做到 0 js，0 水合，而且这是 O(1) 的，不会因为业务增长而性能下降
+
+Asta 双重优化，彻底根除 SSR 的性能瓶颈
+
+
+
+
