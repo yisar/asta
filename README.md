@@ -1,4 +1,5 @@
-<p align="center"><img width="300" alt="image" src="https://user-images.githubusercontent.com/12951461/196841593-c3f469ba-a67d-45a5-ad66-8ace2040550d.jpeg"></p>
+<p align="center"><img width="300" alt="image" src="https://user-images.githubusercontent.com/12951461/196841960-7e297a6d-0a83-4343-b4a2-8b4caa0f858b.png"></p>
+
 
 # Asta [![NPM version](https://img.shields.io/npm/v/asta.svg)](https://npmjs.com/package/asta) [![NPM downloads](https://img.shields.io/npm/dt/eplayer.svg)](https://npmjs.com/package/asta)
 
