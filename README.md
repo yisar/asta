@@ -82,7 +82,13 @@ Then because the client side is 0 js, it can continuously get a high Google scor
 
 ### How is This Different from Qwik.js or Marko.js?
 
-In principle, asta is the sum of them, but the implementation details are quite different.
+In principle, asta is the sum of them, Asta is a double optimization, but the implementation details are quite different.
+
+At the same time, Asta attempts to migrate Elm's mental model to SSR. 
+
+There is only a single state tree, and components are pure functions without states or any overhead. 
+
+These helps to completely solve performance problems.
 
 
 
