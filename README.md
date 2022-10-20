@@ -19,7 +19,8 @@ yarn build
 yarn start
 ```
 
-### Use
+
+### Syntax
 
 input:
 
@@ -63,20 +64,27 @@ const view = ({list}) => s.openTag('div')+s.expression(list.map(i=>s.openTag('i'
 const view = ({list}) => h('div',{children:[list.map(i=>h('i',{children:[i]}))]})
 ```
 
-### 核心优化
+# How and why
 
-asta 是一个 ssr 特化的框架，它核心的两个优化
+### How is This Different from Next.js, Remix.js, Fresh.js or Other SSR Solutions?
 
-1. client 端 0 js
+There are two biggest differences. 
 
-asta 第一个优化，首屏幕 html 是有事件的，js 根据交互懒加载，这种概念也被称之为 `Resumable`，不需要 `hydrate`， inspird by qwik.js
+First, the server side. Asta does not run any VDOM-based framework runtime. It generates the `s function` through the compiler, which is only used for string splicing. At this point, it is a little like Marko.js.
 
-优化成果是不管业务多么复杂，都可以谷歌评分 100 分
+Second, on the client side, Asta is 0 javascript, and it does not require any hydration. This is a new concept, called Resumable, a little like qwik.js.
 
-2. server 端只有 html
+So, `Asta ≈ Marko + Qwik`.
 
-asta 第二个优化，就是在 server 端只拼接 html，没有 vdom 的遍历，后续直接将 html 当作结构来使用，inspired by marko.js
+Because there is no Vdom overhead on the server side, Asta can get super high QPS and throughput.
 
-两个优化，分别解决了 ssr 世界里的两个瓶颈
+Then because the client side is 0 js, it can continuously get a high Google score, and the score will not decrease with the increase of components.
 
-asta 是无敌的，毫不夸张
+### How is This Different from Qwik.js or Marko.js?
+
+In principle, asta is the sum of them, but the implementation details are quite different.
+
+
+
+
+
