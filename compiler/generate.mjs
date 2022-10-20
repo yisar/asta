@@ -92,7 +92,7 @@ function generate(tree) {
             childrenGenerated;
         }
 
-        let sdom = `${generate(value[1])}${generateName(value[2], false)}${generate(value[3])},{${data.output}"data-id": ${tree.id}})+${childrenGenerated}${generateName(value[2], true)})`
+        let sdom = `${generate(value[1])}${generateName(value[2], false)}${generate(value[3])},{${data.output}})+${childrenGenerated}${generateName(value[2], true)})`
         return sdom;
     }
 }

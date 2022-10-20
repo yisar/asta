@@ -28,56 +28,53 @@ for (const event of events) {
 function resume(root) {
     window.dispatch = (newState) => {
         window.__state = { ...window.__state, ...newState }
-        const vdom = mod.default(window.__state)
-
-        console.log(vdom)
-        import('./app.js').then(mod=>{
+        import('./app.js').then(mod => {
+            const vdom = mod.default(window.__state)
             patch(root, vdom, root.firstChild, 0)
-        }) 
+        })
     }
 
 }
 
 function patch(parent, node, oldNode, index) {
     if (node.type === 3 && oldNode.nodeType === 3) {
-        oldNode.nodeValue = node.tag
+        if (oldNode.nodeValue !== node.tag) {
+            oldNode.nodeValue = node.tag
+        }
+
     }
-    else if (oldNode === undefined) {
+    else if (!oldNode) {
         parent.appendChild(createElement(node))
 
-    } else if (node === undefined) {
+    } else if (!node) {
         while (index > 0 && !parent.childNodes[index]) {
             index--
         }
-        var element = parent.childNodes[index]
-        if (oldNode && oldNode.data) {
-            var hook = oldNode.data.onremove
-            if (hook) {
-                defer(hook, element)
-            }
-        }
-
-        parent.removeChild(element)
+        var dom = parent.childNodes[index]
+        parent.removeChild(dom)
 
     } else if (oldNode.nodeName.toLowerCase() !== node.tag) {
+        console.log(oldNode,node)
         parent.replaceChild(createElement(node), parent.childNodes[index])
 
     } else if (node.tag) {
-        var element = parent.childNodes[index]
+        var dom = parent.childNodes[index]
 
-        updateElement(element, node.props)
+        updateElement(dom, node.props)
 
         var len = node.children.length, oldLen = oldNode.children.length
 
+        console.log(node.children, oldNode.childNodes)
+
         for (var i = 0; i < len || i < oldLen; i++) {
-            patch(element, node.children[i], oldNode.childNodes[i], i)
+            patch(dom, node.children[i], oldNode.childNodes[i], i)
         }
     }
 }
 
 function updateElement(node, data) {
     for (const name in data) { // need diff
-        if(name[0] === '$') continue
+        if (name[0] === '$') continue
         node.setAttribute(name, data[name])
     }
 }

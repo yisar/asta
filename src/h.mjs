@@ -5,23 +5,26 @@ const isArray = Array.isArray
 
 export const h = function (tag, props, ...args) {
   let children = []
-  let key = props.key
+  props = props || EMPTY_OBJ
 
-  for (let i = 0; i < props.children.length; i++) {
-    let vnode = props.children[i]
-    if (vnode === false || vnode === true || vnode == null) {
+  let key = props.key || null
+
+  for (let i = 0; i < args.length; i++) {
+    let vnode = args[i]
+    if (isArray(vnode)) {
+      for (var j = vnode.length; i-- > 0;) {
+        args.push(vnode[j])
+      }
+    } else if (vnode === false || vnode === true || vnode == null) {
     } else {
       children.push(typeof vnode === "object" ? vnode : createTextVNode(vnode))
     }
   }
 
   props.key = undefined;
-  
-  props = props || EMPTY_OBJ
-
   return typeof tag === "function"
     ? tag(props, children)
-    : createVNode(tag, props, children, props.key)
+    : createVNode(tag, props, children, key)
 }
 
 const createTextVNode = function (value) {
