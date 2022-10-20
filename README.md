@@ -5,7 +5,7 @@
 
 :dart: Asta is a highly specialized full stack framework for SSR. It has no vdom on the server side and 0 js on the client side. Finally, it gets best QPS and Google scores.
 
-> Note this is early WIP! It is not recommended to use this for anything serious yet.
+> Note this is early Development! It is not recommended to use this for anything serious yet.
 
 - no VDOM on server, 0 javascript on client.
 - write JSX and react-like syntax.
