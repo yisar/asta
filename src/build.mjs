@@ -1,8 +1,7 @@
 import esbuild from 'esbuild'
 import fs from 'fs/promises'
 import path from 'path'
-import { compile } from '../compiler/gen-sdom.mjs'
-import { compile as generateVdom } from '../compiler/gen-vdom.mjs'
+import { compile } from '../compiler/generate.mjs'
 import ScriptParser from '../compiler/acorn-parser.mjs'
 
 const dirname = new URL('.', import.meta.url).pathname
@@ -24,8 +23,6 @@ function astaPlugin(type) {
                         const { actions } = ScriptParser.parse(a);
 
                         actionMap = actions
-                    } else {
-                        var a = generateVdom(code)
                     }
 
                     return {
@@ -98,7 +95,7 @@ async function main() {
         jsxFactory: 'h',
         plugins: [
             pathPlugin('client'),
-            astaPlugin('client')
+            // astaPlugin('client')
         ],
         watch: process.env.WATCH === 'true',
     })

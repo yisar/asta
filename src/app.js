@@ -13,40 +13,29 @@ var loader = async (req) => {
   return data;
 };
 var app_default = ({ title, comments, rate, imgs, info, cover }) => {
-  return h("div", { children: [
-    h("header", { children: [
-      h("img", { "src": { cover }, "alt": "" }),
-      h("h1", { children: [title] }),
-      h("div", { "class": "rate", children: [rate] })
-    ] }),
-    h("main", { children: [
-      h("button", { "$onclick": { addCount }, children: ["\u4E0B\u8F7DTapTap\u5BA2\u6237\u7AEF"] })
-    ] }),
-    h("div", { "class": "screenshot", children: [
-      h("h3", { children: ["\u622A\u56FE"] }),
-      h("ul", { children: [
-        imgs.map((i) => h("li", { children: [
-          h("img", { "src": { i } })
-        ] }))
-      ] })
-    ] }),
-    h("div", { "class": "screenshot", children: [
-      h("h3", { children: ["\u7B80\u4ECB"] }),
-      h("p", { children: [info] })
-    ] }),
-    h("div", { "class": "comments", children: [
-      h("h3", { children: ["\u8BC4\u4EF7"] }),
-      h("ul", { children: [
-        comments.map(({ avatar, name, content }) => h("li", { children: [
-          h("div", { "class": "bio", children: [
-            h("img", { "class": "avatar", "src": { avatar } }),
-            h("b", { "class": "name", children: [name] })
-          ] }),
-          h("p", { children: [content] })
-        ] }))
-      ] })
-    ] })
-  ] });
+  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("header", null, /* @__PURE__ */ h("img", {
+    src: cover,
+    alt: ""
+  }), /* @__PURE__ */ h("h1", null, title), /* @__PURE__ */ h("div", {
+    class: "rate"
+  }, rate)), /* @__PURE__ */ h("main", null, /* @__PURE__ */ h("button", {
+    $onclick: addCount
+  }, "\u4E0B\u8F7DTapTap\u5BA2\u6237\u7AEF")), /* @__PURE__ */ h("div", {
+    class: "screenshot"
+  }, /* @__PURE__ */ h("h3", null, "\u622A\u56FE"), /* @__PURE__ */ h("ul", null, imgs.map((i) => /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("img", {
+    src: i
+  }))))), /* @__PURE__ */ h("div", {
+    class: "screenshot"
+  }, /* @__PURE__ */ h("h3", null, "\u7B80\u4ECB"), /* @__PURE__ */ h("p", null, info)), /* @__PURE__ */ h("div", {
+    class: "comments"
+  }, /* @__PURE__ */ h("h3", null, "\u8BC4\u4EF7"), /* @__PURE__ */ h("ul", null, comments.map(({ avatar, name, content }) => /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("div", {
+    class: "bio"
+  }, /* @__PURE__ */ h("img", {
+    class: "avatar",
+    src: avatar
+  }), /* @__PURE__ */ h("b", {
+    class: "name"
+  }, name)), /* @__PURE__ */ h("p", null, content))))));
 };
 export {
   app_default as default,

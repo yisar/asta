@@ -3,7 +3,7 @@ const EMPTY_OBJ = {}
 const EMPTY_ARR = []
 const isArray = Array.isArray
 
-export const h = function (tag, props) {
+export const h = function (tag, props, ...args) {
   let children = []
   let key = props.key
 
@@ -15,7 +15,6 @@ export const h = function (tag, props) {
     }
   }
 
-  props.children = undefined;
   props.key = undefined;
   
   props = props || EMPTY_OBJ

@@ -28,8 +28,11 @@ for (const event of events) {
 function resume(root) {
     window.dispatch = (newState) => {
         window.__state = { ...window.__state, ...newState }
+        const vdom = mod.default(window.__state)
+
+        console.log(vdom)
         import('./app.js').then(mod=>{
-            patch(root, mod.default(window.__state), root.firstChild, 0)
+            patch(root, vdom, root.firstChild, 0)
         }) 
     }
 
