@@ -28,10 +28,8 @@ for (const event of events) {
 function resume(root) {
     window.dispatch = (newState) => {
         window.__state = { ...window.__state, ...newState }
-        console.log(333)
         import('./app.js').then(mod => {
             const vdom = mod.default(window.__state)
-            console.log(vdom)
             patch(root, vdom, root.firstChild, 0)
         })
     }
@@ -56,13 +54,12 @@ function patch(parent, node, oldNode, index) {
         parent.removeChild(dom)
 
     } else if (oldNode.nodeName.toLowerCase() !== node.tag) {
-        console.log(oldNode,node)
         parent.replaceChild(createElement(node), parent.childNodes[index])
 
-    } else if (node.tag) {
+    } else if (node.tag) { // diff
         var dom = parent.childNodes[index]
 
-        updateElement(dom, node.props)
+        updateElement(dom, node)
 
         var len = node.children.length, oldLen = oldNode.children.length
         for (var i = 0; i < len || i < oldLen; i++) {
@@ -71,10 +68,17 @@ function patch(parent, node, oldNode, index) {
     }
 }
 
-function updateElement(node, data) {
-    for (const name in data) { // need diff
+function updateElement(node, vnode) {
+    for (const name in vnode.props) { // need diff
         if (name[0] === '$') continue
-        node.setAttribute(name, data[name])
+        if (!(name in node.attributes) || node.getAttribute(name) !== vnode.props[name]) {
+            if (name in node) {
+                node[name] = vnode.props[name]
+            } else {
+                node.setAttribute(name, vnode.props[name])
+            }
+        }
+
     }
 }
 
