@@ -20,7 +20,7 @@ export default ({ title, comments, rate, imgs, info, cover, count }) => {
 				<div class="rate">{rate}</div>
 			</header>
 			<main>
-				<button $onclick={addCount}>{count}</button>
+				<button $onclick={addCount}>Count: {count}</button>
 			</main>
 			<div class="screenshot">
 				<h3>截图</h3>

@@ -24,7 +24,7 @@ var app_default = ({ title, comments, rate, imgs, info, cover, count }) => {
     class: "rate"
   }, rate)), /* @__PURE__ */ h("main", null, /* @__PURE__ */ h("button", {
     $onclick: addCount
-  }, count)), /* @__PURE__ */ h("div", {
+  }, "Count: ", count)), /* @__PURE__ */ h("div", {
     class: "screenshot"
   }, /* @__PURE__ */ h("h3", null, "\u622A\u56FE"), /* @__PURE__ */ h("ul", null, imgs.map((i) => /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("img", {
     src: i

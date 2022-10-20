@@ -3,21 +3,41 @@ const EMPTY_OBJ = {}
 const EMPTY_ARR = []
 const isArray = Array.isArray
 
+let simpleNode = '';
+
 export const h = function (tag, props, ...args) {
   let children = []
   props = props || EMPTY_OBJ
+
 
   let key = props.key || null
 
   for (let i = 0; i < args.length; i++) {
     let vnode = args[i]
+    const isEnd = i === args.length - 1;
+
     if (isArray(vnode)) {
       for (var j = vnode.length; j-- > 0;) {
         args.push(vnode[j])
       }
     } else if (vnode === false || vnode === true || vnode == null) {
+      vnode = ''
     } else {
-      children.push(typeof vnode === "object" ? vnode : createTextVNode(vnode))
+      const isStrNode = isStr(vnode);
+      // merge simple nodes
+      if (isStrNode) {
+        simpleNode += String(vnode);
+      }
+
+      if (simpleNode && (!isStrNode || isEnd)) {
+        children.push(createText(simpleNode));
+        simpleNode = '';
+      }
+
+      if (!isStrNode) {
+        children.push(vnode)
+      }
+
     }
   }
 
@@ -27,9 +47,11 @@ export const h = function (tag, props, ...args) {
     : createVNode(tag, props, children, key)
 }
 
-const createTextVNode = function (value) {
+const createText = function (value) {
   return createVNode(value, EMPTY_OBJ, EMPTY_ARR, null, TEXT_NODE)
 }
+
+const isStr = x => typeof x === 'string' || typeof x === 'number'
 
 const createVNode = function (tag, props, children, key, type) {
   return {
