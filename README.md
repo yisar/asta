@@ -90,6 +90,21 @@ There is only a single state tree, and components are pure functions without sta
 
 These helps to completely solve performance problems.
 
+### 中文概括下？
+
+Asta 的核心是根治性能问题，已知的 SSR 框架有几个性能瓶颈：
+
+1. server 端的 vdom 开销，组件开销
+
+- server 端生成和遍历 vdom 成本是巨大的，asta 在 server 端没有 vdom，它通过一个特殊的编译器将 jsx 编译成 s 函数，只用来拼接字符串
+
+- 第二点，server 端组件的初始化，状态更新，生命周期的开销，也是巨大的，Asta 也有组件，但它的组件是纯函数，也只用来拼接字符串，没有任何私有状态和生命周期，这得益于 Elm 的心智模型，单 state tree，组件是纯函数
+
+2. client 0 js
+
+一个新兴的概念，叫做 Resumable，client 不再水合，而是将必要的信息序列化到 html 里，然后直接从 html 进行恢复，所有的 js 都根据交互懒加载，这样就可以做到 0 js，0 水合，而且这是 O(1) 的，不会因为业务增长而性能下降
+
+Asta 双重优化，彻底根除 SSR 的性能瓶颈
 
 
 
