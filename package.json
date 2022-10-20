@@ -27,6 +27,7 @@
     "chalk": "^5.1.2",
     "es-module-lexer": "^1.0.3",
     "esbuild": "^0.15.10",
+    "esbuild-darwin-arm64": "^0.15.11",
     "polka": "^0.5.2",
     "sirv": "^2.0.2"
   }
