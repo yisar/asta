@@ -28,8 +28,10 @@ for (const event of events) {
 function resume(root) {
     window.dispatch = (newState) => {
         window.__state = { ...window.__state, ...newState }
+        console.log(333)
         import('./app.js').then(mod => {
             const vdom = mod.default(window.__state)
+            console.log(vdom)
             patch(root, vdom, root.firstChild, 0)
         })
     }
@@ -63,9 +65,6 @@ function patch(parent, node, oldNode, index) {
         updateElement(dom, node.props)
 
         var len = node.children.length, oldLen = oldNode.children.length
-
-        console.log(node.children, oldNode.childNodes)
-
         for (var i = 0; i < len || i < oldLen; i++) {
             patch(dom, node.children[i], oldNode.childNodes[i], i)
         }

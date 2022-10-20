@@ -1,6 +1,7 @@
 import {h} from './h.mjs';
 // asta-path:~action/count.js
 var addCount = (state, event) => {
+  console.log(123);
   return {
     ...state,
     count: state.count + 1
@@ -10,9 +11,12 @@ var addCount = (state, event) => {
 // demo/app.jsx
 var loader = async (req) => {
   const data = await fetch("http://localhost:1234/data").then((res) => res.json()).then((data2) => data2);
-  return data;
+  return {
+    ...data,
+    count: 0
+  };
 };
-var app_default = ({ title, comments, rate, imgs, info, cover }) => {
+var app_default = ({ title, comments, rate, imgs, info, cover, count }) => {
   return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("header", null, /* @__PURE__ */ h("img", {
     src: cover,
     alt: ""
@@ -20,7 +24,7 @@ var app_default = ({ title, comments, rate, imgs, info, cover }) => {
     class: "rate"
   }, rate)), /* @__PURE__ */ h("main", null, /* @__PURE__ */ h("button", {
     $onclick: addCount
-  }, "\u4E0B\u8F7DTapTap\u5BA2\u6237\u7AEF")), /* @__PURE__ */ h("div", {
+  }, count)), /* @__PURE__ */ h("div", {
     class: "screenshot"
   }, /* @__PURE__ */ h("h3", null, "\u622A\u56FE"), /* @__PURE__ */ h("ul", null, imgs.map((i) => /* @__PURE__ */ h("li", null, /* @__PURE__ */ h("img", {
     src: i

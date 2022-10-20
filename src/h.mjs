@@ -12,7 +12,7 @@ export const h = function (tag, props, ...args) {
   for (let i = 0; i < args.length; i++) {
     let vnode = args[i]
     if (isArray(vnode)) {
-      for (var j = vnode.length; i-- > 0;) {
+      for (var j = vnode.length; j-- > 0;) {
         args.push(vnode[j])
       }
     } else if (vnode === false || vnode === true || vnode == null) {

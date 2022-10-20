@@ -4,7 +4,7 @@
 }
 
 :root {
-	--theme-color: #12a7b4;
+	--theme-color: #07b9c9;
 }
 
 li {
@@ -14,7 +14,7 @@ li {
 button {
 	background-color: var(--theme-color);
 	color: aliceblue;
-	padding: 20px 10px;
+	padding: 20px;
 	margin: 20px;
 	border: 0;
 	border-radius: 10px;

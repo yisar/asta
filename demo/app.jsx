@@ -5,10 +5,13 @@ export const loader = async (req) => {
 	const data = await fetch('http://localhost:1234/data')
 		.then((res) => res.json())
 		.then((data) => data)
-	return data
+	return {
+		...data,
+		count: 0,
+	}
 }
 
-export default ({ title, comments, rate, imgs, info, cover }) => {
+export default ({ title, comments, rate, imgs, info, cover, count }) => {
 	return (
 		<div>
 			<header>
@@ -17,7 +20,7 @@ export default ({ title, comments, rate, imgs, info, cover }) => {
 				<div class="rate">{rate}</div>
 			</header>
 			<main>
-				<button $onclick={addCount}>下载TapTap客户端</button>
+				<button $onclick={addCount}>{count}</button>
 			</main>
 			<div class="screenshot">
 				<h3>截图</h3>
