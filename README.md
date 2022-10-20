@@ -94,7 +94,7 @@ These helps to completely solve performance problems.
 
 Although JSX of fre can also be optimized at compile time, and the client side can also be selective hydrated, it is important that Fre or other Vdom-based framework components are not completely cost free.
 
-### 中文概括下？
+### 说人话？
 
 Asta 的核心是根治性能问题，已知的 SSR 框架有几个性能瓶颈：
 
