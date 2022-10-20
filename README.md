@@ -1,6 +1,9 @@
-# Asta
+<p align="center"><img width="582" alt="image" src="https://user-images.githubusercontent.com/12951461/196841103-6f109262-27a5-4f78-8795-1d59b91e8f88.png"></p>
 
-SSR resumable framework
+# Asta [![NPM version](https://img.shields.io/npm/v/asta.svg)](https://npmjs.com/package/asta) [![NPM downloads](https://img.shields.io/npm/dt/eplayer.svg)](https://npmjs.com/package/asta)
+
+:dart: SSR resumable framework.
+
 
 ### Run demo
 
