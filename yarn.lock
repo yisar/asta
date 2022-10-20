@@ -37,7 +37,7 @@ chalk@^5.1.2:
   resolved "https://registry.npmjs.org/chalk/-/chalk-5.1.2.tgz#d957f370038b75ac572471e83be4c5ca9f8e8c45"
   integrity sha512-E5CkT4jWURs1Vy5qGJye+XwCkNj7Od3Af7CP6SujMetSMkLs8Do2RWJK5yx1wamHV/op8Rz+9rltjaTQWDnEFQ==
 
-es-module-lexer@^1.0.5:
+es-module-lexer@^1.0.3:
   version "1.0.5"
   resolved "https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-1.0.5.tgz#d6d9de310a5e11cbf73b39a1d6f79e5c3df4d06f"
   integrity sha512-oxJ+R1DzAw6j4g1Lx70bIKgfoRCX67C51kH2Mx7J4bS7ZzWxkcivXskFspzgKHUj6JUwUTghQgUPy8zTp6mMBw==
@@ -142,7 +142,7 @@ esbuild-windows-arm64@0.15.11:
   resolved "https://registry.npmjs.org/esbuild-windows-arm64/-/esbuild-windows-arm64-0.15.11.tgz#018624023b5c3f0cca334cc99f5ef7134d396333"
   integrity sha512-VwUHFACuBahrvntdcMKZteUZ9HaYrBRODoKe4tIWxguQRvvYoYb7iu5LrcRS/FQx8KPZNaa72zuqwVtHeXsITw==
 
-esbuild@^0.15.11:
+esbuild@^0.15.10:
   version "0.15.11"
   resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.15.11.tgz#524d48612a9aa7edc1753c83459cb6fcae0cb66e"
   integrity sha512-OgHGuhlfZ//mToxjte1D5iiiQgWfJ2GByVMwEC/IuoXsBGkuyK1+KrjYu0laSpnN/L1UmLUCv0s25vObdc1bVg==
