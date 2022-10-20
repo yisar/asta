@@ -3,10 +3,13 @@
 
 # Asta [![NPM version](https://img.shields.io/npm/v/asta.svg)](https://npmjs.com/package/asta) [![NPM downloads](https://img.shields.io/npm/dt/eplayer.svg)](https://npmjs.com/package/asta)
 
-:dart: Asta is a highly specialized full stack framework for SSR. It has no vdom on the server side and 0 js on the client side. Finally, it gets good qps and Google scores.
+:dart: Asta is a highly specialized full stack framework for SSR. It has no vdom on the server side and 0 js on the client side. Finally, it gets best QPS and Google scores.
+
+* Note this is early WIP! It is not recommended to use this for anything serious yet. *
 
 - no VDOM on server, 0 javascript on client.
 - write JSX and react-like syntax.
+
 
 
 ### Run demo
