@@ -145,7 +145,7 @@ function patch(parent, node, vnode) {
 
 function updateNode(node, vnode) {
     for (const name in vnode.props) { // need diff
-        if (name[0] === '$') continue
+        if (name[0] === '$' || name === 'key') continue
         if (!(name in node.attributes) || node.getAttribute(name) !== vnode.props[name]) {
             if (name in node) {
                 node[name] = vnode.props[name]

@@ -13,7 +13,7 @@ export const loader = async (req) => {
 
 const Header = ({ cover, title, rate }) => (
 	<header>
-		<img src={cover} alt=""></img>
+		<img src={cover} alt=""/>
 		<h1>{title}</h1>
 		<div class="rate">{rate}</div>
 	</header>
@@ -22,7 +22,7 @@ const Header = ({ cover, title, rate }) => (
 export default ({ title, comments, rate, imgs, info, cover, count }) => {
 	return (
 		<div>
-			<Header cover={cover} title={title} rate={rate}></Header>
+			<Header cover={cover} title={title} rate={rate}/>
 			<main>
 				<button $onclick={addCount}>Count: {count}</button>
 			</main>
@@ -30,8 +30,8 @@ export default ({ title, comments, rate, imgs, info, cover, count }) => {
 				<h3>截图</h3>
 				<ul>
 					{imgs.map((i) => (
-						<li>
-							<img src={i}></img>
+						<li key={i}>
+							<img src={i}/>
 						</li>
 					))}
 				</ul>
@@ -46,9 +46,9 @@ export default ({ title, comments, rate, imgs, info, cover, count }) => {
 				<h3>评价</h3>
 				<ul>
 					{comments.map(({ avatar, name, content }) => (
-						<li>
+						<li key={name}>
 							<div class="bio">
-								<img class="avatar" src={avatar}></img>
+								<img class="avatar" src={avatar}/>
 								<b class="name">{name}</b>
 							</div>
 							<p>{content}</p>

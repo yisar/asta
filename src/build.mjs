@@ -20,6 +20,7 @@ function astaPlugin(type) {
 
                     if (type === 'server') {
                         var a = compile(code)
+                        console.log(a)
                         const { actions } = ScriptParser.parse(a);
                         actionMap = actions
                     }

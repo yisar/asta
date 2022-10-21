@@ -67,7 +67,7 @@ function generate(tree) {
         const value = tree.value;
         const data = value[4];
         const dataGenerated = generate(data);
-        return `${generate(value[1])}${generateName(value[2])}${generate(value[3])}(${data.type === "attributes" ? `{${dataGenerated.output}}` : dataGenerated
+        return `${generate(value[1])}${generateName(value[2])}${generate(value[3])},${data.type === "attributes" ? `{${dataGenerated.output}}` : dataGenerated
             })`;
     } else if (type === "nodeDataChildren") {
         const value = tree.value;
