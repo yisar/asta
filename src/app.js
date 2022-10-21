@@ -1,6 +1,7 @@
 import {h} from './h.mjs';
 // asta-path:~action/count.js
-var addCount = (state, event) => {
+var addCount = async (state, event) => {
+  await new Promise((r) => setTimeout(() => r(), 1e3));
   return {
     ...state,
     count: state.count + 1

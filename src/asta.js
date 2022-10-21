@@ -9,8 +9,8 @@ function parseURLParams(url) {
 }
 function $import(url, e) {
     const { mod } = parseURLParams(url)
-    import(url).then(mods => {
-        const newState = mods[mod](window.__state, e)
+    import(url).then(async (mods) => {
+        const newState = await mods[mod](window.__state, e)
         window.dispatch(newState)
     })
 }

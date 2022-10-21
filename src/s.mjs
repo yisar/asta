@@ -9,7 +9,7 @@ export const s = {
             if (typeof attrs[name] === 'object') {
                 value = Object.values(attrs[name])[0].toString().replace(/[\s]/g, '')
             }
-            code += ` ${name}="${value}"`
+            code += ` ${name}="${value || ''}"`
         }
         code += '>'
         return code
