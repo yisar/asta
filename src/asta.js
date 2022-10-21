@@ -170,7 +170,7 @@ function createNode(vdom) {
             )
         )
     }
-    return (vdom.node = dom)
+    return dom
 }
 
 resume(document.body)
