@@ -7,6 +7,9 @@
     "start": "node demo/server.mjs",
     "build": "node src/build.mjs"
   },
+  "engines": {
+    "node": ">=17.5.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yisar/asta.git"
