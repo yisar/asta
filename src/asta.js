@@ -67,14 +67,14 @@ function patch(parent, node, vnode) {
             if (oldKey = getKey(oldKids[oldHead]) == null || oldKey !== getKey(newKids[newHead])) {
                 break
             }
-            patch(node, oldKids[oldHead++], newKids[newHead++], 0)
+            patch(node, oldKids[oldHead++], newKids[newHead++])
         }
 
         while (newHead <= newTail && oldHead <= oldTail) {
             if (oldKey = getKey(oldKids[oldTail]) == null || oldKey !== getKey(newKids[newTail])) {
                 break
             }
-            patch(node, oldKids[oldTail--], newKids[newTail--], 0)
+            patch(node, oldKids[oldTail--], newKids[newTail--])
         }
 
         if (oldHead > oldTail) {
@@ -170,7 +170,7 @@ function createNode(vdom) {
             )
         )
     }
-    return (vdom.node = dom)
+    return dom
 }
 
 resume(document.body)
