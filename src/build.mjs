@@ -21,7 +21,6 @@ function astaPlugin(type) {
                     if (type === 'server') {
                         var a = compile(code)
                         const { actions } = ScriptParser.parse(a);
-
                         actionMap = actions
                     }
 

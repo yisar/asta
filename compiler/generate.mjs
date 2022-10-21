@@ -3,10 +3,18 @@ const whitespaceRE = /^\s+$/;
 
 const textSpecialRE = /(^|[^\\])("|\n)/g;
 
+export const isComponent = type => type[0] === type[0].toUpperCase() && type[0] !== type[0].toLowerCase()
+
 function generateName(nameTree, close) {
     const name = generate(nameTree);
-    let tag = close ? 's.closeTag' : 's.openTag'
-    return `${tag}('${name}'`
+    const isComp = isComponent(name)
+    let tag = ''
+    if (isComp) {
+        tag = close ? 's.empty' : 's.component'
+    } else {
+        tag = close ? 's.closeTag' : 's.openTag'
+    }
+    return isComp ? `${tag}(${name}` : `${tag}('${name}'`
 }
 
 function generate(tree) {
@@ -35,7 +43,6 @@ function generate(tree) {
         if (output.length > 0) {
             output += ","
         }
-
         return {
             output,
             separator
@@ -82,7 +89,7 @@ function generate(tree) {
                     if (childGenerated.isWhitespace) {
                         childrenGenerated += childGenerated.output;
                     } else {
-                        childrenGenerated +=  childGenerated.output;
+                        childrenGenerated += childGenerated.output;
                     }
                 } else {
                     childrenGenerated += childGenerated + '+';
@@ -109,4 +116,4 @@ ${format(input, ast.index)}`);
     return generate(ast[0][0]);
 }
 
-export {compile}
+export { compile }
