@@ -30,7 +30,7 @@ function resume(root) {
         window.__state = { ...window.__state, ...newState }
         import('./app.js').then(mod => {
             const vdom = mod.default(window.__state)
-            patch(root, root.firstChild, vdom, 0)
+            patch(root, root.firstChild, vdom)
         })
     }
 
