@@ -30,45 +30,120 @@ function resume(root) {
         window.__state = { ...window.__state, ...newState }
         import('./app.js').then(mod => {
             const vdom = mod.default(window.__state)
-            patch(root, vdom, root.firstChild, 0)
+            patch(root, root.firstChild, vdom, 0)
         })
     }
 
 }
 
-function patch(parent, node, oldNode, index) {
-    if (node.type === 3 && oldNode.nodeType === 3) {
-        if (oldNode.nodeValue !== node.tag) {
-            oldNode.nodeValue = node.tag
+var getKey = (vdom) => (vdom == null ? vdom : vdom.key)
+
+
+function patch(parent, node, vnode) {
+    if (vnode.type === 3 && node.nodeType === 3) {
+        if (node.nodeValue !== vnode.tag) {
+            node.nodeValue = vnode.tag
         }
 
     }
-    else if (!oldNode) {
-        parent.appendChild(createElement(node))
-
-    } else if (!node) {
-        while (index > 0 && !parent.childNodes[index]) {
-            index--
+    else if (node == null || node.nodeName.toLowerCase() !== vnode.tag) {
+        parent.insertBefore(createNode(vnode))
+        if (node != null) {
+            parent.removeChild(node)
         }
-        var dom = parent.childNodes[index]
-        parent.removeChild(dom)
 
-    } else if (oldNode.nodeName.toLowerCase() !== node.tag) {
-        parent.replaceChild(createElement(node), parent.childNodes[index])
+    } else {
+        let oldHead = 0,
+            newHead = 0,
+            oldKids = node.childNodes,
+            newKids = vnode.children,
+            oldTail = oldKids.length - 1,
+            newTail = newKids.length - 1,
+            oldKey
 
-    } else if (node.tag) { // diff
-        var dom = parent.childNodes[index]
+        updateNode(node, vnode)
 
-        updateElement(dom, node)
-
-        var len = node.children.length, oldLen = oldNode.children.length
-        for (var i = 0; i < len || i < oldLen; i++) {
-            patch(dom, node.children[i], oldNode.childNodes[i], i)
+        while (newHead <= newTail && oldHead <= oldTail) {
+            if (oldKey = getKey(oldKids[oldHead]) == null || oldKey !== getKey(newKids[newHead])) {
+                break
+            }
+            patch(node, oldKids[oldHead++], newKids[newHead++], 0)
         }
+
+        while (newHead <= newTail && oldHead <= oldTail) {
+            if (oldKey = getKey(oldKids[oldTail]) == null || oldKey !== getKey(newKids[newTail])) {
+                break
+            }
+            patch(node, oldKids[oldTail--], newKids[newTail--], 0)
+        }
+
+        if (oldHead > oldTail) {
+            while (newHead <= newTail) {
+                node.insertBefore(createNode(newKids[newHead++]), oldKids[oldHead])
+            }
+        } else if (newHead > newTail) {
+            while (oldHead <= oldTail) {
+                node.removeChild(oldKids[oldHead++])
+            }
+
+        } else {
+            for (var keyed = {}, newKeyed = {}, i = oldHead; i <= oldTail; i++) {
+                if (oldKids[i].key != null) {
+                    keyed[oldKids[i].key] = oldKids[i]
+                }
+            }
+            while (newHead <= newTail) {
+                let oldKey = getKey(oldKids[oldHead])
+                let newKey = getKey(newKids[newHead])
+
+                if (newKeyed[oldKey] || (newKey != null && newKey === getKey(oldKids[oldHead + 1]))) {
+                    if (oldKey == null) {
+                        node.removeChild(oldKids[oldHead])
+                    }
+                    oldHead++
+                    continue
+                }
+
+                if (newKey == null) {
+                    if (oldKey == null) {
+                        patch(node, oldKids[oldHead], newKids[newHead])
+                        newHead++
+                    }
+                    oldHead++
+                } else {
+                    if (oldKey === newKey) {
+                        patch(node, oldKids[oldHead], newKids[newHead])
+                        newKeyed[newKey] = true
+                        oldHead++
+                    } else {
+                        if (keyed[newKey] != null) {
+                            patch(node, node.insertBefore(keyed[newKey], oldKids[oldHead]), newKids[newHead])
+                            newKeyed[newKey] = true
+                        } else {
+                            patch(node, oldkids[oldHead], newKids[newHead])
+                        }
+                    }
+                    newHead++
+                }
+            }
+
+            while (oldHead <= oldTail) {
+                if (getKey(oldkids[oldHead++]) == null) {
+                    node.removeChild(oldKids[oldHead])
+                }
+            }
+
+            for (const i in keyed) {
+                if (newKeyed[i] == null) {
+                    node.removeChild(keyed[i])
+                }
+            }
+        }
+
     }
 }
 
-function updateElement(node, vnode) {
+function updateNode(node, vnode) {
     for (const name in vnode.props) { // need diff
         if (name[0] === '$') continue
         if (!(name in node.attributes) || node.getAttribute(name) !== vnode.props[name]) {
@@ -82,15 +157,15 @@ function updateElement(node, vnode) {
     }
 }
 
-function createElement(vdom) {
+function createNode(vdom) {
     const dom =
         vdom.type === 3
             ? document.createTextNode('')
-            : document.createElement(vdom.tag)
+            : document.createNode(vdom.tag)
 
     for (var i = 0; i < vdom.children.length; i++) {
         dom.appendChild(
-            createElement(
+            createNode(
                 vdom.children[i]
             )
         )
