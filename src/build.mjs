@@ -1,10 +1,12 @@
 import esbuild from 'esbuild'
 import fs from 'fs/promises'
-import path from 'path'
+import path from 'node:path'
+import url from 'node:url'
 import { compile } from '../compiler/generate.mjs'
 import ScriptParser from '../compiler/acorn-parser.mjs'
 
-const dirname = new URL('.', import.meta.url).pathname
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 let actionMap = {}
 
@@ -52,7 +54,7 @@ export function pathPlugin(type) {
                     code += `export const ${map.name} = '${map.value}';`
                 } else {
                     const p = args.path.replace(/~action/g, './action')
-                    const file = await fs.readFile(path.join(dirname, '../demo', p))
+                    const file = await fs.readFile(path.join(__dirname, '../demo', p))
 
                     code = file.toString()
                     console.log(code)
@@ -70,7 +72,7 @@ export function pathPlugin(type) {
 
 async function main() {
     const res = await esbuild.build({
-        entryPoints: [path.join(dirname, '../demo/app.jsx')],
+        entryPoints: [path.join(__dirname, '../demo/app.jsx')],
         bundle: true,
         platform: 'node',
         format: 'esm',
@@ -85,7 +87,7 @@ async function main() {
     })
 
     const res2 = await esbuild.build({
-        entryPoints: [path.join(dirname, '../demo/app.jsx')],
+        entryPoints: [path.join(__dirname, '../demo/app.jsx')],
         bundle: true,
         platform: 'browser',
         format: 'esm',
@@ -105,15 +107,15 @@ async function main() {
     const str = String.fromCharCode.apply(null, new Uint8Array(buf))
     const str2 = String.fromCharCode.apply(null, new Uint8Array(buf2))
 
-    await fs.writeFile(path.join(dirname, './app.mjs'), `import {s} from './s.mjs';\n` + str)
+    await fs.writeFile(path.join(__dirname, './app.mjs'), `import {s} from './s.mjs';\n` + str)
 
-    await fs.writeFile(path.join(dirname, './app.js'), `import {h} from './h.mjs';\n` + str2)
+    await fs.writeFile(path.join(__dirname, './app.js'), `import {h} from './h.mjs';\n` + str2)
 
     await fs.mkdir('./src/action', { recursive: true })
     await fs.mkdir('./src/public', { recursive: true })
 
-    await fs.copyFile(path.join(dirname, "../demo/action/count.js"), path.join(dirname, "./action/count.js"))
-    await fs.copyFile(path.join(dirname, "../demo/public/style.css"), path.join(dirname, "./public/style.css"))
+    await fs.copyFile(path.join(__dirname, "../demo/action/count.js"), path.join(__dirname, "./action/count.js"))
+    await fs.copyFile(path.join(__dirname, "../demo/public/style.css"), path.join(__dirname, "./public/style.css"))
 }
 
 main()
