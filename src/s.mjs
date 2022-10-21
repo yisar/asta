@@ -25,6 +25,20 @@ export const s = {
         } else {
             return ''
         }
+    },
+    component(comp, attrs){
+        let props = {}
+        for (const name in attrs) {
+            let value = attrs[name]
+            if (typeof attrs[name] === 'object') {
+                value = Object.values(attrs[name])[0]
+            }
+            props[name] = value
+        }
+        return comp(props)
+    },
+    empty(){
+        return ''
     }
 }
 

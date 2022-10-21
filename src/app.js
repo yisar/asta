@@ -16,13 +16,18 @@ var loader = async (req) => {
     count: 0
   };
 };
+var Header = ({ cover, title, rate }) => /* @__PURE__ */ h("header", null, /* @__PURE__ */ h("img", {
+  src: cover,
+  alt: ""
+}), /* @__PURE__ */ h("h1", null, title), /* @__PURE__ */ h("div", {
+  class: "rate"
+}, rate));
 var app_default = ({ title, comments, rate, imgs, info, cover, count }) => {
-  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h("header", null, /* @__PURE__ */ h("img", {
-    src: cover,
-    alt: ""
-  }), /* @__PURE__ */ h("h1", null, title), /* @__PURE__ */ h("div", {
-    class: "rate"
-  }, rate)), /* @__PURE__ */ h("main", null, /* @__PURE__ */ h("button", {
+  return /* @__PURE__ */ h("div", null, /* @__PURE__ */ h(Header, {
+    cover,
+    title,
+    rate
+  }), /* @__PURE__ */ h("main", null, /* @__PURE__ */ h("button", {
     $onclick: addCount
   }, "Count: ", count)), /* @__PURE__ */ h("div", {
     class: "screenshot"

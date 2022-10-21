@@ -11,14 +11,18 @@ export const loader = async (req) => {
 	}
 }
 
+const Header = ({ cover, title, rate }) => (
+	<header>
+		<img src={cover} alt=""></img>
+		<h1>{title}</h1>
+		<div class="rate">{rate}</div>
+	</header>
+)
+
 export default ({ title, comments, rate, imgs, info, cover, count }) => {
 	return (
 		<div>
-			<header>
-				<img src={cover} alt=""></img>
-				<h1>{title}</h1>
-				<div class="rate">{rate}</div>
-			</header>
+			<Header cover={cover} title={title} rate={rate}></Header>
 			<main>
 				<button $onclick={addCount}>Count: {count}</button>
 			</main>
