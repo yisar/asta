@@ -3,11 +3,12 @@ import chalk from 'chalk'
 import sirv from 'sirv'
 import fs from 'fs/promises'
 
-function serve(options) {
+export default function serve(options) {
+    console.log(options)
     const app = polka()
-        .use(sirv(options.o))
+        .use(sirv(options.serverOutputDir))
         .get("/", async (req, res) => {
-            const module = await import(options.clientOutput)
+            const module = await import(options.serverOutput)
             const state = await module.loader(req)
             const html = module.default(state)
             const str = `
@@ -38,4 +39,3 @@ function serve(options) {
         })
     return app.server
 }
-serve({ clientOutput: '../src/app.mjs' })

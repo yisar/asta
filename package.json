@@ -1,11 +1,14 @@
 {
   "name": "asta",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "SSR resumable framework",
   "main": "index.js",
   "scripts": {
     "start": "node demo/server.mjs",
     "build": "node src/build.mjs"
+  },
+  "bin": {
+    "asta": "bin/index.js"
   },
   "engines": {
     "node": ">=17.5.0"
