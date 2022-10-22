@@ -15,7 +15,6 @@
 ### Run demo
 
 ```shell
-yarn build
 yarn start
 ```
 

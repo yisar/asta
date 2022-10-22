@@ -82,7 +82,7 @@ export function pathPlugin(type) {
 }
 
 
-async function main() {
+export async function build() {
     await esbuild.build({
         entryPoints: [path.join(__dirname, '../demo/app.jsx')],
         bundle: true,
@@ -115,5 +115,3 @@ async function main() {
     await fse.copy(path.join(process.cwd(), 'demo/public'), path.join(__dirname, 'public'))
     await fse.copy(path.join(process.cwd(), 'demo/action'), path.join(__dirname, 'action'))
 }
-
-main()

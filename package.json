@@ -4,8 +4,7 @@
   "description": "SSR resumable framework",
   "main": "index.js",
   "scripts": {
-    "start": "node src/cli.mjs -e ./demo -o ./src",
-    "build": "node src/build.mjs"
+    "start": "node src/cli.mjs -e ./demo -o ./src"
   },
   "bin": {
     "asta": "bin/index.js"

@@ -1,5 +1,6 @@
 import path from 'path'
 import url from 'node:url'
+import {build} from './build.mjs'
 
 
 const __filename = url.fileURLToPath(import.meta.url)
@@ -44,6 +45,8 @@ async function start(options) {
 
     const serverEntry = path.join(process.cwd(), options.entryDir, 'server.mjs')
     const serverOutputDir = __dirname
+
+    await build(options)
 
     const mod = await import(serverEntry)
     mod.default({ serverOutput, serverOutputDir })
