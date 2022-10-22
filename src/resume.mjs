@@ -25,7 +25,7 @@ for (const event of events) {
     })
 }
 
-function resume(root) {
+export function resume(root) {
     window.dispatch = (newState) => {
         window.__state = { ...window.__state, ...newState }
         import('./app.js').then(mod => {
@@ -36,7 +36,9 @@ function resume(root) {
 
 }
 
-var getKey = (vdom) => (vdom == null ? vdom : vdom.key)
+var getKey = (vdom) => {
+    return vdom == null ? vdom :vdom.getAttribute ? vdom.getAttribute('key') : vdom.key
+}
 
 
 function patch(parent, node, vnode) {
@@ -120,7 +122,7 @@ function patch(parent, node, vnode) {
                             patch(node, node.insertBefore(keyed[newKey], oldKids[oldHead]), newKids[newHead])
                             newKeyed[newKey] = true
                         } else {
-                            patch(node, oldkids[oldHead], newKids[newHead])
+                            patch(node, oldKids[oldHead], newKids[newHead])
                         }
                     }
                     newHead++
@@ -128,7 +130,7 @@ function patch(parent, node, vnode) {
             }
 
             while (oldHead <= oldTail) {
-                if (getKey(oldkids[oldHead++]) == null) {
+                if (getKey(oldKids[oldHead++]) == null) {
                     node.removeChild(oldKids[oldHead])
                 }
             }
@@ -161,7 +163,7 @@ function createNode(vdom) {
     const dom =
         vdom.type === 3
             ? document.createTextNode('')
-            : document.createNode(vdom.tag)
+            : document.createElement(vdom.tag)
 
     for (var i = 0; i < vdom.children.length; i++) {
         dom.appendChild(
@@ -172,5 +174,3 @@ function createNode(vdom) {
     }
     return dom
 }
-
-resume(document.body)

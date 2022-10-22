@@ -45,10 +45,8 @@ async function start(options) {
     const serverEntry = path.join(process.cwd(), options.entryDir, 'server.mjs')
     const serverOutputDir = __dirname
 
-    import(serverEntry).then(mod => {
-        console.log(mod)
-        mod.default({ serverOutput, serverOutputDir })
-    })
+    const mod = await import(serverEntry)
+    mod.default({ serverOutput, serverOutputDir })
 }
 
 run(process.argv.slice(2))

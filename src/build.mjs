@@ -4,6 +4,7 @@ import path from 'node:path'
 import url from 'node:url'
 import { compile } from '../compiler/generate.mjs'
 import ScriptParser from '../compiler/acorn-parser.mjs'
+import fse from 'fs-extra'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -82,7 +83,7 @@ export function pathPlugin(type) {
 
 
 async function main() {
-    const res = await esbuild.build({
+    await esbuild.build({
         entryPoints: [path.join(__dirname, '../demo/app.jsx')],
         bundle: true,
         platform: 'node',
@@ -96,7 +97,7 @@ async function main() {
         watch: process.env.WATCH === 'true',
     })
 
-    const res2 = await esbuild.build({
+    await esbuild.build({
         entryPoints: [path.join(__dirname, '../demo/app.jsx')],
         bundle: true,
         platform: 'browser',
@@ -111,11 +112,8 @@ async function main() {
         watch: process.env.WATCH === 'true',
     })
 
-    await fs.mkdir('./src/action', { recursive: true })
-    await fs.mkdir('./src/public', { recursive: true })
-
-    await fs.copyFile(path.join(__dirname, "../demo/action/count.js"), path.join(__dirname, "./action/count.js"))
-    await fs.copyFile(path.join(__dirname, "../demo/public/style.css"), path.join(__dirname, "./public/style.css"))
+    await fse.copy(path.join(process.cwd(), 'demo/public'), path.join(__dirname, 'public'))
+    await fse.copy(path.join(process.cwd(), 'demo/action'), path.join(__dirname, 'action'))
 }
 
 main()

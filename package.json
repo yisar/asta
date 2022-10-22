@@ -4,7 +4,7 @@
   "description": "SSR resumable framework",
   "main": "index.js",
   "scripts": {
-    "start": "node demo/server.mjs",
+    "start": "node src/cli.mjs -e ./demo -o ./src",
     "build": "node src/build.mjs"
   },
   "bin": {
@@ -33,6 +33,7 @@
     "chalk": "^5.1.2",
     "es-module-lexer": "^1.0.3",
     "esbuild": "^0.15.10",
+    "fs-extra": "^10.1.0",
     "polka": "^0.5.2",
     "sirv": "^2.0.2"
   }

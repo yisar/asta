@@ -2,6 +2,7 @@ import polka from 'polka'
 import chalk from 'chalk'
 import sirv from 'sirv'
 import fs from 'fs/promises'
+import path from 'path'
 
 export default function serve(options) {
     console.log(options)
@@ -26,11 +27,11 @@ export default function serve(options) {
             <script>
             window.__state = ${JSON.stringify(state)}
             </script>
-            <script type="module" src="./resume.js"></script></script><body>${html}</body>
+            <script type="module" src="/public/client.mjs"></script></script><body>${html}</body>
 </html>`
             res.end(str)
         }).get('/data', async (req, res) => {
-            const json = await fs.readFile('./src/public/data.json')
+            const json = await fs.readFile(path.join(options.serverOutputDir, 'public/data.json'))
             res.end(json)
         })
         .listen(1234, (err) => {
