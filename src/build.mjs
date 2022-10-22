@@ -19,17 +19,28 @@ function astaPlugin(type) {
                 { filter: /.*/, }, async (args) => {
                     const content = await fs.readFile(args.path)
                     const code = content.toString()
+                    let res = ''
 
                     if (type === 'server') {
-                        var a = compile(code)
-                        console.log(a)
-                        const { actions } = ScriptParser.parse(a);
+                        res += compile(code)
+                        const { actions } = ScriptParser.parse(res);
                         actionMap = actions
+
+                    } else {
+                        res += code
+                    }
+
+                    if (/\.(?:j|t)sx\b/.test(args.path)) {
+                        if (type === 'server') {
+                            res = `import {s} from '../src/s.mjs';` + res
+                        } else {
+                            res = `import {h} from '../src/h.mjs';` + res
+                        }
                     }
 
                     return {
-                        contents: a,
-                        loader: 'js',
+                        contents: res,
+                        loader: 'jsx',
                     };
                 }
             );
@@ -55,9 +66,7 @@ export function pathPlugin(type) {
                 } else {
                     const p = args.path.replace(/~action/g, './action')
                     const file = await fs.readFile(path.join(__dirname, '../demo', p))
-
                     code = file.toString()
-                    console.log(code)
                 }
 
                 return {
@@ -65,6 +74,8 @@ export function pathPlugin(type) {
                     loader: 'js',
                 }
             })
+
+
         }
     }
 }
@@ -76,7 +87,6 @@ async function main() {
         bundle: true,
         platform: 'node',
         format: 'esm',
-        write: false,
         treeShaking: false,
         outfile: 'src/app.mjs',
         plugins: [
@@ -91,25 +101,15 @@ async function main() {
         bundle: true,
         platform: 'browser',
         format: 'esm',
-        write: false,
         treeShaking: false,
         outfile: 'src/app.js',
         jsxFactory: 'h',
         plugins: [
             pathPlugin('client'),
-            // astaPlugin('client')
+            astaPlugin('client')
         ],
         watch: process.env.WATCH === 'true',
     })
-
-    const buf = res.outputFiles[0].contents
-    const buf2 = res2.outputFiles[0].contents
-    const str = String.fromCharCode.apply(null, new Uint8Array(buf))
-    const str2 = String.fromCharCode.apply(null, new Uint8Array(buf2))
-
-    await fs.writeFile(path.join(__dirname, './app.mjs'), `import {s} from './s.mjs';\n` + str)
-
-    await fs.writeFile(path.join(__dirname, './app.js'), `import {h} from './h.mjs';\n` + str2)
 
     await fs.mkdir('./src/action', { recursive: true })
     await fs.mkdir('./src/public', { recursive: true })

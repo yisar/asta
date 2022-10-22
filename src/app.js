@@ -1,4 +1,53 @@
-import {h} from './h.mjs';
+// src/h.mjs
+var TEXT_NODE = 3;
+var EMPTY_OBJ = {};
+var EMPTY_ARR = [];
+var isArray = Array.isArray;
+var simpleNode = "";
+var h = function(tag, props, ...args) {
+  let children = [];
+  props = props || EMPTY_OBJ;
+  let key = props.key || null;
+  for (let i = 0; i < args.length; i++) {
+    let vnode = args[i];
+    const isEnd = i === args.length - 1;
+    if (isArray(vnode)) {
+      for (var j = vnode.length; j-- > 0; ) {
+        args.push(vnode[j]);
+      }
+    } else if (vnode === false || vnode === true || vnode == null) {
+      vnode = "";
+    } else {
+      const isStrNode = isStr(vnode);
+      if (isStrNode) {
+        simpleNode += String(vnode);
+      }
+      if (simpleNode && (!isStrNode || isEnd)) {
+        children.push(createText(simpleNode));
+        simpleNode = "";
+      }
+      if (!isStrNode) {
+        children.push(vnode);
+      }
+    }
+  }
+  props.key = void 0;
+  return typeof tag === "function" ? tag(props, children) : createVNode(tag, props, children, key);
+};
+var createText = function(value) {
+  return createVNode(value, EMPTY_OBJ, EMPTY_ARR, null, TEXT_NODE);
+};
+var isStr = (x) => typeof x === "string" || typeof x === "number";
+var createVNode = function(tag, props, children, key, type) {
+  return {
+    tag,
+    props,
+    children,
+    type,
+    key
+  };
+};
+
 // asta-path:~action/count.js
 var addCount = async (state, event) => {
   await new Promise((r) => setTimeout(() => r(), 1e3));
