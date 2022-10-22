@@ -7,12 +7,10 @@ function serve(options) {
     const app = polka()
         .use(sirv(options.o))
         .get("/", async (req, res) => {
-            const module = await import('../src/app.mjs')
+            const module = await import(options.clientOutput)
             const state = await module.loader(req)
             const html = module.default(state)
             const str = `
-            
-          
           <!DOCTYPE html>
 <html>
 <head>
@@ -22,13 +20,12 @@ function serve(options) {
     <link rel="icon" href="data:" />
     <link rel="stylesheet" href="/public/style.css">
     <meta name="referrer" content="no-referrer" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-
             <script>
             window.__state = ${JSON.stringify(state)}
             </script>
-          <script type="module" src="./asta.js"></script></script><body>${html}</body>
+            <script type="module" src="./resume.js"></script></script><body>${html}</body>
 </html>`
             res.end(str)
         }).get('/data', async (req, res) => {
@@ -41,4 +38,4 @@ function serve(options) {
         })
     return app.server
 }
-serve({ o: './src' })
+serve({ clientOutput: '../src/app.mjs' })
