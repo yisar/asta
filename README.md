@@ -52,7 +52,7 @@ output:
 
 ### Compiler
 
-Sdom in server, Vdom in client
+Jointing on server, Resumable on client
 
 ```js
 // jsx input
