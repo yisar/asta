@@ -12,9 +12,7 @@ var h = function(tag, props, ...args) {
     let vnode = args[i];
     const isEnd = i === args.length - 1;
     if (isArray(vnode)) {
-      for (var j = vnode.length; j-- > 0; ) {
-        args.push(vnode[j]);
-      }
+      children.push(...vnode);
     } else if (vnode === false || vnode === true || vnode == null) {
       vnode = "";
     } else {
