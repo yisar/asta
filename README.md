@@ -37,7 +37,7 @@ export const loader = async (req) => {
 export default ({ count }) => {
 	return (
 		<main>
-			<button $onclick={addCount}>{count}</button>
+			<button onclick={addCount}>{count}</button>
 		</main>
 	)
 }
