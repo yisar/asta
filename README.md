@@ -24,7 +24,7 @@ yarn start
 input:
 
 ```jsx
-const addCount = () => $import('./action.js?mod=addCount')
+const addCount = $import('./action.js#addCount')
 
 // state: will run in server and inject to client
 export const loader = async (req) => {
