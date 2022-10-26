@@ -46,14 +46,20 @@ var createVNode = function(tag, props, children, key, type) {
   };
 };
 
-// asta-path:~action/count.js
-var addCount = async (state, event) => {
-  await new Promise((r) => setTimeout(() => r(), 1e3));
-  return {
-    ...state,
-    count: state.count + 1
-  };
-};
+// src/$import.mjs
+function $import(url, e) {
+  if (typeof window === "undefined") {
+    return url;
+  } else {
+    console.log(url);
+    const [path, mod] = url.split("#");
+    console.log(path);
+    import(path).then(async (mods) => {
+      const newState = await mods[mod](window.__state, e);
+      window.dispatch(newState);
+    });
+  }
+}
 
 // demo/app.jsx
 var loader = async (req) => {
@@ -63,6 +69,7 @@ var loader = async (req) => {
     count: 0
   };
 };
+var addCount = $import("./action/count.js#addCount");
 var Header = ({ cover, title, rate }) => /* @__PURE__ */ h("header", null, /* @__PURE__ */ h("img", {
   src: cover,
   alt: ""

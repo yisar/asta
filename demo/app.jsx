@@ -1,4 +1,4 @@
-import { addCount } from '~action/count.js'
+import { $import } from '../src/$import.mjs'
 
 export const loader = async (req) => {
 	// await new Promise(r=> setTimeout(()=>r(null), 100))
@@ -11,9 +11,11 @@ export const loader = async (req) => {
 	}
 }
 
+const addCount = $import('./action/count.js#addCount')
+
 const Header = ({ cover, title, rate }) => (
 	<header>
-		<img src={cover} alt=""/>
+		<img src={cover} alt="" />
 		<h1>{title}</h1>
 		<div class="rate">{rate}</div>
 	</header>
@@ -22,7 +24,7 @@ const Header = ({ cover, title, rate }) => (
 export default ({ title, comments, rate, imgs, info, cover, count }) => {
 	return (
 		<div>
-			<Header cover={cover} title={title} rate={rate}/>
+			<Header cover={cover} title={title} rate={rate} />
 			<main>
 				<button $onclick={addCount}>Count: {count}</button>
 			</main>
@@ -31,7 +33,7 @@ export default ({ title, comments, rate, imgs, info, cover, count }) => {
 				<ul>
 					{imgs.map((i) => (
 						<li key={i}>
-							<img src={i}/>
+							<img src={i} />
 						</li>
 					))}
 				</ul>
@@ -48,7 +50,7 @@ export default ({ title, comments, rate, imgs, info, cover, count }) => {
 					{comments.map(({ avatar, name, content }) => (
 						<li key={name}>
 							<div class="bio">
-								<img class="avatar" src={avatar}/>
+								<img class="avatar" src={avatar} />
 								<b class="name">{name}</b>
 							</div>
 							<p>{content}</p>
