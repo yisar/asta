@@ -1,6 +1,6 @@
 import { $import } from './$import.mjs'
 
-const events = ['click']
+const events = ['click', 'keydown', 'input', 'mousedown', 'mouseover', 'mouseenter', 'blur', 'focus', 'dbclick', 'wheel', 'change', 'touchstart', 'touchmove', 'touchend', 'drag']
 
 for (const event of events) {
 	document.addEventListener(event, (e) => {
