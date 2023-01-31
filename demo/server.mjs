@@ -9,7 +9,7 @@ export default function serve(options) {
     const app = polka()
         .use(sirv(options.serverOutputDir))
         .get("/", async (req, res) => {
-            const module = await import(options.serverOutput)
+            const module = await import(`file://${options.serverOutput}`)
             const state = await module.loader(req)
             const html = module.default(state)
             const str = `
