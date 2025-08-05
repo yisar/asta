@@ -40,7 +40,7 @@ impl Bundle {
 }
 
 
-/// 示例：入口相对路径 "aaa/bbb.js" -> "P$aaa$bbb_js"
+// "aaa/bbb.js" -> "P$aaa$bbb_js"
 pub fn generate_bundle_id(entry_rel_path: &str) -> String {
     let transformed = entry_rel_path
         .replace('/', "$") // 替换路径分隔符为 $
@@ -277,7 +277,7 @@ pub fn emit_bundles(bundles: &HashMap<String, Bundle>, asset_graph: &AssetGraph,
             let new_ast = transformer::transform(ast.1, &asset);
             let mut printer = Printer::new("  ", "\n");
             printer.print(&new_ast);
-            content.push_str(&printer.finish());
+            content.push_str(&printer.code());
         }
         content.push_str("})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this);");
 
