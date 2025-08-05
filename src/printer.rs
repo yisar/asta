@@ -241,7 +241,6 @@ impl Printer {
         self.print(right);
     }
 
-    // 其他方法保持不变...
     fn print_if<'a>(
         &mut self,
         test: &Node<'a>,
