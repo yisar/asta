@@ -5,6 +5,7 @@ input
 
 ```js
 import {hello} from './hello.js'
+
 function world() {
   return 'World';
 }
