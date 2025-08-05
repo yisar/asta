@@ -23,7 +23,7 @@ impl Printer {
         }
     }
 
-    pub fn finish(self) -> String {
+    pub fn code(self) -> String {
         self.output
     }
 
@@ -631,7 +631,7 @@ impl Printer {
                 Some(n) => {
                     let mut printer = Printer::new("  ", "\n");
                     printer.print(n);
-                    printer.finish()
+                    printer.code()
                 }
                 None => String::new(),
             })
