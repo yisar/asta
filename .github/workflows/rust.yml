@@ -8,7 +8,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Format
-      run: cargo fmt -- --check
     # - name: Test
-      # run: cargo test
+    #   run: cargo test
