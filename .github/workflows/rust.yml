@@ -1,0 +1,14 @@
+name: Rust
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Format
+      run: cargo fmt -- --check
+    # - name: Test
+      # run: cargo test

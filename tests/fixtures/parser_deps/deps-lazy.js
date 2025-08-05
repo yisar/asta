@@ -1,0 +1,3 @@
+(function() {
+  require('lazily-loaded');
+})();

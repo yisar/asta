@@ -1,0 +1,12 @@
+[package]
+name = "bbc"
+version = "0.1.0"
+authors = ["Silvio Henrique Ferreira <shferreira@me.com>"]
+edition = "2018"
+
+[dependencies]
+json = "0.12"
+regex = "1.11.1"
+
+[profile.release]
+panic = 'abort'
