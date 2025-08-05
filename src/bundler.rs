@@ -8,8 +8,8 @@ use std::path::{Path, PathBuf};
 
 use crate::transformer::{get_export_deps, get_import_deps};
 
-pub type Imports = HashMap<String, Vec<String>>; // 键：原始导入路径
-pub type Exports = HashSet<String>; // 导出的名称
+pub type Imports = HashMap<String, Vec<String>>;
+pub type Exports = HashSet<String>;
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Asset {
@@ -39,27 +39,21 @@ impl Bundle {
     }
 }
 
-/// 根据入口文件的相对路径生成唯一bundle ID
-/// 规则：
-/// - 前缀为 "bundle$"
-/// - 路径分隔符 '/' 替换为 '$'
-/// - 扩展名 '.' 替换为 '_'
-/// 示例：入口相对路径 "aaa/bbb.js" -> "bundle$aaa$bbb_js"
+
+/// 示例：入口相对路径 "aaa/bbb.js" -> "P$aaa$bbb_js"
 pub fn generate_bundle_id(entry_rel_path: &str) -> String {
     let transformed = entry_rel_path
         .replace('/', "$") // 替换路径分隔符为 $
         .replace('.', "_"); // 替换扩展名分隔符为 _
-    format!("Pak${}", transformed)
+    format!("P${}", transformed)
 }
 
-/// 打包配置
 #[derive(Debug, Default)]
 pub struct Config {
     pub entries: Vec<String>,
     pub out_dir: String,
 }
 
-// 解析JS模块的导入、导出和依赖
 pub fn parse_js_module(content: &str) -> (Vec<String>, Imports, Exports) {
     let mut deps = vec![];
     let mut imports = Imports::new();
@@ -90,7 +84,6 @@ pub fn build_asset_graph(entries: &[String]) -> (AssetGraph, Vec<String>) {
     let mut dependencies: HashMap<String, Vec<String>> = HashMap::new();
     let mut entry_paths = vec![];
 
-    // 计算路径相对于基准路径的相对路径字符串
     fn get_relative_to_base(base_abs: &str, target_abs: &str) -> String {
         let base_path = Path::new(base_abs);
         let target_path = Path::new(target_abs);
@@ -270,7 +263,6 @@ pub fn emit_bundles(bundles: &HashMap<String, Bundle>, asset_graph: &AssetGraph,
         }
     }
 
-    // 生成bundle文件
     for (bundle_id, bundle) in bundles.iter() {
         if bundle.asset_paths.is_empty() {
             continue;
