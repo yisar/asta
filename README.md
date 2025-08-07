@@ -1,5 +1,5 @@
-# Pak
-> Tiny but beautiful JavaScript bundler
+# eac
+> Easy but amazing JavaScript compiler
 
 - Simplest bundler algorithm
 - Smallest JavaScript compiler
