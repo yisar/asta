@@ -1,5 +1,5 @@
-# eac
-> Easy but amazing JavaScript compiler
+# yjc
+> Yeilding Javascript compiler
 
 - Simplest bundler algorithm
 - Smallest JavaScript compiler
