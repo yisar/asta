@@ -1,5 +1,5 @@
-use bbc::parser::{block, expression, Node};
-use bbc::transformer::{transform};
+use pek::parser::{block, expression, Node};
+use pek::transformer::{transform};
 
 #[test]
 fn text_parse_fixtures() {

@@ -1,4 +1,4 @@
-use bbc::parser::*;
+use pek::parser::*;
 
 #[test]
 fn test_tag() {
