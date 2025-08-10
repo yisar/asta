@@ -1,5 +1,5 @@
-# yjc
-> Yeilding Javascript compiler
+# Pek
+> Tiny Javascript compiler
 
 - Simplest bundler algorithm
 - Smallest JavaScript compiler

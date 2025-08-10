@@ -1,4 +1,4 @@
-use pek::parser::*;
+use yjc::parser::*;
 
 #[test]
 fn test_tag() {

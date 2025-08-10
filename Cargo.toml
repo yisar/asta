@@ -1,8 +1,10 @@
 [package]
-name = "pek"
+name = "yjc"
 version = "0.0.1"
 authors = ["Yisar"]
 edition = "2018"
+description = "tiny javascript compiler"
+license = "MIT"
 
 [dependencies]
 json = "0.12"

@@ -1,4 +1,4 @@
-use pek::{
+use yjc::{
     bundler::{build_asset_graph, emit_bundles, generate_bundles, Config}, parser::{block, statement, walk, Node}, printer::Printer
 };
 
