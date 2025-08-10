@@ -1,5 +1,5 @@
-# Pak
-> Tiny but beautiful JavaScript bundler
+# yjc
+> Yeilding Javascript compiler
 
 - Simplest bundler algorithm
 - Smallest JavaScript compiler
