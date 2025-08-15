@@ -21,11 +21,13 @@ output
 
 ```js
 (function (global) {
-const P$hello_js$hello = 'hello';
+const I$hello_js$hello = 'hello';
 
-const P$index_js$world = () => console.log("world");
+function I$index_js$world() {
+  return 'World'
+}
 
-console.log(P$hello_js$hello);
-console.log(P$index_js$world());
+console.log(I$hello_js$hello);
+console.log(I$index_js$world());
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this);
 ```
