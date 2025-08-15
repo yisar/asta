@@ -1,4 +1,4 @@
-# Pek
+# ijc
 > Tiny Javascript compiler
 
 - Simplest bundler algorithm
